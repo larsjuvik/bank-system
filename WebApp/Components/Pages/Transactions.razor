@@ -14,21 +14,20 @@
 else
 {
     <table class="table">
-    <thead>
+    <thead class="bg-secondary bg-gradient bg-opacity-75">
         <tr>
             <th>Date</th>
-            <th>From</th>
-            <th>To</th>
+            <th>Account</th>
             <th>Amount (USD)</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var transaction in transactions)
             {
-                <tr>
+                <tr
+                    class="@(transaction.Amount < 0 ? "bg-danger bg-gradient bg-opacity-25" : "bg-success bg-gradient bg-opacity-25")">
                     <td>@transaction.Date.ToShortDateString()</td>
-                    <td>@transaction.From</td>
-                    <td>@transaction.To</td>
+                    <td>@transaction.OtherAccount</td>
                     <td>@transaction.Amount</td>
                 </tr>
             }
@@ -39,18 +38,24 @@ else
 @code {
     private Transaction[]? transactions;
 
+    private static string GetRandomFakeAccountNumber()
+    {
+        var random = new Random();
+        return random.Next(1000, 9999).ToString() + " " + random.Next(10, 99).ToString() + " " + random.Next(1000,
+        9999).ToString();
+    }
+
     protected override async Task OnInitializedAsync()
     {
         // Simulate asynchronous loading to demonstrate streaming rendering
         await Task.Delay(500);
 
         var startDate = DateOnly.FromDateTime(DateTime.Now);
-        var amounts = new[] { 100m, 200m, 300m, 400m, 500m };
+        var amounts = new[] { -100m, 205m, -300m, 400.45m, -570m };
         transactions = Enumerable.Range(1, 5).Select(index => new Transaction
             {
                 Date = startDate.AddDays(index),
-                From = $"Person {index}",
-                To = $"Person {index + 1}",
+                OtherAccount = GetRandomFakeAccountNumber(),
                 Amount = amounts[index - 1]
             }).ToArray();
     }
@@ -58,8 +63,7 @@ else
     private class Transaction
     {
         public DateOnly Date { get; set; }
-        public string From { get; set; }
-        public string To { get; set; }
+        public string OtherAccount { get; set; }
         public decimal Amount { get; set; }
     }
 }
