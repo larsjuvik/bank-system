@@ -24,7 +24,7 @@ RUN dotnet publish WebApp.csproj -c $BUILD_CONFIGURATION -o /app/publish
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-EXPOSE 8443
+EXPOSE 8080
 
 # Run the application
 ENTRYPOINT [ "dotnet", "WebApp.dll" ]
