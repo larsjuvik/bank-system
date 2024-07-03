@@ -1,0 +1,65 @@
+﻿@page "/transactions"
+@attribute [StreamRendering]
+
+<PageTitle>Transactions</PageTitle>
+
+<h1>Transactions</h1>
+
+<p>Here you can see your financial transactions</p>
+
+@if (transactions == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Amount (USD)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var transaction in transactions)
+            {
+                <tr>
+                    <td>@transaction.Date.ToShortDateString()</td>
+                    <td>@transaction.From</td>
+                    <td>@transaction.To</td>
+                    <td>@transaction.Amount</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Transaction[]? transactions;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Simulate asynchronous loading to demonstrate streaming rendering
+        await Task.Delay(500);
+
+        var startDate = DateOnly.FromDateTime(DateTime.Now);
+        var amounts = new[] { 100m, 200m, 300m, 400m, 500m };
+        transactions = Enumerable.Range(1, 5).Select(index => new Transaction
+            {
+                Date = startDate.AddDays(index),
+                From = $"Person {index}",
+                To = $"Person {index + 1}",
+                Amount = amounts[index - 1]
+            }).ToArray();
+    }
+
+    private class Transaction
+    {
+        public DateOnly Date { get; set; }
+        public string From { get; set; }
+        public string To { get; set; }
+        public decimal Amount { get; set; }
+    }
+}
