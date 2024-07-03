@@ -24,8 +24,7 @@ else
     <tbody>
         @foreach (var transaction in transactions)
             {
-                <tr
-                    class="@(transaction.Amount < 0 ? "bg-danger bg-gradient bg-opacity-25" : "bg-success bg-gradient bg-opacity-25")">
+                <tr class="bg-gradient bg-opacity-25 @(transaction.Amount < 0 ? "bg-danger" : "bg-success")">
                     <td>@transaction.Date.ToShortDateString()</td>
                     <td>@transaction.OtherAccount</td>
                     <td>@transaction.Amount</td>
