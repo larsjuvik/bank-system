@@ -1,5 +1,8 @@
 ﻿@page "/transactions"
+@using BankSystem.Data
+@using Data.Models
 @attribute [StreamRendering]
+@inject BankContext BankContext
 
 <PageTitle>Transactions</PageTitle>
 
@@ -25,8 +28,8 @@ else
         @foreach (var transaction in transactions)
             {
                 <tr class="bg-gradient bg-opacity-25 @(transaction.Amount < 0 ? "bg-danger" : "bg-success")">
-                    <td>@transaction.Date.ToShortDateString()</td>
-                    <td>@transaction.OtherAccount</td>
+                    <td>@transaction.TransactionDate.ToShortDateString()</td>
+                    <td>@transaction.To</td>
                     <td>@transaction.Amount</td>
                 </tr>
             }
@@ -37,32 +40,8 @@ else
 @code {
     private Transaction[]? transactions;
 
-    private static string GetRandomFakeAccountNumber()
-    {
-        var random = new Random();
-        return random.Next(1000, 9999).ToString() + " " + random.Next(10, 99).ToString() + " " + random.Next(1000,
-        9999).ToString();
-    }
-
     protected override async Task OnInitializedAsync()
     {
-        // Simulate asynchronous loading to demonstrate streaming rendering
-        await Task.Delay(500);
-
-        var startDate = DateOnly.FromDateTime(DateTime.Now);
-        var amounts = new[] { -100m, 205m, -300m, 400.45m, -570m };
-        transactions = Enumerable.Range(1, 5).Select(index => new Transaction
-            {
-                Date = startDate.AddDays(index),
-                OtherAccount = GetRandomFakeAccountNumber(),
-                Amount = amounts[index - 1]
-            }).ToArray();
-    }
-
-    private class Transaction
-    {
-        public DateOnly Date { get; set; }
-        public string OtherAccount { get; set; }
-        public decimal Amount { get; set; }
+        transactions = BankContext.Transactions.ToArray();
     }
 }

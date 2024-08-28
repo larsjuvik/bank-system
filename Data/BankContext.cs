@@ -52,6 +52,26 @@ namespace BankSystem.Data
                     CreatedDate = DateTime.Now
                 }
             );
+
+            // Generating initial transaction data
+            modelBuilder.Entity<Transaction>().HasData(
+                new Transaction
+                {
+                    Id = 1,
+                    FromId = 1,
+                    ToId = 2,
+                    Amount = 500m,
+                    TransactionDate = DateTime.Now
+                },
+                new Transaction
+                {
+                    Id = 2,
+                    FromId = 2,
+                    ToId = 1,
+                    Amount = 750m,
+                    TransactionDate = DateTime.Now
+                }
+            );
         }
     }
 }
