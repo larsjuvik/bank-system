@@ -21,16 +21,15 @@ namespace BankSystem.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configuring the relationship between BankAccount and Transaction
-            modelBuilder.Entity<BankAccount>()
-                .HasMany(b => b.Transactions)
-                .WithOne(t => t.From)
+            modelBuilder.Entity<Transaction>()
+                .HasOne(b => b.From)
+                .WithMany()
                 .HasForeignKey(t => t.FromId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<BankAccount>()
-                .HasMany(b => b.Transactions)
-                .WithOne(t => t.To)
+            modelBuilder.Entity<Transaction>()
+                .HasOne(b => b.To)
+                .WithMany()
                 .HasForeignKey(t => t.ToId)
                 .OnDelete(DeleteBehavior.Restrict);
 
