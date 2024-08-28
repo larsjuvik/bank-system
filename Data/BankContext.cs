@@ -21,15 +21,15 @@ namespace BankSystem.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Transaction>()
-                .HasOne(b => b.From)
-                .WithMany()
+            modelBuilder.Entity<BankAccount>()
+                .HasMany(b => b.FromTransactions)
+                .WithOne(t => t.From)
                 .HasForeignKey(t => t.FromId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Transaction>()
-                .HasOne(b => b.To)
-                .WithMany()
+            modelBuilder.Entity<BankAccount>()
+                .HasMany(b => b.ToTransactions)
+                .WithOne(t => t.To)
                 .HasForeignKey(t => t.ToId)
                 .OnDelete(DeleteBehavior.Restrict);
 
@@ -53,7 +53,6 @@ namespace BankSystem.Data
                 }
             );
 
-            // Generating initial transaction data
             modelBuilder.Entity<Transaction>().HasData(
                 new Transaction
                 {

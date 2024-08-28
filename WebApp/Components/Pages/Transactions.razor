@@ -1,6 +1,7 @@
 ﻿@page "/transactions"
 @using BankSystem.Data
 @using Data.Models
+@using Microsoft.EntityFrameworkCore
 @attribute [StreamRendering]
 @inject BankContext BankContext
 
@@ -20,7 +21,8 @@ else
     <thead class="bg-secondary bg-gradient bg-opacity-75">
         <tr>
             <th>Date</th>
-            <th>Account</th>
+            <th>From</th>
+            <th>To</th>
             <th>Amount (USD)</th>
         </tr>
     </thead>
@@ -29,7 +31,8 @@ else
             {
                 <tr class="bg-gradient bg-opacity-25 @(transaction.Amount < 0 ? "bg-danger" : "bg-success")">
                     <td>@transaction.TransactionDate.ToShortDateString()</td>
-                    <td>@transaction.To.Id</td>
+                    <td>@transaction.From?.Id</td>
+                    <td>@transaction.To?.Id</td>
                     <td>@transaction.Amount</td>
                 </tr>
             }
@@ -42,7 +45,9 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        transactions = BankContext.Transactions.ToArray();
-        Console.WriteLine(BankContext.BankAccounts.Count());
+        transactions = BankContext.Transactions
+            .Include(t => t.From)
+            .Include(t => t.To)
+            .ToArray();
     }
 }
