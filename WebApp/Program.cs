@@ -12,6 +12,13 @@ builder.Services.AddDbContext<BankContext>(options => options.UseInMemoryDatabas
 
 var app = builder.Build();
 
+// Ensure the database is created.
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<BankContext>();
+    dbContext.Database.EnsureCreated();
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
