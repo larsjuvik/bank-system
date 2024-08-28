@@ -8,6 +8,10 @@ namespace BankSystem.Data
         public DbSet<BankAccount> BankAccounts { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
 
+        public BankContext(DbContextOptions<BankContext> options) : base(options)
+        {
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseInMemoryDatabase("BankSystemDemo");
