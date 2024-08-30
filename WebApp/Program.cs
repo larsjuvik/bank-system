@@ -1,6 +1,9 @@
 using BankSystem.Data;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Components;
+using WebApp.Security;
+using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +12,10 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddDbContext<BankContext>(options => options.UseInMemoryDatabase("BankSystemDemo"));
+
+// Authentication
+builder.Services.AddScoped<AuthenticationStateProvider, DemoAuthenticationStateProvider>();
+builder.Services.AddAuthorizationCore();
 
 var app = builder.Build();
 
