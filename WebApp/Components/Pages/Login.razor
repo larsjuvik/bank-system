@@ -1,0 +1,45 @@
+@page "/login"
+@rendermode InteractiveServer
+
+<PageTitle>Login</PageTitle>
+
+<h1>Login or register</h1>
+
+To use this bank demo, you need to login or register an account.
+
+<b>This is a demo application, and this application does not prioritize high security. Therefore a username is
+    sufficient to login / create an account.</b>
+
+
+@if (!string.IsNullOrWhiteSpace(validationError))
+{
+    <div class="alert alert-danger" role="alert">
+    @validationError
+</div>
+}
+
+<div>
+    <label>Username: </label>
+    <input @bind="username" />
+</div>
+<button @onclick="HandleUserLogin">Login</button>
+
+@code {
+    private string? username;
+    private string? validationError;
+
+    /// <summary>
+    /// Handle the user login
+    /// </summary>
+    private async void HandleUserLogin()
+    {
+        if (string.IsNullOrWhiteSpace(username))
+        {
+            validationError = "Username is required";
+            return;
+        }
+
+        validationError = null;
+        Console.WriteLine("Attempting to log in user with username: " + username);
+    }
+}
