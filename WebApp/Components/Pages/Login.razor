@@ -1,5 +1,8 @@
 @page "/login"
 @rendermode InteractiveServer
+@using WebApp.Security
+@inject NavigationManager Navigation
+@inject DemoAuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>Login</PageTitle>
 
@@ -40,6 +43,14 @@ To use this bank demo, you need to login or register an account.
         }
 
         validationError = null;
-        Console.WriteLine("Attempting to log in user with username: " + username);
+        bool success = await AuthenticationStateProvider.Login(username, string.Empty);
+        if (success)
+        {
+            Navigation.NavigateTo("/");
+        }
+        else
+        {
+            validationError = "Failed to login user";
+        }
     }
 }
