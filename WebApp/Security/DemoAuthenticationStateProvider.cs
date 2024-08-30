@@ -1,5 +1,8 @@
+using BankSystem.Data;
+using Data.Models;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
 using System.Security.Claims;
 
@@ -8,6 +11,7 @@ namespace WebApp.Security
     public class DemoAuthenticationStateProvider : AuthenticationStateProvider
     {
         private readonly ProtectedSessionStorage localStorage;
+        private readonly BankContext bankContext;
         private ClaimsPrincipal _currentUser = new(new ClaimsIdentity());
         struct User
         {
@@ -15,9 +19,10 @@ namespace WebApp.Security
             public string Role { get; set; }
         }
 
-        public DemoAuthenticationStateProvider(ProtectedSessionStorage localStorage)
+        public DemoAuthenticationStateProvider(BankContext bankContext, ProtectedSessionStorage localStorage)
         {
             this.localStorage = localStorage;
+            this.bankContext = bankContext;
         }
 
         public async Task Initialize()
@@ -50,9 +55,15 @@ namespace WebApp.Security
 
         public async Task<bool> Login(string username, string password)
         {
-            bool isValid = true;
-            // TODO: Implement the authentication logic here
-            if (!isValid)
+            // Check if the user exists
+            var userFromDb = await bankContext.Users.FirstOrDefaultAsync(u => u.Username == username);
+            if (userFromDb == null)
+            {
+                return false;
+            }
+
+            // Verify the password
+            if (!Data.Models.User.VerifyPassword(password, userFromDb.PasswordHash, userFromDb.Salt))
             {
                 return false;
             }

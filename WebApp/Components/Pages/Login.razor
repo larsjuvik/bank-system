@@ -24,11 +24,15 @@ To use this bank demo, you need to login or register an account.
 <div>
     <label>Username: </label>
     <input @bind="username" />
+
+    <label>Password: </label>
+    <input @bind="password" type="password" />
 </div>
 <button @onclick="HandleUserLogin">Login</button>
 
 @code {
     private string? username;
+    private string? password;
     private string? validationError;
 
     /// <summary>
@@ -41,9 +45,14 @@ To use this bank demo, you need to login or register an account.
             validationError = "Username is required";
             return;
         }
+        if (string.IsNullOrWhiteSpace(password))
+        {
+            validationError = "Password is required";
+            return;
+        }
 
         validationError = null;
-        bool success = await AuthenticationStateProvider.Login(username, string.Empty);
+        bool success = await AuthenticationStateProvider.Login(username, password);
         if (success)
         {
             Navigation.NavigateTo("/");
@@ -53,4 +62,4 @@ To use this bank demo, you need to login or register an account.
             validationError = "Failed to login user";
         }
     }
-}
+} using BankSystem.Data;
