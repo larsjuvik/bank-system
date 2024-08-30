@@ -7,10 +7,10 @@ namespace WebApp.Security
 {
     public class DemoAuthenticationStateProvider : AuthenticationStateProvider
     {
-        private readonly ProtectedBrowserStorage localStorage;
+        private readonly ProtectedSessionStorage localStorage;
         private ClaimsPrincipal _currentUser = new(new ClaimsIdentity());
 
-        public DemoAuthenticationStateProvider(ProtectedBrowserStorage localStorage)
+        public DemoAuthenticationStateProvider(ProtectedSessionStorage localStorage)
         {
             this.localStorage = localStorage;
         }
