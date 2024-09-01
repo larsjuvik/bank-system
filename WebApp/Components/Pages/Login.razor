@@ -14,15 +14,16 @@ To use this bank demo, you need to login or register an account.
 <div class="card mt-3">
     <EditForm Model="LoginData" OnValidSubmit="HandleValidSubmit" FormName="login" Enhance>
         <div class="card-body">
-            <ValidationSummary />
             <DataAnnotationsValidator />
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
                 <InputText id="username" class="form-control" @bind-Value="LoginData.Username" />
+                <ValidationMessage For="@(() => LoginData.Username)" class="text-danger" />
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
                 <InputText id="password" class="form-control" type="password" @bind-Value="LoginData.Password" />
+                <ValidationMessage For="@(() => LoginData.Password)" class="text-danger" />
             </div>
             <button type="submit" class="btn btn-primary">Login</button>
         </div>
