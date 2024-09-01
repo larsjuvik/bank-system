@@ -2,6 +2,7 @@
 @rendermode InteractiveServer
 @using WebApp.Security
 @inject NavigationManager Navigation
+@inject IJSRuntime IJSRuntime
 @inject DemoAuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>Login</PageTitle>
@@ -10,56 +11,32 @@
 
 To use this bank demo, you need to login or register an account.
 
-<b>This is a demo application, and this application does not prioritize high security. Therefore a username is
-    sufficient to login / create an account.</b>
-
-
-@if (!string.IsNullOrWhiteSpace(validationError))
-{
-    <div class="alert alert-danger" role="alert">
-    @validationError
+<div class="card">
+    <EditForm Model="LoginData" OnValidSubmit="HandleValidSubmit" FormName="login" Enhance>
+        <div class="card-body">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <InputText id="username" class="form-control" @bind-Value="LoginData.Username" />
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <InputText id="password" class="form-control" type="password" @bind-Value="LoginData.Password" />
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </div>
+    </EditForm>
 </div>
-}
-
-<div>
-    <label>Username: </label>
-    <input @bind="username" />
-
-    <label>Password: </label>
-    <input @bind="password" type="password" />
-</div>
-<button @onclick="HandleUserLogin">Login</button>
 
 @code {
-    private string? username;
-    private string? password;
-    private string? validationError;
-
-    /// <summary>
-    /// Handle the user login
-    /// </summary>
-    private async void HandleUserLogin()
+    private LoginModel LoginData { get; set; } = new LoginModel();
+    private class LoginModel
     {
-        if (string.IsNullOrWhiteSpace(username))
-        {
-            validationError = "Username is required";
-            return;
-        }
-        if (string.IsNullOrWhiteSpace(password))
-        {
-            validationError = "Password is required";
-            return;
-        }
-
-        validationError = null;
-        bool success = await AuthenticationStateProvider.Login(username, password);
-        if (success)
-        {
-            Navigation.NavigateTo("/");
-        }
-        else
-        {
-            validationError = "Failed to login user";
-        }
+        public string Username { get; set; }
+        public string Password { get; set; }
     }
-} using BankSystem.Data;
+
+    private async Task HandleValidSubmit()
+    {
+
+    }
+}
