@@ -38,17 +38,22 @@ To use this bank demo, you need to login or register an account.
         [Required]
         [MinLength(5)]
         [MaxLength(20)]
-        public string Username { get; set; }
+        public string? Username { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
         [MinLength(8)]
         [MaxLength(100)]
-        public string Password { get; set; }
+        public string? Password { get; set; }
     }
 
     private async Task HandleValidSubmit()
     {
+        if (LoginData?.Username == null || LoginData?.Password == null)
+        {
+            return;
+        }
+
         var result = await AuthenticationStateProvider.Login(LoginData.Username, LoginData.Password);
         if (result)
         {
