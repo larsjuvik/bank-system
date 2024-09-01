@@ -1,7 +1,5 @@
 ﻿@page "/"
 @using Microsoft.AspNetCore.Authorization
-@using WebApp.Security
-@inject DemoAuthenticationStateProvider AuthenticationStateProvider
 @rendermode InteractiveServer
 
 <PageTitle>Overview</PageTitle>
@@ -9,20 +7,3 @@
 <h1>Overview</h1>
 
 Here you can see your fincancials.
-
-<h2>Logged in: @LoggedIn</h2>
-
-@code {
-    public bool LoggedIn { get; set; }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await AuthenticationStateProvider.Initialize();
-            var result = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-            LoggedIn = result.User.Identity.IsAuthenticated;
-            StateHasChanged();
-        }
-    }
-}
