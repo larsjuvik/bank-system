@@ -1,8 +1,8 @@
 @page "/login"
 @rendermode InteractiveServer
+@using System.ComponentModel.DataAnnotations
 @using WebApp.Security
 @inject NavigationManager Navigation
-@inject IJSRuntime IJSRuntime
 @inject DemoAuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>Login</PageTitle>
@@ -14,6 +14,8 @@ To use this bank demo, you need to login or register an account.
 <div class="card mt-3">
     <EditForm Model="LoginData" OnValidSubmit="HandleValidSubmit" FormName="login" Enhance>
         <div class="card-body">
+            <ValidationSummary />
+            <DataAnnotationsValidator />
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
                 <InputText id="username" class="form-control" @bind-Value="LoginData.Username" />
@@ -28,10 +30,19 @@ To use this bank demo, you need to login or register an account.
 </div>
 
 @code {
+    [SupplyParameterFromForm(FormName = "login")]
     private LoginModel LoginData { get; set; } = new LoginModel();
     private class LoginModel
     {
+        [Required]
+        [MinLength(5)]
+        [MaxLength(20)]
         public string Username { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        [MinLength(8)]
+        [MaxLength(100)]
         public string Password { get; set; }
     }
 
