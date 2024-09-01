@@ -1,4 +1,5 @@
 using BankSystem.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Components;
@@ -15,7 +16,17 @@ builder.Services.AddDbContext<BankContext>(options => options.UseInMemoryDatabas
 // Authentication
 builder.Services.AddScoped<DemoAuthenticationStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider, DemoAuthenticationStateProvider>();
-
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.Cookie.Name = "BankSystemDemo";
+        options.LoginPath = "/login";
+        options.LogoutPath = "/logout";
+        options.AccessDeniedPath = "/access-denied";
+        options.Cookie.MaxAge = TimeSpan.FromDays(30);
+    });
+builder.Services.AddAuthorization();
+builder.Services.AddCascadingAuthenticationState();
 var app = builder.Build();
 
 // Ensure the database is created.
