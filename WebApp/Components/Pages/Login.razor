@@ -11,7 +11,7 @@
 
 To use this bank demo, you need to login or register an account.
 
-<div class="card">
+<div class="card mt-3">
     <EditForm Model="LoginData" OnValidSubmit="HandleValidSubmit" FormName="login" Enhance>
         <div class="card-body">
             <div class="mb-3">
@@ -37,6 +37,10 @@ To use this bank demo, you need to login or register an account.
 
     private async Task HandleValidSubmit()
     {
-
+        var result = await AuthenticationStateProvider.Login(LoginData.Username, LoginData.Password);
+        if (result)
+        {
+            Navigation.NavigateTo("/");
+        }
     }
 }
