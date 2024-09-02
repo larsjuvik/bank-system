@@ -1,12 +1,15 @@
 @page "/register"
 @using System.ComponentModel.DataAnnotations
 @using System.Security.Claims
+@using AutoMapper
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Authentication.Cookies
 @using Microsoft.EntityFrameworkCore
+@using WebApp.DTOs
 @using global::BankSystem.Data
 @inject NavigationManager Navigation
 @inject BankContext Context
+@inject IMapper Mapper
 
 <PageTitle>Register</PageTitle>
 
@@ -19,6 +22,11 @@
     <EditForm Model="RegisterData" OnValidSubmit="HandleValidSubmit" FormName="register" Enhance>
         <div class="card-body">
             <DataAnnotationsValidator />
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <InputText id="name" class="form-control" @bind-Value="RegisterData.Name" />
+                <ValidationMessage For="@(() => RegisterData.Name)" class="text-danger" />
+            </div>
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
                 <InputText id="username" class="form-control" @bind-Value="RegisterData.Username" />
@@ -66,6 +74,16 @@
             return;
         }
 
-        // TODO: create the user
+        // Create hash and salt, and convert to data model
+        Data.Models.User.CreateSaltAndHash(RegisterData.Password, out var salt, out var hash);
+        var user = Mapper.Map<Data.Models.User>(RegisterData);
+        user.Salt = salt;
+        user.PasswordHash = hash;
+
+        // Save
+        Context.Users.Add(user);
+        await Context.SaveChangesAsync();
+
+        Navigation.NavigateTo("/");
     }
 }

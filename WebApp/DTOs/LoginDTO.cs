@@ -1,3 +1,4 @@
+namespace WebApp.DTOs;
 using System.ComponentModel.DataAnnotations;
 
 public class LoginDTO

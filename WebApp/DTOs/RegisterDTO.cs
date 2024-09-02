@@ -1,5 +1,7 @@
+namespace WebApp.DTOs;
 using System.ComponentModel.DataAnnotations;
 using BankSystem.WebApp.DTOs.DataAnnotations;
+using Data.Models;
 
 public class RegisterDTO
 {
@@ -27,4 +29,8 @@ public class RegisterDTO
     [Display(Name = "Date of Birth")]
     [MinimumAge(18, ErrorMessage = "You must be at least 18 years old.")]
     public DateTime? BirthDate { get; set; }
+
+    [Required]
+    [MinLength(1)]
+    public string? Name { get; set; }
 }

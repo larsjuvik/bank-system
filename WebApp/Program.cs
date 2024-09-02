@@ -1,14 +1,23 @@
+using AutoMapper;
 using BankSystem.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Components;
+using WebApp.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+// AutoMapper
+var autoMapperConfig = new MapperConfiguration(cfg =>
+{
+    cfg.CreateMap<RegisterDTO, Data.Models.User>();
+});
+builder.Services.AddSingleton(autoMapperConfig.CreateMapper());
 
 builder.Services.AddDbContext<BankContext>(options => options.UseInMemoryDatabase("BankSystemDemo"));
 
