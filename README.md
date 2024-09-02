@@ -19,8 +19,9 @@ docker run --name bank-system -d -p 8080:8080 bank-system
 
 ## Attributions
 
-Thank you to the following libraries and frameworks:
+Thank you to the following libraries and frameworks :heart:
 
-- Blazor
-- Bootstrap
-- AutoMapper (https://github.com/AutoMapper/AutoMapper)
+- [Blazor](https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor)
+- [Bootstrap](https://getbootstrap.com)
+- [Bootstrap Icons](https://icons.getbootstrap.com)
+- [AutoMapper](https://github.com/AutoMapper/AutoMapper)
