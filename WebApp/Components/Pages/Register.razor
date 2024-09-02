@@ -42,31 +42,10 @@
 
 @code {
     [SupplyParameterFromForm(FormName = "register")]
-    private RegisterAccountModel RegisterData { get; set; } = new RegisterAccountModel();
+    private RegisterDTO RegisterData { get; set; } = new();
 
     [CascadingParameter]
     private HttpContext? HttpContext { get; set; }
-
-    private class RegisterAccountModel
-    {
-        [Required]
-        [MinLength(5)]
-        [MaxLength(20)]
-        public string? Username { get; set; }
-
-        [Required]
-        [DataType(DataType.Password)]
-        [MinLength(8)]
-        [MaxLength(100)]
-        public string? Password { get; set; }
-
-        [Required]
-        [DataType(DataType.Password)]
-        [MinLength(8)]
-        [MaxLength(100)]
-        [Compare(nameof(Password), ErrorMessage = "The passwords do not match.")]
-        public string? RepeatPassword { get; set; }
-    }
 
     private async Task HandleValidSubmit()
     {
