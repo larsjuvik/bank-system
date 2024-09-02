@@ -10,6 +10,7 @@ namespace Data.Models
         public byte[] PasswordHash { get; set; }
         public byte[] Salt { get; set; }
         public string Name { get; set; }
+        public DateTime BirthDate { get; set; }
 
         // Bank accounts
         public ICollection<BankAccount> BankAccounts { get; set; }

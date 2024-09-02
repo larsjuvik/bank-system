@@ -35,6 +35,11 @@
                     @bind-Value="RegisterData.RepeatPassword" />
                 <ValidationMessage For="@(() => RegisterData.RepeatPassword)" class="text-danger" />
             </div>
+            <div class="mb-3">
+                <label for="birthdate" class="form-label">Date of birth</label>
+                <InputDate id="birthdate" class="form-control" @bind-Value="RegisterData.BirthDate" />
+                <ValidationMessage For="@(() => RegisterData.BirthDate)" class="text-danger" />
+            </div>
             <button type="submit" class="btn btn-primary">Register</button>
         </div>
     </EditForm>
