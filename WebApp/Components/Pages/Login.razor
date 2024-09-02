@@ -104,6 +104,13 @@ new Claim(ClaimTypes.Role, "User")
         }
         await HttpContext.SignInAsync(user);
 
-        Navigation.NavigateTo("/");
+        // Get URL params
+        var uri = new Uri(Navigation.Uri);
+        var returnUrl = System.Web.HttpUtility.ParseQueryString(uri.Query).Get("returnUrl");
+
+        if (returnUrl == null)
+        {
+            Navigation.NavigateTo("/");
+        }
     }
 }
