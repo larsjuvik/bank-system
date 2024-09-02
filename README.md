@@ -16,3 +16,10 @@ dotnet run --project WebApp
 docker build -t bank-system .
 docker run --name bank-system -d -p 8080:8080 bank-system
 ```
+
+## Attributions
+
+Thank you to the following libraries and frameworks:
+
+- Blazor
+- Bootstrap
