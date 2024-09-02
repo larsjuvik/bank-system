@@ -16,8 +16,13 @@
     Don't have an account? <a href="/register">Register here</a>.</p>
 
 <div class="card mt-3">
-    <EditForm Model="LoginData" OnValidSubmit="HandleValidSubmit" FormName="login" Enhance>
-        <div class="card-body">
+    <div class="card-body">
+        @if (errorMessage != null)
+        {
+            <p class="text-danger">@errorMessage</p>
+        }
+
+        <EditForm Model="LoginData" OnValidSubmit="HandleValidSubmit" FormName="login" Enhance>
             <DataAnnotationsValidator />
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
@@ -30,8 +35,8 @@
                 <ValidationMessage For="@(() => LoginData.Password)" class="text-danger" />
             </div>
             <button type="submit" class="btn btn-primary">Login</button>
-        </div>
-    </EditForm>
+        </EditForm>
+    </div>
 </div>
 
 @code {
@@ -40,6 +45,8 @@
 
     [CascadingParameter]
     private HttpContext? HttpContext { get; set; }
+
+    private string? errorMessage = null;
 
     private class LoginModel
     {
@@ -59,6 +66,7 @@
     {
         if (LoginData?.Username == null || LoginData?.Password == null)
         {
+            errorMessage = "Fill in all fields";
             return;
         }
 
@@ -66,12 +74,14 @@
         var userFromDb = await Context.Users.FirstOrDefaultAsync(u => u.Username == LoginData.Username);
         if (userFromDb == null)
         {
+            errorMessage = "Invalid credentials";
             return;
         }
 
         // Verify the password
         if (!Data.Models.User.VerifyPassword(LoginData.Password, userFromDb.PasswordHash, userFromDb.Salt))
         {
+            errorMessage = "Invalid credentials";
             return;
         }
 
@@ -87,6 +97,11 @@ new Claim(ClaimTypes.Role, "User")
         var user = new ClaimsPrincipal(identity);
 
         // Sign in the user
+        if (HttpContext == null)
+        {
+            errorMessage = "An unexpected error occured, please try again";
+            return;
+        }
         await HttpContext.SignInAsync(user);
 
         Navigation.NavigateTo("/");
