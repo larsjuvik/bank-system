@@ -41,26 +41,12 @@
 
 @code {
     [SupplyParameterFromForm(FormName = "login")]
-    private LoginModel LoginData { get; set; } = new LoginModel();
+    private LoginDTO LoginData { get; set; } = new();
 
     [CascadingParameter]
     private HttpContext? HttpContext { get; set; }
 
     private string? errorMessage = null;
-
-    private class LoginModel
-    {
-        [Required]
-        [MinLength(5)]
-        [MaxLength(20)]
-        public string? Username { get; set; }
-
-        [Required]
-        [DataType(DataType.Password)]
-        [MinLength(8)]
-        [MaxLength(100)]
-        public string? Password { get; set; }
-    }
 
     private async Task HandleValidSubmit()
     {
