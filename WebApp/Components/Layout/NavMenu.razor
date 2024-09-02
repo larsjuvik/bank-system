@@ -39,7 +39,9 @@
                 </div>
 
                 <div class="nav-item px-3">
-                    <button class="btn btn-primary w-100" @onclick="LogOut">Log out</button>
+                    <NavLink class="nav-link" href="logout">
+                        <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Log out
+                    </NavLink>
                 </div>
             </Authorized>
             <NotAuthorized>
@@ -53,12 +55,3 @@
 
     </nav>
 </div>
-
-@code {
-    [CascadingParameter]
-    private HttpContext? HttpContext { get; set; }
-    private async Task LogOut()
-    {
-        await HttpContext.SignOutAsync();
-    }
-}

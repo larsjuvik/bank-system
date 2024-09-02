@@ -1,0 +1,43 @@
+@page "/logout"
+@using System.ComponentModel.DataAnnotations
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
+@using Microsoft.EntityFrameworkCore
+@using global::BankSystem.Data
+@inject NavigationManager Navigation
+@inject BankContext Context
+
+<PageTitle>Logout</PageTitle>
+
+<h1>Logout</h1>
+
+@if (tryingToLogOut)
+{
+    <p>Logging out...</p>
+}
+else
+{
+    <p>Logged out!</p>
+}
+
+@code {
+    private bool tryingToLogOut = false;
+
+    [CascadingParameter]
+    private HttpContext? HttpContext { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (HttpContext == null)
+        {
+            return;
+        }
+
+        tryingToLogOut = true;
+
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+        tryingToLogOut = false;
+    }
+}
