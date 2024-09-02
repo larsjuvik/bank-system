@@ -21,6 +21,10 @@
 <div class="card mt-3">
     <EditForm Model="RegisterData" OnValidSubmit="HandleValidSubmit" FormName="register" Enhance>
         <div class="card-body">
+            @if (errorMessage != null)
+            {
+                <p class="text-danger">@errorMessage</p>
+            }
             <DataAnnotationsValidator />
             <div class="mb-3">
                 <label for="name" class="form-label">Name</label>
@@ -60,6 +64,9 @@
     [CascadingParameter]
     private HttpContext? HttpContext { get; set; }
 
+    private string? errorMessage = null;
+
+
     private async Task HandleValidSubmit()
     {
         if (RegisterData?.Username == null || RegisterData?.Password == null || RegisterData?.RepeatPassword == null)
@@ -71,19 +78,46 @@
         var userFromDb = await Context.Users.FirstOrDefaultAsync(u => u.Username == RegisterData.Username);
         if (userFromDb != null)
         {
+            errorMessage = "Username already exists";
             return;
         }
 
         // Create hash and salt, and convert to data model
         Data.Models.User.CreateSaltAndHash(RegisterData.Password, out var salt, out var hash);
-        var user = Mapper.Map<Data.Models.User>(RegisterData);
-        user.Salt = salt;
-        user.PasswordHash = hash;
+        var userModel = Mapper.Map<Data.Models.User>(RegisterData);
+        userModel.Salt = salt;
+        userModel.PasswordHash = hash;
 
         // Save
-        Context.Users.Add(user);
+        Context.Users.Add(userModel);
         await Context.SaveChangesAsync();
 
-        Navigation.NavigateTo("/");
+        // Create a new ClaimsIdentity with the user's name and role
+        var identity = new ClaimsIdentity(
+        [
+        new Claim(ClaimTypes.Name, RegisterData.Username),
+new Claim(ClaimTypes.Role, "User")
+        ], CookieAuthenticationDefaults.AuthenticationScheme);
+
+
+        // Create a new ClaimsPrincipal with the identity
+        var user = new ClaimsPrincipal(identity);
+
+        // Sign in the user
+        if (HttpContext == null)
+        {
+            errorMessage = "An unexpected error occured, please try again";
+            return;
+        }
+        await HttpContext.SignInAsync(user);
+
+        // Get URL params
+        var uri = new Uri(Navigation.Uri);
+        var returnUrl = System.Web.HttpUtility.ParseQueryString(uri.Query).Get("returnUrl");
+
+        if (returnUrl == null)
+        {
+            Navigation.NavigateTo("/");
+        }
     }
 }
