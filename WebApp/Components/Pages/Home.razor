@@ -1,9 +1,32 @@
 ﻿@page "/"
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @rendermode InteractiveServer
+@attribute [Authorize]
 
 <PageTitle>Overview</PageTitle>
 
 <h1>Overview</h1>
 
-Here you can see your fincancials.
+<div class="card mt-3">
+    <div class="card-body">
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input id="username" class="form-control" placeholder="..." value="@_username" disabled />
+        </div>
+    </div>
+</div>
+
+@code {
+    private string? _username = null;
+    protected override async Task OnInitializedAsync()
+    {
+        var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+
+        if (authenticationState.User.Identity.IsAuthenticated)
+        {
+            _username = authenticationState.User.Identity.Name;
+        }
+    }
+}
