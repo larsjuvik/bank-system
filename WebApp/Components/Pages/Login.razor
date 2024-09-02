@@ -89,10 +89,6 @@ new Claim(ClaimTypes.Role, "User")
         // Sign in the user
         await HttpContext.SignInAsync(user);
 
-        var result = false;
-        if (result)
-        {
-            Navigation.NavigateTo("/");
-        }
+        Navigation.NavigateTo("/");
     }
 }
