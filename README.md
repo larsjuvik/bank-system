@@ -23,3 +23,4 @@ Thank you to the following libraries and frameworks:
 
 - Blazor
 - Bootstrap
+- AutoMapper (https://github.com/AutoMapper/AutoMapper)
