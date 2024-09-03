@@ -10,16 +10,18 @@
 
 <PageTitle>Logout</PageTitle>
 
-<h1>Logout</h1>
-
 @if (tryingToLogOut)
 {
-    <p>Logging out...</p>
+    <h1>Logging out ...</h1>
 }
 else
 {
-    <p>Logged out!</p>
+    <h1>Logged out!</h1>
 }
+
+<a href="/login">
+    Press here to login.
+</a>
 
 @code {
     private bool tryingToLogOut = false;
