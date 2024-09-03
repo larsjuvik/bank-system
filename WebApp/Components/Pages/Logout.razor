@@ -34,10 +34,17 @@ else
             return;
         }
 
+        if (!HttpContext.User.Identity.IsAuthenticated)
+        {
+            return;
+        }
+
         tryingToLogOut = true;
 
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
         tryingToLogOut = false;
+
+        Navigation.NavigateTo("/logout");
     }
 }
