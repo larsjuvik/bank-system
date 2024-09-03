@@ -25,7 +25,7 @@ namespace BankSystem.Data
             // User to bank account
             modelBuilder.Entity<User>()
                 .HasMany(u => u.BankAccounts)
-                .WithOne(b => b.User)
+                .WithOne(b => b.Owner)
                 .HasForeignKey(b => b.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 

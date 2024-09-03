@@ -7,7 +7,7 @@ public class BankAccount
     public decimal Balance { get; set; }
     public DateTime CreatedDate { get; set; }
 
-    public User User { get; set; }
+    public User Owner { get; set; }
     public ICollection<Transaction> FromTransactions { get; set; }
     public ICollection<Transaction> ToTransactions { get; set; }
 }
