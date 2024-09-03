@@ -1,12 +1,16 @@
 ﻿@page "/"
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
-@using BankSystem.Data
+@using WebApp.DTOs
+@using WebApp.Services
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inject BankContext Context
 @rendermode InteractiveServer
 @attribute [Authorize]
 @attribute [StreamRendering]
+@inject UserService UserService
+@inject TransactionService TransactionService
+@inject BankAccountService BankAccountService
+
 
 <PageTitle>Overview</PageTitle>
 
@@ -14,29 +18,56 @@
 
 <div class="card mt-3 card-form">
     <div class="card-body">
-        <div class="mb-3 d-flex flex-row justify-content-between gap-3">
-            <div class="flex-grow-1">
-                <label for="name" class="form-label">Name</label>
-                <input id="name" class="form-control" placeholder="..." value="@_name" disabled />
+        <div class="mb-3 d-flex flex-col justify-content-between gap-3">
+            <div class="mb-3 d-flex flex-row justify-content-between gap-3">
+                <div class="flex-grow-1">
+                    <label for="name" class="form-label">Name</label>
+                    <input id="name" class="form-control" placeholder="..." value="@_user?.Name" disabled />
+                </div>
+                <div class="flex-grow-1">
+                    <label for="username" class="form-label">Username</label>
+                    <input id="username" class="form-control" placeholder="..." value="@_user?.Username" disabled />
+                </div>
             </div>
-            <div class="flex-grow-1">
-                <label for="username" class="form-label">Username</label>
-                <input id="username" class="form-control" placeholder="..." value="@_username" disabled />
+            <div class="mb-3 d-flex flex-row justify-content-between gap-3">
+                <div class="flex-grow-1">
+                    <label for="totalBalance" class="form-label">Total balance</label>
+                    <input id="totalBalance" class="form-control" type="number" placeholder="..." value="@_totalBalance"
+                        disabled />
+                </div>
+                <div class="flex-grow-1">
+                    <label for="accounts" class="form-label">Accounts</label>
+                    <input id="accounts" class="form-control" type="number" placeholder="..."
+                        value="@_bankAccounts?.Count" disabled />
+                </div>
             </div>
         </div>
+
     </div>
 </div>
 
 @code {
-    private string? _name = null;
-    private string? _username = null;
+    private UserDTO? _user = null;
+    private List<TransactionDTO>? _transactions = null;
+    private List<BankAccountDTO>? _bankAccounts = null;
+    private decimal? _totalBalance = null;
+
     protected override async Task OnInitializedAsync()
     {
-        var authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-
-        if (authenticationState.User.Identity.IsAuthenticated)
+        // Get id from current user
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var username = authState.User?.Identity?.Name;
+        if (username == null)
         {
-            _username = authenticationState.User.Identity.Name;
+            return;
         }
+
+        var userId = await UserService.GetIdByUsernameAsync(username);
+        _user = await UserService.GetUserByUsernameAsync(username);
+        _transactions = await TransactionService.GetAllTransactionsByIdAsync(userId);
+        _bankAccounts = await BankAccountService.GetAllBankAccountsByUserIdAsync(userId);
+
+        // Calculate remaining fields
+        _totalBalance = _bankAccounts?.Sum(ba => ba.Balance);
     }
 }

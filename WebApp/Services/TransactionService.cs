@@ -15,9 +15,21 @@ public class TransactionService
         _mapper = mapper;
     }
 
-    public async Task<List<TransactionDTO>> GetFromTransactionByIdAsync(int id)
+    public async Task<List<TransactionDTO>> GetAllTransactionsByIdAsync(int id)
     {
-        var model = await _transactionRepository.GetFromTransactionByIdAsync(id);
+        var model = await _transactionRepository.GetAllTransactionsByIdAsync(id);
+        return _mapper.Map<List<TransactionDTO>>(model);
+    }
+
+    public async Task<List<TransactionDTO>> GetFromTransactionsByIdAsync(int id)
+    {
+        var model = await _transactionRepository.GetFromTransactionsByIdAsync(id);
+        return _mapper.Map<List<TransactionDTO>>(model);
+    }
+
+    public async Task<List<TransactionDTO>> GetToTransactionsByIdAsync(int id)
+    {
+        var model = await _transactionRepository.GetToTransactionsByIdAsync(id);
         return _mapper.Map<List<TransactionDTO>>(model);
     }
 }

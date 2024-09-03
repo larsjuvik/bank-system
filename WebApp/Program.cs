@@ -18,10 +18,12 @@ builder.Services.AddRazorComponents()
 // Repostiories
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<TransactionRepository>();
+builder.Services.AddScoped<BankAccountRepository>();
 
 // Services
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<TransactionService>();
+builder.Services.AddScoped<BankAccountService>();
 
 // AutoMapper
 var autoMapperConfig = new MapperConfiguration(cfg =>

@@ -73,6 +73,6 @@ else
         }
 
         var userId = await UserService.GetIdByUsernameAsync(username);
-        transactions = await TransactionService.GetFromTransactionByIdAsync(userId);
+        transactions = await TransactionService.GetAllTransactionsByIdAsync(userId);
     }
 }
