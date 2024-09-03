@@ -6,6 +6,7 @@
 @using Microsoft.EntityFrameworkCore
 @using WebApp.DTOs
 @using global::BankSystem.Data
+@using WebApp.Authorization.RoleManager
 @inject NavigationManager Navigation
 @inject BankContext Context
 
@@ -76,7 +77,7 @@
         var identity = new ClaimsIdentity(
         [
         new Claim(ClaimTypes.Name, LoginData.Username),
-new Claim(ClaimTypes.Role, "User")
+new Claim(ClaimTypes.Role, GetRoleName(Role.User))
         ], CookieAuthenticationDefaults.AuthenticationScheme);
 
 
@@ -91,6 +92,8 @@ new Claim(ClaimTypes.Role, "User")
         }
         await HttpContext.SignInAsync(user);
 
+        using WebApp.Authorization;
+        using WebApp.Authorization;
         // Get URL params
         var uri = new Uri(Navigation.Uri);
         var returnUrl = System.Web.HttpUtility.ParseQueryString(uri.Query).Get("returnUrl");

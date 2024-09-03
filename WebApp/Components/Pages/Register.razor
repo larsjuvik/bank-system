@@ -2,6 +2,7 @@
 @using System.ComponentModel.DataAnnotations
 @using System.Security.Claims
 @using AutoMapper
+@using WebApp.Authorization.RoleManager
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Authentication.Cookies
 @using Microsoft.EntityFrameworkCore
@@ -96,7 +97,7 @@
         var identity = new ClaimsIdentity(
         [
         new Claim(ClaimTypes.Name, RegisterData.Username),
-new Claim(ClaimTypes.Role, "User")
+new Claim(ClaimTypes.Role, GetRoleName(Role.User))
         ], CookieAuthenticationDefaults.AuthenticationScheme);
 
 
