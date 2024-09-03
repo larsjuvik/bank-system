@@ -27,13 +27,13 @@
                 </div>
 
                 <AuthorizeView Roles="Admin" Context="innerAdminContext">
-                    <Authorize>
+                    <Authorized>
                         <div class="nav-item px-3">
                             <NavLink class="nav-link" href="transactions">
                                 <span class="bi bi-lock-fill-nav-menu" aria-hidden="true"></span> Admin
                             </NavLink>
                         </div>
-                    </Authorize>
+                    </Authorized>
                 </AuthorizeView>
 
                 <div class="nav-item px-3">
