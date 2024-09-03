@@ -1,8 +1,10 @@
 ﻿@page "/transactions"
 @using BankSystem.Data
 @using Data.Models
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.EntityFrameworkCore
 @attribute [StreamRendering]
+@attribute [Authorize]
 @inject BankContext BankContext
 
 <PageTitle>Transactions</PageTitle>
@@ -46,8 +48,8 @@ else
     protected override async Task OnInitializedAsync()
     {
         transactions = BankContext.Transactions
-            .Include(t => t.From)
-            .Include(t => t.To)
-            .ToArray();
+        .Include(t => t.From)
+        .Include(t => t.To)
+        .ToArray();
     }
 }
