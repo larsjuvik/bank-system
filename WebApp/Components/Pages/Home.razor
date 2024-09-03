@@ -1,24 +1,34 @@
 ﻿@page "/"
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
+@using BankSystem.Data
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject BankContext Context
 @rendermode InteractiveServer
 @attribute [Authorize]
+@attribute [StreamRendering]
 
 <PageTitle>Overview</PageTitle>
 
 <h1>Overview</h1>
 
-<div class="card mt-3">
+<div class="card mt-3" style="max-width: 1000px;">
     <div class="card-body">
-        <div class="mb-3">
-            <label for="username" class="form-label">Username</label>
-            <input id="username" class="form-control" placeholder="..." value="@_username" disabled />
+        <div class="mb-3 d-flex flex-row justify-content-between gap-3">
+            <div class="flex-grow-1">
+                <label for="name" class="form-label">Name</label>
+                <input id="name" class="form-control" placeholder="..." value="@_name" disabled />
+            </div>
+            <div class="flex-grow-1">
+                <label for="username" class="form-label">Username</label>
+                <input id="username" class="form-control" placeholder="..." value="@_username" disabled />
+            </div>
         </div>
     </div>
 </div>
 
 @code {
+    private string? _name = null;
     private string? _username = null;
     protected override async Task OnInitializedAsync()
     {
