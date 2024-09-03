@@ -15,9 +15,14 @@ public class UserService
         _mapper = mapper;
     }
 
-    public async Task<bool> UserExists(string username)
+    public async Task<bool> VerifyUserCredentialsAsync(string username, string password)
     {
-        return await _userRepository.UserExists(username);
+        return await _userRepository.VerifyUserCredentialsAsync(username, password);
+    }
+
+    public async Task<bool> UserExistsAsync(string username)
+    {
+        return await _userRepository.UserExistsAsync(username);
     }
 
     public async Task<bool> IsAdminAsync(string username)

@@ -5,10 +5,10 @@
 @using Microsoft.AspNetCore.Authentication.Cookies
 @using Microsoft.EntityFrameworkCore
 @using WebApp.DTOs
-@using global::BankSystem.Data
-@using static WebApp.Authorization.RoleHelper
+@using WebApp.Services
+@inject UserService UserService
 @inject NavigationManager Navigation
-@inject BankContext Context
+@using static WebApp.Authorization.RoleHelper
 
 <PageTitle>Login</PageTitle>
 
@@ -59,27 +59,33 @@
         }
 
         // Check if the user exists
-        var userFromDb = await Context.Users.FirstOrDefaultAsync(u => u.Username == LoginData.Username);
-        if (userFromDb == null)
+        var userExists = await UserService.UserExistsAsync(LoginData.Username);
+        if (!userExists)
         {
             errorMessage = "Invalid credentials";
             return;
         }
 
         // Verify the password
-        if (!Data.Models.User.VerifyPassword(LoginData.Password, userFromDb.PasswordHash, userFromDb.Salt))
+        var credentialsVerified = await UserService.VerifyUserCredentialsAsync(LoginData.Username, LoginData.Password);
+        if (!credentialsVerified)
         {
             errorMessage = "Invalid credentials";
             return;
         }
 
-        // Create a new ClaimsIdentity with the user's name and role
+        // Create a new identity for a user
         var identity = new ClaimsIdentity(
         [
         new Claim(ClaimTypes.Name, LoginData.Username),
 new Claim(ClaimTypes.Role, GetRoleName(Role.User))
         ], CookieAuthenticationDefaults.AuthenticationScheme);
 
+        // Check if the user is an admin
+        if (await UserService.IsAdminAsync(LoginData.Username))
+        {
+            identity.AddClaim(new Claim(ClaimTypes.Role, GetRoleName(Role.Admin)));
+        }
 
         // Create a new ClaimsPrincipal with the identity
         var user = new ClaimsPrincipal(identity);
