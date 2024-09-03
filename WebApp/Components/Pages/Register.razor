@@ -99,8 +99,14 @@ new Claim(ClaimTypes.Role, GetRoleName(Role.User))
             return;
         }
         await HttpContext.SignInAsync(user);
+        GracefulRedirect();
+    }
 
-        // Get URL params
+    /// <summary>
+    /// Gracefully redirects to returnUrl if set, or just returns to home screen
+    /// </summary>
+    private void GracefulRedirect()
+    {
         var uri = new Uri(Navigation.Uri);
         var returnUrl = System.Web.HttpUtility.ParseQueryString(uri.Query).Get("returnUrl");
 
