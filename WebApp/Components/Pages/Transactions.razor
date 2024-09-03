@@ -25,23 +25,28 @@
 }
 else
 {
-    <table class="table">
-    <thead class="bg-secondary bg-gradient bg-opacity-75">
+    <table class="table border">
+    <thead class="table-secondary">
         <tr>
+            <th>#</th>
             <th>Date</th>
             <th>From</th>
             <th>To</th>
             <th>Amount (USD)</th>
+            <th>Type</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var transaction in transactions)
             {
-                <tr class="bg-gradient bg-opacity-25 @(transaction.Amount < 0 ? "bg-danger" : "bg-success")">
+                <tr>
+                    <td>@(transactions.IndexOf(transaction) + 1)</td>
                     <td>@transaction.TransactionDate.ToShortDateString()</td>
                     <td>@transaction.From?.AccountNumber</td>
                     <td>@transaction.To?.AccountNumber</td>
-                    <td>@transaction.Amount</td>
+                    <td class=" @(transaction.Amount < 0 ? "table-danger" : "table-success")">@transaction.Amount
+                    </td>
+                    <td>Out</td>
                 </tr>
             }
         </tbody>
