@@ -13,6 +13,23 @@ public class UserRepository
         _context = context;
     }
 
+    public async Task CreateUserAsync(string username, string password, string name, DateTime birthDate, bool isAdmin = false)
+    {
+        User.CreateSaltAndHash(password, out var salt, out var passwordHash);
+
+        var user = new User
+        {
+            Username = username,
+            Name = name,
+            Salt = salt,
+            PasswordHash = passwordHash,
+            BirthDate = birthDate,
+            IsAdmin = isAdmin
+        };
+        _context.Users.Add(user);
+        await _context.SaveChangesAsync();
+    }
+
     public async Task<bool> VerifyUserCredentialsAsync(string username, string password)
     {
         var user = await _context.Users.FirstAsync(u => u.Username == username);

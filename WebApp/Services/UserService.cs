@@ -1,6 +1,7 @@
 using Data.Repositories;
 using AutoMapper;
 using WebApp.DTOs;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebApp.Services;
 
@@ -13,6 +14,11 @@ public class UserService
     {
         _userRepository = userRepository;
         _mapper = mapper;
+    }
+
+    public async Task CreateUserAsync(RegisterDTO registerUser, bool isAdmin = false)
+    {
+        await _userRepository.CreateUserAsync(registerUser.Username, registerUser.Password, registerUser.Name, registerUser.BirthDate, isAdmin);
     }
 
     public async Task<bool> VerifyUserCredentialsAsync(string username, string password)

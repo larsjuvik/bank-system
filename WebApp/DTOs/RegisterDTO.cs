@@ -1,20 +1,19 @@
 namespace WebApp.DTOs;
 using System.ComponentModel.DataAnnotations;
 using BankSystem.WebApp.DTOs.DataAnnotations;
-using Data.Models;
 
 public class RegisterDTO
 {
     [Required]
     [MinLength(5)]
     [MaxLength(20)]
-    public string? Username { get; set; }
+    public string Username { get; set; } = string.Empty;
 
     [Required]
     [DataType(DataType.Password)]
     [MinLength(8)]
     [MaxLength(100)]
-    public string? Password { get; set; }
+    public string Password { get; set; } = string.Empty;
 
     [Required]
     [DataType(DataType.Password)]
@@ -22,15 +21,15 @@ public class RegisterDTO
     [MinLength(8)]
     [MaxLength(100)]
     [Compare(nameof(Password), ErrorMessage = "The passwords do not match.")]
-    public string? RepeatPassword { get; set; }
+    public string RepeatPassword { get; set; } = string.Empty;
 
     [Required]
     [DataType(DataType.Date)]
     [Display(Name = "Date of Birth")]
     [MinimumAge(18, ErrorMessage = "You must be at least 18 years old.")]
-    public DateTime? BirthDate { get; set; }
+    public DateTime BirthDate { get; set; } = DateTime.Now;
 
     [Required]
     [MinLength(1)]
-    public string? Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 }
