@@ -1,6 +1,6 @@
 namespace WebApp.Authorization;
 
-public class RoleManager
+public static class RoleHelper
 {
     public enum Role
     {
