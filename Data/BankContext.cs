@@ -73,6 +73,34 @@ namespace BankSystem.Data
                     CreatedDate = DateTime.Now
                 }
             );
+
+            // Transactions
+            modelBuilder.Entity<Transaction>().HasData(
+                new Transaction
+                {
+                    Id = 1,
+                    FromId = 1,
+                    ToId = 2,
+                    Amount = 1000,
+                    TransactionDate = DateTime.Now
+                },
+                new Transaction
+                {
+                    Id = 2,
+                    FromId = 1,
+                    ToId = 3,
+                    Amount = 2000,
+                    TransactionDate = DateTime.Now
+                },
+                new Transaction
+                {
+                    Id = 3,
+                    FromId = 2,
+                    ToId = 1,
+                    Amount = 500,
+                    TransactionDate = DateTime.Now
+                }
+            );
         }
 
         private static User CreateDummyUser(int id, string username, string password, string name)

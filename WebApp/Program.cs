@@ -1,5 +1,6 @@
 using AutoMapper;
 using BankSystem.Data;
+using Data.Models;
 using Data.Repositories;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -25,7 +26,16 @@ builder.Services.AddScoped<TransactionService>();
 // AutoMapper
 var autoMapperConfig = new MapperConfiguration(cfg =>
 {
-    cfg.CreateMap<RegisterDTO, Data.Models.User>();
+    cfg.CreateMap<RegisterDTO, User>();
+
+    // Transaction
+    cfg.CreateMap<Transaction, TransactionDTO>();
+
+    // Bank account
+    cfg.CreateMap<BankAccount, BankAccountDTO>();
+
+    // User
+    cfg.CreateMap<User, UserDTO>();
 });
 builder.Services.AddSingleton(autoMapperConfig.CreateMapper());
 

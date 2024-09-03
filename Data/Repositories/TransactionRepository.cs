@@ -22,6 +22,7 @@ public class TransactionRepository
     {
         return await _context.Transactions
             .Include(t => t.From)
+            .Include(t => t.To)
             .Where(t => t.From.Id == id)
             .ToListAsync();
     }
