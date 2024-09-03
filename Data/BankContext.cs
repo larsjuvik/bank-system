@@ -43,7 +43,7 @@ namespace BankSystem.Data
 
             // Seeding initial data
             modelBuilder.Entity<User>().HasData(
-                CreateDummyUser(1, "JaneDoe", "password123", "Jane Doe"),
+                CreateDummyUser(1, "JaneDoe", "password123", "Jane Doe", true),
                 CreateDummyUser(2, "JohnDoe", "password123", "John Doe"),
                 CreateDummyUser(3, "TestUser", "password123", "Test User")
             );
@@ -103,7 +103,7 @@ namespace BankSystem.Data
             );
         }
 
-        private static User CreateDummyUser(int id, string username, string password, string name)
+        private static User CreateDummyUser(int id, string username, string password, string name, bool isAdmin = false)
         {
             User.CreateSaltAndHash(password, out var salt, out var passwordHash);
             var user = new User
@@ -112,7 +112,8 @@ namespace BankSystem.Data
                 Username = username,
                 Name = name,
                 Salt = salt,
-                PasswordHash = passwordHash
+                PasswordHash = passwordHash,
+                IsAdmin = isAdmin
             };
             return user;
         }
