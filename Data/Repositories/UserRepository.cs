@@ -13,6 +13,13 @@ public class UserRepository
         _context = context;
     }
 
+    public async Task<List<User>> GetAllUsersWithBankAccountsAsync()
+    {
+        return await _context.Users
+            .Include(u => u.BankAccounts)
+            .ToListAsync();
+    }
+
     public async Task CreateUserAsync(string username, string password, string name, DateTime birthDate, bool isAdmin = false)
     {
         User.CreateSaltAndHash(password, out var salt, out var passwordHash);

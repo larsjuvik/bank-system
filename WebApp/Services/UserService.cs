@@ -16,6 +16,12 @@ public class UserService
         _mapper = mapper;
     }
 
+    public async Task<List<UserDTO>> GetAllUsersWithBankAccountsAsync()
+    {
+        var models = await _userRepository.GetAllUsersWithBankAccountsAsync();
+        return _mapper.Map<List<UserDTO>>(models);
+    }
+
     public async Task CreateUserAsync(RegisterDTO registerUser, bool isAdmin = false)
     {
         await _userRepository.CreateUserAsync(registerUser.Username, registerUser.Password, registerUser.Name, registerUser.BirthDate, isAdmin);

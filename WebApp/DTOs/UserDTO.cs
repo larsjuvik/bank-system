@@ -4,4 +4,5 @@ public class UserDTO
     public string Username { get; set; }
     public string Name { get; set; }
     public DateTime BirthDate { get; set; }
+    public ICollection<BankAccountDTO> BankAccounts { get; set; }
 }

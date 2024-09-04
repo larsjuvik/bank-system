@@ -1,0 +1,66 @@
+@page "/admin"
+@using System.ComponentModel.DataAnnotations
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
+@using Microsoft.EntityFrameworkCore
+@using WebApp.DTOs
+@using WebApp.Services
+@inject UserService UserService
+@inject NavigationManager Navigation
+@using static WebApp.Authorization.RoleHelper
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@attribute [Authorize]
+@attribute [StreamRendering]
+
+<PageTitle>Admin</PageTitle>
+
+<h1>Admin</h1>
+@if (_users != null)
+{
+<div>
+    <RoundedTable>
+        <TableHead>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Accounts</th>
+                    <th>Total balance</th>
+                    <th>Registered</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+        </TableHead>
+        <TableBody>
+            <tbody>
+            @foreach (var user in _users)
+                {
+                    <tr>
+                        <td>@user.Name</td>
+                        <td>@user.BankAccounts.Count()</td>
+                        <td>@user.BankAccounts.Sum(ba => ba.Balance)</td>
+                        <td>@user.BirthDate.ToShortDateString()</td>
+                        <td>
+                            <button type="button" class="btn btn-primary"
+                                onclick="window.location.href='/admin/user/@user.Username'">Edit</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </TableBody>
+    </RoundedTable>
+</div>
+}
+
+@code {
+    [CascadingParameter]
+    private HttpContext? HttpContext { get; set; }
+
+    private List<UserDTO>? _users = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _users = await UserService.GetAllUsersWithBankAccountsAsync();
+    }
+}

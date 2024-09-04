@@ -50,27 +50,30 @@
 
 @if (_bankAccounts != null)
 {
-    <div><h2>Accounts</h2>
-<div class="overflow-hidden rounded card" style="border-bottom: none;">
-<table class="card-body table bg-secondary mb-0">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Balance</th>
-            <th>Account number</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var bankAccount in _bankAccounts)
-            {
+<div>
+    <RoundedTable>
+        <TableHead>
+            <thead>
                 <tr>
-                    <td>@bankAccount.Owner.Name</td>
-                    <td>@bankAccount.Balance</td>
-                    <td>@bankAccount.AccountNumber</td>
+                    <th>Name</th>
+                    <th>Balance</th>
+                    <th>Account number</th>
                 </tr>
-            }
-    </tbody>
-</table></div>
+            </thead>
+        </TableHead>
+        <TableBody>
+            <tbody>
+            @foreach (var bankAccount in _bankAccounts)
+                {
+                    <tr>
+                        <td>@bankAccount.Owner.Name</td>
+                        <td>@bankAccount.Balance</td>
+                        <td>@bankAccount.AccountNumber</td>
+                    </tr>
+                }
+            </tbody>
+        </TableBody>
+    </RoundedTable>
 </div>
 }
 
