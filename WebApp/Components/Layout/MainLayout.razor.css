@@ -10,6 +10,8 @@ main {
 
 .sidebar {
     border-right: solid 1px rgb(212, 209, 209);
+    width: min-content;
+    max-width: 200px;
 }
 
 .top-row {
@@ -23,7 +25,6 @@ main {
 
     .top-row ::deep a, .top-row ::deep .btn-link {
         white-space: nowrap;
-        margin-left: 1.5rem;
         text-decoration: none;
     }
 
