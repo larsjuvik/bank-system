@@ -85,7 +85,7 @@
     style="overflow-x: auto; overflow-y: visible !important;">
     @foreach (var bankAccount in _bankAccounts.Where(b => b.HasDebitCard))
         {
-            <BankAccountCard Title="@bankAccount.Owner.Name" DescriptionLeft="@bankAccount.AccountNumber"
+            <DebitCard Title="@bankAccount.Owner.Name" DescriptionLeft="@bankAccount.AccountNumber"
                 DescriptionRight="@bankAccount.Balance.ToString()" Id="@bankAccount.AccountNumber" />
         }
     </div></div>
