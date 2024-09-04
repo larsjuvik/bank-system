@@ -34,14 +34,12 @@ else
 <div>
     <RoundedTable>
         <TableHead>
-            <thead class="table-secondary">
+            <thead>
                 <tr>
-            <th>#</th>
             <th>Date</th>
             <th>From</th>
             <th>To</th>
             <th>Amount (USD)</th>
-            <th>Type</th>
         </tr>
             </thead>
         </TableHead>
@@ -50,13 +48,11 @@ else
             @foreach (var transaction in _transactions)
             {
                 <tr>
-                    <td>@(_transactions.IndexOf(transaction) + 1)</td>
                     <td>@transaction.TransactionDate.ToShortDateString()</td>
                     <td>@transaction.From?.AccountNumber</td>
                     <td>@transaction.To?.AccountNumber</td>
                     <td class=" @(transaction.Amount < 0 ? "table-danger" : "table-success")">@transaction.Amount
                     </td>
-                    <td>Out</td>
                 </tr>
             }
             </tbody>
