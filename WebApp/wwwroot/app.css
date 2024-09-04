@@ -39,7 +39,3 @@ h1:focus {
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
 }
-
-.card-form {
-    max-width: 600px;
-}
