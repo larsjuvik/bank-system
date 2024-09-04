@@ -54,7 +54,8 @@
 <h3>Bank Accounts</h3>
 @if (_bankAccounts != null)
 {
-    <div class="d-flex flex-row justify-content-between gap-3" style="overflow-x: scroll;">
+    <div class="d-flex flex-row justify-content-between gap-3 pb-3"
+    style="overflow-x: auto; overflow-y: visible !important;">
     @foreach (var bankAccount in _bankAccounts)
         {
             <BankAccountCard Title="@bankAccount.Owner.Name" DescriptionLeft="@bankAccount.AccountNumber"
