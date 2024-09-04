@@ -22,3 +22,8 @@
     background-size: cover;
 }
 
+#wrapper:hover{
+    border: solid 5px blue;
+    cursor: pointer;
+    scale: 1.02;
+}
