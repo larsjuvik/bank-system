@@ -43,9 +43,10 @@ var autoMapperConfig = new MapperConfiguration(cfg =>
 });
 builder.Services.AddSingleton(autoMapperConfig.CreateMapper());
 
+// Database
 builder.Services.AddDbContext<BankContext>(options => options.UseInMemoryDatabase("BankSystemDemo"));
 
-// Authentication
+// Authentication and authorization
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -57,6 +58,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 builder.Services.AddAuthorization();
 builder.Services.AddCascadingAuthenticationState();
+
 var app = builder.Build();
 
 // Ensure the database is created.
@@ -75,7 +77,6 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
 app.UseAntiforgery();
 
