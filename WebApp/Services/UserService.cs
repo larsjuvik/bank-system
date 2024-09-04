@@ -1,5 +1,6 @@
 using Data.Repositories;
 using AutoMapper;
+using Data.Models;
 using WebApp.DTOs;
 using System.ComponentModel.DataAnnotations;
 
@@ -14,6 +15,19 @@ public class UserService
     {
         _userRepository = userRepository;
         _mapper = mapper;
+    }
+
+    public async Task<EditUserDTO> GetEditUserDTOFromUsername(string username)
+    {
+        var model = await _userRepository.GetUserByUsernameAsync(username);
+        return _mapper.Map<EditUserDTO>(model);
+    }
+
+    public async Task SaveUserAsync(EditUserDTO user)
+    {
+        var model = await _userRepository.GetUserByUsernameAsync(user.Username);
+        _mapper.Map(user, model);
+        await _userRepository.SaveUserAsync(model);
     }
 
     public async Task<List<UserDTO>> GetAllUsersWithBankAccountsAsync()

@@ -13,6 +13,12 @@ public class UserRepository
         _context = context;
     }
 
+    public async Task SaveUserAsync(User user)
+    {
+        _context.Users.Update(user);
+        await _context.SaveChangesAsync();
+    }
+
     public async Task<List<User>> GetAllUsersWithBankAccountsAsync()
     {
         return await _context.Users

@@ -38,6 +38,8 @@ var autoMapperConfig = new MapperConfiguration(cfg =>
 
     // User
     cfg.CreateMap<User, UserDTO>();
+    cfg.CreateMap<EditUserDTO, User>();
+    cfg.CreateMap<User, EditUserDTO>();
 });
 builder.Services.AddSingleton(autoMapperConfig.CreateMapper());
 

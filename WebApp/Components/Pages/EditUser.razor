@@ -1,0 +1,96 @@
+@page "/edit/user/{username}"
+
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
+@using System.Security.Claims
+@using WebApp.DTOs
+@using WebApp.Services
+@using static WebApp.Authorization.RoleHelper
+@inject NavigationManager Navigation
+@inject UserService UserService
+@inject NavigationManager Navigation
+
+<div class="card mt-3 card-form">
+    <EditForm Model="EditUserData" OnValidSubmit="HandleValidSubmit" FormName="editUser" Enhance>
+        <div class="card-body">
+            @if (errorMessage != null)
+            {
+                <p class="text-danger">@errorMessage</p>
+            }
+            <DataAnnotationsValidator />
+            <div class="mb-3">
+                <label for="name" class="form-label">Name</label>
+                <InputText id="name" class="form-control" @bind-Value="EditUserData.Name" />
+                <ValidationMessage For="@(() => EditUserData.Name)" class="text-danger" />
+            </div>
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <InputText id="username" class="form-control" @bind-Value="EditUserData.Username" />
+                <ValidationMessage For="@(() => EditUserData.Username)" class="text-danger" />
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <InputText id="password" class="form-control" type="password" @bind-Value="EditUserData.Password" />
+                <ValidationMessage For="@(() => EditUserData.Password)" class="text-danger" />
+            </div>
+            <div class="mb-3">
+                <label for="passwordConfirmation" class="form-label">Repeat password</label>
+                <InputText id="passwordConfirmation" class="form-control" type="password"
+                    @bind-Value="EditUserData.RepeatPassword" />
+                <ValidationMessage For="@(() => EditUserData.RepeatPassword)" class="text-danger" />
+            </div>
+            <div class="mb-3">
+                <label for="birthdate" class="form-label">Date of birth</label>
+                <InputDate id="birthdate" class="form-control" @bind-Value="EditUserData.BirthDate" />
+                <ValidationMessage For="@(() => EditUserData.BirthDate)" class="text-danger" />
+            </div>
+            <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    [Parameter]
+    public string Username { get; set; }
+
+    [SupplyParameterFromForm(FormName = "editUser")]
+    private EditUserDTO EditUserData { get; set; } = new();
+
+    [CascadingParameter]
+    private HttpContext? HttpContext { get; set; }
+
+    private string? errorMessage = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // TODO: simplifiy this & refactor
+        foreach (var claim in HttpContext.User.Claims.Where(c => c.Type == ClaimTypes.Role))
+        {
+            Console.WriteLine(claim.Value);
+        }
+        if (!HttpContext.User.Claims.Where(c => c.Type == ClaimTypes.Role).Any(c => c.Value == "Admin"))
+        {
+            Navigation.NavigateTo("/");
+            return;
+        }
+
+        // Get user obj from username
+        EditUserData = await UserService.GetEditUserDTOFromUsername(Username);
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        // Check if the user exists
+        var userExists = await UserService.UserExistsAsync(EditUserData.Username);
+        if (!userExists)
+        {
+            errorMessage = "Username does not exists";
+            return;
+        }
+
+        // Save
+        await UserService.SaveUserAsync(EditUserData);
+        Navigation.NavigateTo("/admin");
+        Console.WriteLine("Saved");
+    }
+}
