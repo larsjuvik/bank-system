@@ -50,6 +50,23 @@
 
 </div>
 
+@if (_bankAccounts != null)
+{
+    <div class="d-flex flex-row justify-content-between gap-3 py-2" style="overflow-x: scroll;">
+    @foreach (var bankAccount in _bankAccounts)
+        {
+            <BankAccountCard BankAccount="bankAccount" />
+            <BankAccountCard BankAccount="bankAccount" />
+            <BankAccountCard BankAccount="bankAccount" />
+            <BankAccountCard BankAccount="bankAccount" />
+            <BankAccountCard BankAccount="bankAccount" />
+            <BankAccountCard BankAccount="bankAccount" />
+
+        }
+    </div>
+
+}
+
 @code {
     private UserDTO? _user = null;
     private List<TransactionDTO>? _transactions = null;

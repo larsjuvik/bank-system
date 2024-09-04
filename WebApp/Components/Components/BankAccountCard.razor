@@ -1,0 +1,14 @@
+@namespace WebApp.Components
+@using WebApp.DTOs
+
+<div class="card bg-primary ratio ratio-16x9" style="min-width: 200px; max-width: 280px;">
+    <div class="card-body">
+        <h5 class="card-title">@BankAccount.Owner.Name</h5>
+        <p class="card-text">@BankAccount.Balance</p>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public BankAccountDTO BankAccount { get; set; }
+}
