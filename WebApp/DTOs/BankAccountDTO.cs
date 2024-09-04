@@ -1,4 +1,5 @@
 namespace WebApp.DTOs;
+using Data.Models;
 public class BankAccountDTO
 {
     public string AccountNumber { get; set; }
@@ -6,6 +7,7 @@ public class BankAccountDTO
     public DateTime CreatedDate { get; set; }
     public UserDTO Owner { get; set; }
     public bool HasDebitCard { get; set; }
+    public BankAccount.BankAccountType AccountType { get; set; }
     public ICollection<TransactionDTO> FromTransactions { get; set; }
     public ICollection<TransactionDTO> ToTransactions { get; set; }
 }

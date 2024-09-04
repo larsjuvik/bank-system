@@ -61,7 +61,7 @@
         <TableHead>
             <thead>
                 <tr>
-                    <th>Name</th>
+                    <th>Type</th>
                     <th>Balance</th>
                     <th>Account number</th>
                 </tr>
@@ -72,7 +72,7 @@
             @foreach (var bankAccount in _bankAccounts)
                 {
                     <tr>
-                        <td>@bankAccount.Owner.Name</td>
+                        <td>@bankAccount.AccountType</td>
                         <td>@bankAccount.Balance</td>
                         <td>@bankAccount.AccountNumber</td>
                     </tr>

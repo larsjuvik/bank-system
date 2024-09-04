@@ -55,7 +55,8 @@ namespace BankSystem.Data
                     AccountNumber = GetDummyAccountNumber(10),
                     Balance = 10000,
                     CreatedDate = DateTime.Now,
-                    HasDebitCard = true
+                    HasDebitCard = GetRandomBoolean(),
+                    AccountType = GetRandomBankAccountType()
                 },
                 new BankAccount
                 {
@@ -64,7 +65,8 @@ namespace BankSystem.Data
                     AccountNumber = GetDummyAccountNumber(10),
                     Balance = -2000,
                     CreatedDate = DateTime.Now,
-                    HasDebitCard = true
+                    HasDebitCard = GetRandomBoolean(),
+                    AccountType = GetRandomBankAccountType()
                 },
                 new BankAccount
                 {
@@ -73,7 +75,8 @@ namespace BankSystem.Data
                     AccountNumber = GetDummyAccountNumber(10),
                     Balance = 5432.45m,
                     CreatedDate = DateTime.Now,
-                    HasDebitCard = true
+                    HasDebitCard = GetRandomBoolean(),
+                    AccountType = GetRandomBankAccountType()
                 },
                 new BankAccount
                 {
@@ -81,7 +84,9 @@ namespace BankSystem.Data
                     UserId = 2,
                     AccountNumber = "0987654321",
                     Balance = 2000,
-                    CreatedDate = DateTime.Now
+                    CreatedDate = DateTime.Now,
+                    HasDebitCard = GetRandomBoolean(),
+                    AccountType = GetRandomBankAccountType()
                 },
                 new BankAccount
                 {
@@ -89,7 +94,9 @@ namespace BankSystem.Data
                     UserId = 3,
                     AccountNumber = "1357924680",
                     Balance = 3000,
-                    CreatedDate = DateTime.Now
+                    CreatedDate = DateTime.Now,
+                    HasDebitCard = GetRandomBoolean(),
+                    AccountType = GetRandomBankAccountType()
                 }
             );
 
@@ -118,8 +125,36 @@ namespace BankSystem.Data
                     ToId = 1,
                     Amount = 500,
                     TransactionDate = DateTime.Now
+                },
+                new Transaction
+                {
+                    Id = 4,
+                    FromId = 3,
+                    ToId = 1,
+                    Amount = 1000,
+                    TransactionDate = DateTime.Now
+                },
+                new Transaction
+                {
+                    Id = 5,
+                    FromId = 1,
+                    ToId = 4,
+                    Amount = 500,
+                    TransactionDate = DateTime.Now
                 }
             );
+        }
+
+        private static bool GetRandomBoolean()
+        {
+            var random = new Random();
+            return random.Next(0, 2) == 1;
+        }
+
+        private static BankAccount.BankAccountType GetRandomBankAccountType()
+        {
+            var random = new Random();
+            return (BankAccount.BankAccountType)random.Next(0, 3);
         }
 
         private static string GetDummyAccountNumber(int length)
