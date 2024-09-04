@@ -54,7 +54,7 @@ namespace BankSystem.Data
                     UserId = 1,
                     AccountNumber = GetDummyAccountNumber(10),
                     Balance = 10000,
-                    CreatedDate = DateTime.Now.AddYears(-20),
+                    CreatedDate = DateTime.Now,
                     HasDebitCard = true
                 },
                 new BankAccount
@@ -63,7 +63,7 @@ namespace BankSystem.Data
                     UserId = 1,
                     AccountNumber = GetDummyAccountNumber(10),
                     Balance = -2000,
-                    CreatedDate = DateTime.Now.AddYears(-20),
+                    CreatedDate = DateTime.Now,
                     HasDebitCard = true
                 },
                 new BankAccount
@@ -72,7 +72,7 @@ namespace BankSystem.Data
                     UserId = 1,
                     AccountNumber = GetDummyAccountNumber(10),
                     Balance = 5432.45m,
-                    CreatedDate = DateTime.Now.AddYears(-20),
+                    CreatedDate = DateTime.Now,
                     HasDebitCard = true
                 },
                 new BankAccount
@@ -81,7 +81,7 @@ namespace BankSystem.Data
                     UserId = 2,
                     AccountNumber = "0987654321",
                     Balance = 2000,
-                    CreatedDate = DateTime.Now.AddYears(-20)
+                    CreatedDate = DateTime.Now
                 },
                 new BankAccount
                 {
@@ -89,7 +89,7 @@ namespace BankSystem.Data
                     UserId = 3,
                     AccountNumber = "1357924680",
                     Balance = 3000,
-                    CreatedDate = DateTime.Now.AddYears(-20)
+                    CreatedDate = DateTime.Now
                 }
             );
 
@@ -140,7 +140,8 @@ namespace BankSystem.Data
                 Name = name,
                 Salt = salt,
                 PasswordHash = passwordHash,
-                IsAdmin = isAdmin
+                IsAdmin = isAdmin,
+                BirthDate = DateTime.Now.AddYears(-20)
             };
             return user;
         }
