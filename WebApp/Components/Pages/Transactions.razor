@@ -25,15 +25,17 @@
 
 <p>Here you can see your financial transactions</p>
 
-@if (transactions == null)
+@if (_transactions == null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    <table class="table border">
-    <thead class="table-secondary">
-        <tr>
+<div>
+    <RoundedTable>
+        <TableHead>
+            <thead class="table-secondary">
+                <tr>
             <th>#</th>
             <th>Date</th>
             <th>From</th>
@@ -41,12 +43,14 @@ else
             <th>Amount (USD)</th>
             <th>Type</th>
         </tr>
-    </thead>
-    <tbody>
-        @foreach (var transaction in transactions)
+            </thead>
+        </TableHead>
+        <TableBody>
+            <tbody>
+            @foreach (var transaction in _transactions)
             {
                 <tr>
-                    <td>@(transactions.IndexOf(transaction) + 1)</td>
+                    <td>@(_transactions.IndexOf(transaction) + 1)</td>
                     <td>@transaction.TransactionDate.ToShortDateString()</td>
                     <td>@transaction.From?.AccountNumber</td>
                     <td>@transaction.To?.AccountNumber</td>
@@ -55,12 +59,14 @@ else
                     <td>Out</td>
                 </tr>
             }
-        </tbody>
-    </table>
+            </tbody>
+        </TableBody>
+    </RoundedTable>
+</div>
 }
 
 @code {
-    private List<TransactionDTO>? transactions = null;
+    private List<TransactionDTO>? _transactions = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -73,6 +79,6 @@ else
         }
 
         var userId = await UserService.GetIdByUsernameAsync(username);
-        transactions = await TransactionService.GetAllTransactionsByIdAsync(userId);
+        _transactions = await TransactionService.GetAllTransactionsByIdAsync(userId);
     }
 }
