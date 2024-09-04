@@ -53,10 +53,6 @@
     protected override async Task OnInitializedAsync()
     {
         // TODO: simplifiy this & refactor
-        foreach (var claim in HttpContext.User.Claims.Where(c => c.Type == ClaimTypes.Role))
-        {
-            Console.WriteLine(claim.Value);
-        }
         if (!HttpContext.User.Claims.Where(c => c.Type == ClaimTypes.Role).Any(c => c.Value == "Admin"))
         {
             Navigation.NavigateTo("/");
