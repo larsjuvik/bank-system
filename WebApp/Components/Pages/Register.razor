@@ -10,10 +10,8 @@
 
 <PageTitle>Register</PageTitle>
 
+<div>
 <h1>Register</h1>
-
-<p>To use this bank demo, you need to create an account.
-    Already have an account? <a href="/login">Log in here</a>.</p>
 
 <div class="card mt-3 card-form">
     <EditForm Model="RegisterData" OnValidSubmit="HandleValidSubmit" FormName="register" Enhance>
@@ -50,8 +48,10 @@
                 <ValidationMessage For="@(() => RegisterData.BirthDate)" class="text-danger" />
             </div>
             <button type="submit" class="btn btn-primary">Register</button>
+            <p class="mt-3 mb-0">Already have an account? <a href="/login">Log in here</a></p>
         </div>
     </EditForm>
+</div>
 </div>
 
 @code {
