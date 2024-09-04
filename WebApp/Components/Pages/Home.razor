@@ -14,7 +14,7 @@
 
 <PageTitle>Overview</PageTitle>
 
-<h1>Overview</h1>
+<div><h1>Overview</h1>
 
 <div class="card">
     <div class="card-body">
@@ -45,7 +45,8 @@
             </div>
         </div>
     </div>
-</div>
+</div></div>
+
 
 @if (_bankAccounts != null)
 {
@@ -73,9 +74,9 @@
 </div>
 }
 
-<h2>Cards</h2>
 @if (_bankAccounts != null)
 {
+    <div><h2>Cards</h2>
     <div class="d-flex flex-row justify-content-between gap-3 pb-4"
     style="overflow-x: auto; overflow-y: visible !important;">
     @foreach (var bankAccount in _bankAccounts)
@@ -83,7 +84,8 @@
             <BankAccountCard Title="@bankAccount.Owner.Name" DescriptionLeft="@bankAccount.AccountNumber"
                 DescriptionRight="@bankAccount.Balance.ToString()" />
         }
-    </div>
+    </div></div>
+
 
 }
 
