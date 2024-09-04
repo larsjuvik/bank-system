@@ -141,7 +141,7 @@ namespace BankSystem.Data
                 Salt = salt,
                 PasswordHash = passwordHash,
                 IsAdmin = isAdmin,
-                BirthDate = DateTime.Now.AddYears(-20)
+                BirthDate = DateTime.Now.AddYears(-(new Random().Next(20, 80))),
             };
             return user;
         }
