@@ -57,9 +57,8 @@
     <div class="d-flex flex-row justify-content-between gap-3" style="overflow-x: scroll;">
     @foreach (var bankAccount in _bankAccounts)
         {
-            <BankAccountCard BankAccount="bankAccount" />
-            <BankAccountCard BankAccount="bankAccount" />
-            <BankAccountCard BankAccount="bankAccount" />
+            <BankAccountCard Title="@bankAccount.Owner.Name" DescriptionLeft="@bankAccount.AccountNumber"
+                DescriptionRight="@bankAccount.Balance.ToString()" />
         }
     </div>
 
