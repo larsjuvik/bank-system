@@ -29,17 +29,6 @@
                 <ValidationMessage For="@(() => EditUserData.Username)" class="text-danger" />
             </div>
             <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <InputText id="password" class="form-control" type="password" @bind-Value="EditUserData.Password" />
-                <ValidationMessage For="@(() => EditUserData.Password)" class="text-danger" />
-            </div>
-            <div class="mb-3">
-                <label for="passwordConfirmation" class="form-label">Repeat password</label>
-                <InputText id="passwordConfirmation" class="form-control" type="password"
-                    @bind-Value="EditUserData.RepeatPassword" />
-                <ValidationMessage For="@(() => EditUserData.RepeatPassword)" class="text-danger" />
-            </div>
-            <div class="mb-3">
                 <label for="birthdate" class="form-label">Date of birth</label>
                 <InputDate id="birthdate" class="form-control" @bind-Value="EditUserData.BirthDate" />
                 <ValidationMessage For="@(() => EditUserData.BirthDate)" class="text-danger" />
