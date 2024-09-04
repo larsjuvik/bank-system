@@ -44,14 +44,36 @@
                 </div>
             </div>
         </div>
-
-
     </div>
-
 </div>
 
-<br />
-<h3>Bank Accounts</h3>
+@if (_bankAccounts != null)
+{
+    <div><h2>Accounts</h2>
+<div class="overflow-hidden rounded border">
+<table class="table bg-secondary">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Balance</th>
+            <th>Account number</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var bankAccount in _bankAccounts)
+            {
+                <tr>
+                    <td>@bankAccount.Owner.Name</td>
+                    <td>@bankAccount.Balance</td>
+                    <td>@bankAccount.AccountNumber</td>
+                </tr>
+            }
+    </tbody>
+</table></div>
+</div>
+}
+
+<h2>Cards</h2>
 @if (_bankAccounts != null)
 {
     <div class="d-flex flex-row justify-content-between gap-3 pb-4"
