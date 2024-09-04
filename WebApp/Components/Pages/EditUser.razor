@@ -10,7 +10,13 @@
 @inject UserService UserService
 @inject NavigationManager Navigation
 
-<div class="card mt-3 card-form">
+@if (EditUserData == null)
+{
+    <p>Fetching model ...</p>
+}
+else
+{
+    <div class="card mt-3 card-form">
     <EditForm Model="EditUserData" OnValidSubmit="HandleValidSubmit" FormName="editUser" Enhance>
         <div class="card-body">
             @if (errorMessage != null)
@@ -37,13 +43,14 @@
         </div>
     </EditForm>
 </div>
+}
 
 @code {
     [Parameter]
     public string Username { get; set; }
 
     [SupplyParameterFromForm(FormName = "editUser")]
-    private EditUserDTO EditUserData { get; set; } = new();
+    private EditUserDTO? EditUserData { get; set; } = null;
 
     [CascadingParameter]
     private HttpContext? HttpContext { get; set; }
