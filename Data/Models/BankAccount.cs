@@ -6,6 +6,7 @@ public class BankAccount
     public string AccountNumber { get; set; }
     public decimal Balance { get; set; }
     public DateTime CreatedDate { get; set; }
+    public bool HasDebitCard { get; set; } = false;
 
     public User Owner { get; set; }
     public ICollection<Transaction> FromTransactions { get; set; }

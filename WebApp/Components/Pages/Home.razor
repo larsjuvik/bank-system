@@ -79,7 +79,7 @@
     <div><h2>Cards</h2>
     <div class="d-flex flex-row justify-content-between gap-3 pb-4"
     style="overflow-x: auto; overflow-y: visible !important;">
-    @foreach (var bankAccount in _bankAccounts)
+    @foreach (var bankAccount in _bankAccounts.Where(b => b.HasDebitCard))
         {
             <BankAccountCard Title="@bankAccount.Owner.Name" DescriptionLeft="@bankAccount.AccountNumber"
                 DescriptionRight="@bankAccount.Balance.ToString()" />

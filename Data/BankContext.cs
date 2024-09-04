@@ -52,25 +52,44 @@ namespace BankSystem.Data
                 {
                     Id = 1,
                     UserId = 1,
-                    AccountNumber = "1234567890",
+                    AccountNumber = GetDummyAccountNumber(10),
                     Balance = 10000,
-                    CreatedDate = DateTime.Now
+                    CreatedDate = DateTime.Now.AddYears(-20),
+                    HasDebitCard = true
                 },
                 new BankAccount
                 {
                     Id = 2,
-                    UserId = 2,
-                    AccountNumber = "0987654321",
-                    Balance = 2000,
-                    CreatedDate = DateTime.Now
+                    UserId = 1,
+                    AccountNumber = GetDummyAccountNumber(10),
+                    Balance = -2000,
+                    CreatedDate = DateTime.Now.AddYears(-20),
+                    HasDebitCard = true
                 },
                 new BankAccount
                 {
                     Id = 3,
+                    UserId = 1,
+                    AccountNumber = GetDummyAccountNumber(10),
+                    Balance = 5432.45m,
+                    CreatedDate = DateTime.Now.AddYears(-20),
+                    HasDebitCard = true
+                },
+                new BankAccount
+                {
+                    Id = 4,
+                    UserId = 2,
+                    AccountNumber = "0987654321",
+                    Balance = 2000,
+                    CreatedDate = DateTime.Now.AddYears(-20)
+                },
+                new BankAccount
+                {
+                    Id = 5,
                     UserId = 3,
                     AccountNumber = "1357924680",
                     Balance = 3000,
-                    CreatedDate = DateTime.Now
+                    CreatedDate = DateTime.Now.AddYears(-20)
                 }
             );
 
@@ -101,6 +120,14 @@ namespace BankSystem.Data
                     TransactionDate = DateTime.Now
                 }
             );
+        }
+
+        private static string GetDummyAccountNumber(int length)
+        {
+            var random = new Random();
+            var chars = "0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
         private static User CreateDummyUser(int id, string username, string password, string name, bool isAdmin = false)
