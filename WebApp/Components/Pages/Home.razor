@@ -82,7 +82,7 @@
     @foreach (var bankAccount in _bankAccounts.Where(b => b.HasDebitCard))
         {
             <BankAccountCard Title="@bankAccount.Owner.Name" DescriptionLeft="@bankAccount.AccountNumber"
-                DescriptionRight="@bankAccount.Balance.ToString()" />
+                DescriptionRight="@bankAccount.Balance.ToString()" Id="@bankAccount.AccountNumber" />
         }
     </div></div>
 
