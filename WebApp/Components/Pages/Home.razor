@@ -48,10 +48,15 @@
 </div></div>
 
 
-@if (_bankAccounts != null)
-{
 <div>
     <h2>Accounts</h2>
+    @if (_bankAccounts == null || _bankAccounts?.Count == 0)
+    {
+    <p>No accounts registered.</p>
+    <button class="btn btn-sm btn-primary">Create account</button>
+    }
+    else
+    {
     <RoundedTable>
         <TableHead>
             <thead>
@@ -75,23 +80,30 @@
             </tbody>
         </TableBody>
     </RoundedTable>
+    }
 </div>
-}
 
-@if (_bankAccounts != null)
+<div>
+    <h2>Cards</h2>
+@if (_bankAccounts == null || _bankAccounts?.Where(b => b.HasDebitCard).Count() == 0)
 {
-    <div><h2>Cards</h2>
-    <div class="d-flex flex-row justify-content-between gap-3 pb-4 ps-1 pe-4"
-    style="overflow-x: auto; overflow-y: visible !important;">
-    @foreach (var bankAccount in _bankAccounts.Where(b => b.HasDebitCard))
-        {
-            <DebitCard Title="@bankAccount.Owner.Name" DescriptionLeft="@bankAccount.AccountNumber"
-                DescriptionRight="@bankAccount.Balance.ToString()" Id="@bankAccount.AccountNumber" />
-        }
-    </div></div>
-
-
+    <p>No cards registered.</p>
+    <button class="btn btn-sm btn-primary">Create card</button>
 }
+else
+{
+    <div class="d-flex flex-row justify-content-between gap-3 pb-4 ps-1 pe-4" style="overflow-x: auto; overflow-y: visible !important;">
+    @foreach (var bankAccount in _bankAccounts.Where(b => b.HasDebitCard))
+    {
+        <DebitCard
+            Title="@bankAccount.Owner.Name"
+            DescriptionLeft="@bankAccount.AccountNumber"
+            DescriptionRight="@bankAccount.Balance.ToString()"
+            Id="@bankAccount.AccountNumber" />
+    }
+    </div>
+}
+</div>
 
 @code {
     private UserDTO? _user = null;
