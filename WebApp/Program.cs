@@ -1,5 +1,5 @@
 using AutoMapper;
-using BankSystem.Data;
+using Data;
 using Data.Models;
 using Data.Repositories;
 using Microsoft.AspNetCore.Authentication.Cookies;
