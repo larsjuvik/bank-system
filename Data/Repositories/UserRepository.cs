@@ -3,24 +3,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repositories;
 
-public class UserRepository
+public class UserRepository(BankContext context)
 {
-    private readonly BankContext _context;
-
-    public UserRepository(BankContext context)
-    {
-        _context = context;
-    }
-
     public async Task SaveUserAsync(User user)
     {
-        _context.Users.Update(user);
-        await _context.SaveChangesAsync();
+        context.Users.Update(user);
+        await context.SaveChangesAsync();
     }
 
     public async Task<List<User>> GetAllUsersWithBankAccountsAsync()
     {
-        return await _context.Users
+        return await context.Users
             .Include(u => u.BankAccounts)
             .ToListAsync();
     }
@@ -38,31 +31,31 @@ public class UserRepository
             BirthDate = birthDate,
             IsAdmin = isAdmin
         };
-        _context.Users.Add(user);
-        await _context.SaveChangesAsync();
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
     }
 
     public async Task<bool> VerifyUserCredentialsAsync(string username, string password)
     {
-        var user = await _context.Users.FirstAsync(u => u.Username == username);
-        var verified = Data.Models.User.VerifyPassword(password, user.PasswordHash, user.Salt);
+        var user = await context.Users.FirstAsync(u => u.Username == username);
+        var verified = User.VerifyPassword(password, user.PasswordHash, user.Salt);
         return verified;
     }
 
     public async Task<bool> UserExistsAsync(string username)
     {
-        return await _context.Users
+        return await context.Users
             .AnyAsync(u => u.Username == username);
     }
 
     public async Task<User> GetIdByUsernameAsync(string username)
     {
-        return await _context.Users.FirstAsync(u => u.Username == username);
+        return await context.Users.FirstAsync(u => u.Username == username);
     }
 
     public async Task<User> GetUserByUsernameAsync(string username)
     {
-        return await _context.Users
+        return await context.Users
             .FirstAsync(u => u.Username == username);
     }
 }

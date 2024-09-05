@@ -3,15 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repositories;
 
-public class TransactionRepository
+public class TransactionRepository(BankContext context)
 {
-    private readonly BankContext _context;
-
-    public TransactionRepository(BankContext context)
-    {
-        _context = context;
-    }
-
     /// <summary>
     /// Get transactions by user id, where the user is the sender or receiver of the transaction
     /// </summary>
@@ -19,7 +12,7 @@ public class TransactionRepository
     /// <returns>A list of transactions</returns>
     public async Task<List<Transaction>> GetAllTransactionsByIdAsync(int id)
     {
-        return await _context.Transactions
+        return await context.Transactions
             .Include(t => t.From)
             .Include(t => t.To)
             .Where(t => t.To.Id == id)
@@ -33,7 +26,7 @@ public class TransactionRepository
     /// <returns>A list of transactions</returns>
     public async Task<List<Transaction>> GetFromTransactionsByIdAsync(int id)
     {
-        return await _context.Transactions
+        return await context.Transactions
             .Include(t => t.From)
             .Include(t => t.To)
             .Where(t => t.From.Id == id)
@@ -47,7 +40,7 @@ public class TransactionRepository
     /// <returns>A list of transactions</returns>
     public async Task<List<Transaction>> GetToTransactionsByIdAsync(int id)
     {
-        return await _context.Transactions
+        return await context.Transactions
             .Include(t => t.From)
             .Include(t => t.To)
             .Where(t => t.To.Id == id)
