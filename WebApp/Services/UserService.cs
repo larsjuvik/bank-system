@@ -1,8 +1,6 @@
 using Data.Repositories;
 using AutoMapper;
-using Data.Models;
 using WebApp.DTOs;
-using System.ComponentModel.DataAnnotations;
 
 namespace WebApp.Services;
 

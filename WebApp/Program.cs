@@ -3,7 +3,6 @@ using Data;
 using Data.Models;
 using Data.Repositories;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Components;
 using WebApp.DTOs;
