@@ -7,7 +7,6 @@ public class BankAccount
     public int Id { get; init; }
     public int UserId { get; set; }
     
-    [Required]
     [MaxLength(50)]
     public required string AccountNumber { get; set; }
     public decimal Balance { get; set; }

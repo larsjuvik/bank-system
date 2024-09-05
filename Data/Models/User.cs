@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 
 namespace Data.Models
@@ -5,7 +6,9 @@ namespace Data.Models
     public class User
     {
         public int Id { get; set; }
-        public string Username { get; set; }
+        
+        [MaxLength(50)]
+        public required string Username { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] Salt { get; set; }
         public string Name { get; set; }
@@ -13,7 +16,7 @@ namespace Data.Models
         public bool IsAdmin { get; set; } = false;
 
         // Bank accounts
-        public ICollection<BankAccount> BankAccounts { get; set; }
+        public ICollection<BankAccount>? BankAccounts { get; set; }
 
         public static void CreateSaltAndHash(string password, out byte[] salt, out byte[] passwordHash)
         {

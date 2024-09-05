@@ -6,8 +6,8 @@ public class Transaction
     public DateTime TransactionDate { get; set; }
 
     public int FromId { get; set; }
-    public BankAccount From { get; set; }
+    public BankAccount? From { get; set; }
 
     public int ToId { get; set; }
-    public BankAccount To { get; set; }
+    public BankAccount? To { get; set; }
 }
