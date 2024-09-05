@@ -4,66 +4,57 @@ using WebApp.DTOs;
 
 namespace WebApp.Services;
 
-public class UserService
+public class UserService(UserRepository userRepository, IMapper mapper)
 {
-    private readonly UserRepository _userRepository;
-    private readonly IMapper _mapper;
-
-    public UserService(UserRepository userRepository, IMapper mapper)
+    public async Task<EditUserDto> GetEditUserDtoFromUsername(string username)
     {
-        _userRepository = userRepository;
-        _mapper = mapper;
+        var model = await userRepository.GetUserByUsernameAsync(username);
+        return mapper.Map<EditUserDto>(model);
     }
 
-    public async Task<EditUserDTO> GetEditUserDTOFromUsername(string username)
+    public async Task SaveUserAsync(EditUserDto user)
     {
-        var model = await _userRepository.GetUserByUsernameAsync(username);
-        return _mapper.Map<EditUserDTO>(model);
+        var model = await userRepository.GetUserByUsernameAsync(user.Username);
+        mapper.Map(user, model);
+        await userRepository.SaveUserAsync(model);
     }
 
-    public async Task SaveUserAsync(EditUserDTO user)
+    public async Task<List<UserDto>> GetAllUsersWithBankAccountsAsync()
     {
-        var model = await _userRepository.GetUserByUsernameAsync(user.Username);
-        _mapper.Map(user, model);
-        await _userRepository.SaveUserAsync(model);
+        var models = await userRepository.GetAllUsersWithBankAccountsAsync();
+        return mapper.Map<List<UserDto>>(models);
     }
 
-    public async Task<List<UserDTO>> GetAllUsersWithBankAccountsAsync()
+    public async Task CreateUserAsync(RegisterDto registerUser, bool isAdmin = false)
     {
-        var models = await _userRepository.GetAllUsersWithBankAccountsAsync();
-        return _mapper.Map<List<UserDTO>>(models);
-    }
-
-    public async Task CreateUserAsync(RegisterDTO registerUser, bool isAdmin = false)
-    {
-        await _userRepository.CreateUserAsync(registerUser.Username, registerUser.Password, registerUser.Name, registerUser.BirthDate, isAdmin);
+        await userRepository.CreateUserAsync(registerUser.Username, registerUser.Password, registerUser.Name, registerUser.BirthDate, isAdmin);
     }
 
     public async Task<bool> VerifyUserCredentialsAsync(string username, string password)
     {
-        return await _userRepository.VerifyUserCredentialsAsync(username, password);
+        return await userRepository.VerifyUserCredentialsAsync(username, password);
     }
 
     public async Task<bool> UserExistsAsync(string username)
     {
-        return await _userRepository.UserExistsAsync(username);
+        return await userRepository.UserExistsAsync(username);
     }
 
     public async Task<bool> IsAdminAsync(string username)
     {
-        var model = await _userRepository.GetUserByUsernameAsync(username);
+        var model = await userRepository.GetUserByUsernameAsync(username);
         return model.IsAdmin;
     }
 
     public async Task<int> GetIdByUsernameAsync(string username)
     {
-        var model = await _userRepository.GetIdByUsernameAsync(username);
+        var model = await userRepository.GetIdByUsernameAsync(username);
         return model.Id;
     }
 
-    public async Task<UserDTO> GetUserByUsernameAsync(string username)
+    public async Task<UserDto> GetUserByUsernameAsync(string username)
     {
-        var model = await _userRepository.GetUserByUsernameAsync(username);
-        return _mapper.Map<UserDTO>(model);
+        var model = await userRepository.GetUserByUsernameAsync(username);
+        return mapper.Map<UserDto>(model);
     }
 }

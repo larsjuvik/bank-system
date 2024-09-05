@@ -16,9 +16,9 @@ else
     <div class="card mt-3 card-form">
     <EditForm Model="EditUserData" OnValidSubmit="HandleValidSubmit" FormName="editUser" Enhance>
         <div class="card-body">
-            @if (errorMessage != null)
+            @if (_errorMessage != null)
             {
-                <p class="text-danger">@errorMessage</p>
+                <p class="text-danger">@_errorMessage</p>
             }
             <DataAnnotationsValidator />
             <div class="mb-3">
@@ -47,14 +47,14 @@ else
     public string Username { get; set; }
 
     [SupplyParameterFromForm(FormName = "editUser")]
-    private EditUserDTO? EditUserData { get; set; } = null;
+    private EditUserDto? EditUserData { get; set; } = null;
 
-    private string? errorMessage = null;
+    private string? _errorMessage = null;
 
     protected override async Task OnInitializedAsync()
     {
         // Get user obj from username
-        EditUserData = await UserService.GetEditUserDTOFromUsername(Username);
+        EditUserData = await UserService.GetEditUserDtoFromUsername(Username);
     }
 
     private async Task HandleValidSubmit()
@@ -63,7 +63,7 @@ else
         var userExists = await UserService.UserExistsAsync(EditUserData.Username);
         if (!userExists)
         {
-            errorMessage = "Username does not exists";
+            _errorMessage = "Username does not exists";
             return;
         }
 

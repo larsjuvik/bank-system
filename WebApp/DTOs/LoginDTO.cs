@@ -1,7 +1,7 @@
 namespace WebApp.DTOs;
 using System.ComponentModel.DataAnnotations;
 
-public class LoginDTO
+public class LoginDto
 {
     [Required]
     [MinLength(5)]

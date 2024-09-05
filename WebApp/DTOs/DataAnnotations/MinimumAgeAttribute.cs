@@ -2,15 +2,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BankSystem.WebApp.DTOs.DataAnnotations
 {
-    public class MinimumAgeAttribute : ValidationAttribute
+    public class MinimumAgeAttribute(int minimumAge) : ValidationAttribute
     {
-        private readonly int _minimumAge;
-
-        public MinimumAgeAttribute(int minimumAge)
-        {
-            _minimumAge = minimumAge;
-        }
-
         public override bool IsValid(object? value)
         {
             if (value is DateTime dateOfBirth)
@@ -21,7 +14,7 @@ namespace BankSystem.WebApp.DTOs.DataAnnotations
                 if (dateOfBirth > DateTime.Today.AddYears(-age))
                     age--;
 
-                if (age < _minimumAge)
+                if (age < minimumAge)
                     return false;
 
                 return true;

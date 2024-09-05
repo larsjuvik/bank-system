@@ -1,9 +1,9 @@
 namespace WebApp.DTOs;
-public class TransactionDTO
+public class TransactionDto
 {
     public int Id { get; set; }
     public decimal Amount { get; set; }
     public DateTime TransactionDate { get; set; }
-    public BankAccountDTO From { get; set; }
-    public BankAccountDTO To { get; set; }
+    public BankAccountDto From { get; set; }
+    public BankAccountDto To { get; set; }
 }

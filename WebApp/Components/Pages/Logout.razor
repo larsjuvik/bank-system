@@ -5,7 +5,7 @@
 
 <PageTitle>Logout</PageTitle>
 
-@if (tryingToLogOut)
+@if (_tryingToLogOut)
 {
     <h1>Logging out ...</h1>
 }
@@ -19,7 +19,7 @@ else
 </a>
 
 @code {
-    private bool tryingToLogOut = false;
+    private bool _tryingToLogOut = false;
 
     [CascadingParameter]
     private HttpContext? HttpContext { get; set; }
@@ -44,9 +44,9 @@ else
             return;
         }
 
-        tryingToLogOut = true;
+        _tryingToLogOut = true;
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        tryingToLogOut = false;
+        _tryingToLogOut = false;
 
         Navigation.NavigateTo("/logout");
     }

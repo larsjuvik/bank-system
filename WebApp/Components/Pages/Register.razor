@@ -16,9 +16,9 @@
 <div class="card mt-3 card-form">
     <EditForm Model="RegisterData" OnValidSubmit="HandleValidSubmit" FormName="register" Enhance>
         <div class="card-body">
-            @if (errorMessage != null)
+            @if (_errorMessage != null)
             {
-                <p class="text-danger">@errorMessage</p>
+                <p class="text-danger">@_errorMessage</p>
             }
             <DataAnnotationsValidator />
             <div class="mb-3">
@@ -56,12 +56,12 @@
 
 @code {
     [SupplyParameterFromForm(FormName = "register")]
-    private RegisterDTO RegisterData { get; set; } = new();
+    private RegisterDto RegisterData { get; set; } = new();
 
     [CascadingParameter]
     private HttpContext? HttpContext { get; set; }
 
-    private string? errorMessage = null;
+    private string? _errorMessage = null;
 
 
     private async Task HandleValidSubmit()
@@ -75,7 +75,7 @@
         var userExists = await UserService.UserExistsAsync(RegisterData.Username);
         if (userExists)
         {
-            errorMessage = "Username already exists";
+            _errorMessage = "Username already exists";
             return;
         }
 
@@ -95,7 +95,7 @@ new Claim(ClaimTypes.Role, GetRoleName(Role.User))
         // Sign in the user
         if (HttpContext == null)
         {
-            errorMessage = "An unexpected error occured, please try again";
+            _errorMessage = "An unexpected error occured, please try again";
             return;
         }
         await HttpContext.SignInAsync(user);

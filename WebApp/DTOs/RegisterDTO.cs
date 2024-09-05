@@ -2,7 +2,7 @@ namespace WebApp.DTOs;
 using System.ComponentModel.DataAnnotations;
 using BankSystem.WebApp.DTOs.DataAnnotations;
 
-public class RegisterDTO
+public class RegisterDto
 {
     [Required]
     [MinLength(5)]

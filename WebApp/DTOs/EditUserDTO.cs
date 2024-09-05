@@ -2,7 +2,7 @@ namespace WebApp.DTOs;
 using System.ComponentModel.DataAnnotations;
 using BankSystem.WebApp.DTOs.DataAnnotations;
 
-public class EditUserDTO
+public class EditUserDto
 {
     [Required]
     [MinLength(5)]

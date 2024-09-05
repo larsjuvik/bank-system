@@ -4,32 +4,23 @@ using WebApp.DTOs;
 
 namespace WebApp.Services;
 
-public class TransactionService
+public class TransactionService(TransactionRepository transactionRepository, IMapper mapper)
 {
-    private readonly TransactionRepository _transactionRepository;
-    private readonly IMapper _mapper;
-
-    public TransactionService(TransactionRepository transactionRepository, IMapper mapper)
+    public async Task<List<TransactionDto>> GetAllTransactionsByIdAsync(int id)
     {
-        _transactionRepository = transactionRepository;
-        _mapper = mapper;
+        var model = await transactionRepository.GetAllTransactionsByIdAsync(id);
+        return mapper.Map<List<TransactionDto>>(model);
     }
 
-    public async Task<List<TransactionDTO>> GetAllTransactionsByIdAsync(int id)
+    public async Task<List<TransactionDto>> GetFromTransactionsByIdAsync(int id)
     {
-        var model = await _transactionRepository.GetAllTransactionsByIdAsync(id);
-        return _mapper.Map<List<TransactionDTO>>(model);
+        var model = await transactionRepository.GetFromTransactionsByIdAsync(id);
+        return mapper.Map<List<TransactionDto>>(model);
     }
 
-    public async Task<List<TransactionDTO>> GetFromTransactionsByIdAsync(int id)
+    public async Task<List<TransactionDto>> GetToTransactionsByIdAsync(int id)
     {
-        var model = await _transactionRepository.GetFromTransactionsByIdAsync(id);
-        return _mapper.Map<List<TransactionDTO>>(model);
-    }
-
-    public async Task<List<TransactionDTO>> GetToTransactionsByIdAsync(int id)
-    {
-        var model = await _transactionRepository.GetToTransactionsByIdAsync(id);
-        return _mapper.Map<List<TransactionDTO>>(model);
+        var model = await transactionRepository.GetToTransactionsByIdAsync(id);
+        return mapper.Map<List<TransactionDto>>(model);
     }
 }

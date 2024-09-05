@@ -1,8 +1,8 @@
 namespace WebApp.DTOs;
-public class UserDTO
+public class UserDto
 {
     public string Username { get; set; }
     public string Name { get; set; }
     public DateTime BirthDate { get; set; }
-    public ICollection<BankAccountDTO> BankAccounts { get; set; }
+    public ICollection<BankAccountDto> BankAccounts { get; set; }
 }

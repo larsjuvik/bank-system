@@ -27,18 +27,18 @@ builder.Services.AddScoped<BankAccountService>();
 // AutoMapper
 var autoMapperConfig = new MapperConfiguration(cfg =>
 {
-    cfg.CreateMap<RegisterDTO, User>();
+    cfg.CreateMap<RegisterDto, User>();
 
     // Transaction
-    cfg.CreateMap<Transaction, TransactionDTO>();
+    cfg.CreateMap<Transaction, TransactionDto>();
 
     // Bank account
-    cfg.CreateMap<BankAccount, BankAccountDTO>();
+    cfg.CreateMap<BankAccount, BankAccountDto>();
 
     // User
-    cfg.CreateMap<User, UserDTO>();
-    cfg.CreateMap<EditUserDTO, User>();
-    cfg.CreateMap<User, EditUserDTO>();
+    cfg.CreateMap<User, UserDto>();
+    cfg.CreateMap<EditUserDto, User>();
+    cfg.CreateMap<User, EditUserDto>();
 });
 builder.Services.AddSingleton(autoMapperConfig.CreateMapper());
 

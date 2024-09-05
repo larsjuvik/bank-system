@@ -15,9 +15,9 @@
 
     <div class="card mt-3">
         <div class="card-body">
-            @if (errorMessage != null)
+            @if (_errorMessage != null)
             {
-                <p class="text-danger">@errorMessage</p>
+                <p class="text-danger">@_errorMessage</p>
             }
 
             <EditForm Model="LoginData" OnValidSubmit="HandleValidSubmit" FormName="login" Enhance>
@@ -41,12 +41,12 @@
 </div>
 @code {
     [SupplyParameterFromForm(FormName = "login")]
-    private LoginDTO LoginData { get; set; } = new();
+    private LoginDto LoginData { get; set; } = new();
 
     [CascadingParameter]
     private HttpContext? HttpContext { get; set; }
 
-    private string? errorMessage = null;
+    private string? _errorMessage = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -72,7 +72,7 @@
     {
         if (LoginData?.Username == null || LoginData?.Password == null)
         {
-            errorMessage = "Fill in all fields";
+            _errorMessage = "Fill in all fields";
             return;
         }
 
@@ -80,7 +80,7 @@
         var userExists = await UserService.UserExistsAsync(LoginData.Username);
         if (!userExists)
         {
-            errorMessage = "Invalid credentials";
+            _errorMessage = "Invalid credentials";
             return;
         }
 
@@ -88,7 +88,7 @@
         var credentialsVerified = await UserService.VerifyUserCredentialsAsync(LoginData.Username, LoginData.Password);
         if (!credentialsVerified)
         {
-            errorMessage = "Invalid credentials";
+            _errorMessage = "Invalid credentials";
             return;
         }
 
@@ -111,7 +111,7 @@ new Claim(ClaimTypes.Role, GetRoleName(Role.User))
         // Sign in the user
         if (HttpContext == null)
         {
-            errorMessage = "An unexpected error occured, please try again";
+            _errorMessage = "An unexpected error occured, please try again";
             return;
         }
         await HttpContext.SignInAsync(user);

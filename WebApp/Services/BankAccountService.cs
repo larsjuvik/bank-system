@@ -4,20 +4,11 @@ using WebApp.DTOs;
 
 namespace WebApp.Services;
 
-public class BankAccountService
+public class BankAccountService(BankAccountRepository bankAccountRepository, IMapper mapper)
 {
-    private readonly BankAccountRepository _bankAccountRepository;
-    private readonly IMapper _mapper;
-
-    public BankAccountService(BankAccountRepository bankAccountRepository, IMapper mapper)
+    public async Task<List<BankAccountDto>> GetAllBankAccountsByUserIdAsync(int id)
     {
-        _bankAccountRepository = bankAccountRepository;
-        _mapper = mapper;
-    }
-
-    public async Task<List<BankAccountDTO>> GetAllBankAccountsByUserIdAsync(int id)
-    {
-        var model = await _bankAccountRepository.GetAllBankAccountsByUserIdAsync(id);
-        return _mapper.Map<List<BankAccountDTO>>(model);
+        var model = await bankAccountRepository.GetAllBankAccountsByUserIdAsync(id);
+        return mapper.Map<List<BankAccountDto>>(model);
     }
 }
