@@ -1,5 +1,7 @@
 # Bank System
 
+[![.NET](https://github.com/larsjuvik/BankSystem/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/larsjuvik/BankSystem/actions/workflows/CI.yml)
+
 This is a demo of a bank system, written in Blazor Web App, with .NET 8.
 
 ![A screenshot of the application](./docs/Screenshot.png)
