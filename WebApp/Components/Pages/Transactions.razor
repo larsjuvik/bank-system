@@ -42,10 +42,6 @@
             }
         }
     </select>
-    @if (string.IsNullOrEmpty(AccountId))
-    {
-        <p>Here you can see your financial transactions for your account <b>@AccountId</b>.</p>
-    }
 </div>
 
 
@@ -56,6 +52,10 @@
 else if (AccountId != null && _transactions != null)
 {
 <div>
+    @if (!string.IsNullOrEmpty(AccountId))
+    {
+    <p>Here you can see your financial transactions for <b>@AccountId</b>:</p>
+    }
     <RoundedTable>
         <TableHead>
             <thead>
