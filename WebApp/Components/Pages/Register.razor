@@ -101,6 +101,21 @@ new Claim(ClaimTypes.Role, GetRoleName(Role.User))
         await HttpContext.SignInAsync(user);
         GracefulRedirect();
     }
+    
+    protected override void OnInitialized()
+    {
+        var identity = HttpContext?.User.Identity;
+        if (identity == null)
+        {
+            return;
+        }
+
+        // User is already logged in
+        if (identity.IsAuthenticated)
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
 
     /// <summary>
     /// Gracefully redirects to returnUrl if set, or just returns to home screen
