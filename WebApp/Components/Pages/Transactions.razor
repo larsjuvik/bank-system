@@ -18,25 +18,30 @@
     <h1>Transactions</h1>
     
     <p>Select an account to see your transactions.</p>
-    <div class="dropdown">
-        <a class="btn btn-secondary dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown">
-            @if (_bankAccounts == null)
+    <select class="form-select" aria-label="Select a bank account" @onchange="BankAccountSelectChanged">
+        @if (_bankAccounts == null)
+        {
+            <option selected>Loading...</option>
+        }
+        else
+        {
+            @if (AccountId == null)
             {
-                <span>Loading...</span>
+                <option value="" selected>Select a bank account</option>
             }
-            else
-            {
-                <span>Select account</span>
-                <ul class="dropdown-menu">
-                    @foreach (var bankAccount in _bankAccounts)
-                    {
-                        <li><a class="dropdown-item" href="/@bankAccount.AccountNumber">@bankAccount.AccountNumber</a></li>
-                    }
-                </ul>
+            @foreach (var bankAccount in _bankAccounts.OrderByDescending(b => b.AccountNumber))
+            { 
+                @if (bankAccount.AccountNumber == AccountId)
+                {
+                    <option value="@bankAccount.AccountNumber" selected>@bankAccount.AccountNumber</option>
+                }
+                else
+                {
+        <option value="@bankAccount.AccountNumber">@bankAccount.AccountNumber</option>
+                }
             }
-           
-        </a>
-    </div>
+        }
+    </select>
     @if (string.IsNullOrEmpty(AccountId))
     {
         <p>Here you can see your financial transactions for your account <b>@AccountId</b>.</p>
@@ -48,7 +53,7 @@
 {
     <p><em>Loading...</em></p>
 }
-else if (_transactions != null)
+else if (AccountId != null && _transactions != null)
 {
 <div>
     <RoundedTable>
@@ -123,4 +128,14 @@ else if (_transactions != null)
             .ToList();
     }
 
+    private void BankAccountSelectChanged(ChangeEventArgs arg)
+    {
+        var accountNumber = (string?) arg.Value;
+        if (string.IsNullOrEmpty(accountNumber))
+        {
+            return;
+        }
+
+        NavigationManager.NavigateTo($"/transactions/{accountNumber}");
+    }
 }
