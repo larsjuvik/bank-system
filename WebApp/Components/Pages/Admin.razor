@@ -15,7 +15,7 @@
     <QuickGrid class="table" Items="_users" Pagination="_pagination">
         <PropertyColumn Property="@(u => u.Name)" Sortable="true" />
         <PropertyColumn Property="@(u => u.Username)" Sortable="true" />
-        <PropertyColumn Property="@(u => u.BirthDate)" Sortable="true" />
+        <PropertyColumn Property="@(u => u.BirthDate)" Format="yyyy-MM-dd" Sortable="true" />
     </QuickGrid>
     <nav aria-label="Pagination" class="w-100 ms-auto me-auto">
         <ul class="pagination">
