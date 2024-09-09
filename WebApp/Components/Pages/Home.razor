@@ -127,7 +127,7 @@ else
         var userId = await UserService.GetIdByUsernameAsync(username);
         _user = await UserService.GetUserByUsernameAsync(username);
         _firstName = _user.Name.Split(" ").FirstOrDefault() ?? "?";
-        _transactions = await TransactionService.GetAllTransactionsByIdAsync(userId);
+        _transactions = await TransactionService.GetAllTransactionsByUserIdAsync(userId);
         _bankAccounts = await BankAccountService.GetAllBankAccountsByUserIdAsync(userId);
 
         // Calculate remaining fields
