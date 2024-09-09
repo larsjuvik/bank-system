@@ -2,58 +2,57 @@
 @using WebApp.DTOs
 @using WebApp.Services
 @inject UserService UserService
-@inject NavigationManager Navigation
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.QuickGrid
 @attribute [Authorize(Roles = "Admin")]
-@attribute [StreamRendering]
-
+@rendermode InteractiveServer
 <PageTitle>Admin</PageTitle>
 
 <h1>Admin</h1>
 @if (_users != null)
 {
 <div>
-    <RoundedTable>
-        <TableHead>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Accounts</th>
-                    <th>Total balance</th>
-                    <th>Registered</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-        </TableHead>
-        <TableBody>
-            <tbody>
-            @foreach (var user in _users)
+    <QuickGrid class="table" Items="_users" Pagination="_pagination">
+        <PropertyColumn Property="@(u => u.Name)" Sortable="true" />
+        <PropertyColumn Property="@(u => u.Username)" Sortable="true" />
+        <PropertyColumn Property="@(u => u.BirthDate)" Sortable="true" />
+    </QuickGrid>
+    <nav aria-label="Pagination" class="w-100 ms-auto me-auto">
+        <ul class="pagination">
+            @if (_pagination.CurrentPageIndex > 0)
+            {
+            <li class="page-item"><a class="page-link" @onclick="async () => await _pagination.SetCurrentPageIndexAsync(_pagination.CurrentPageIndex - 1)">Previous</a></li>
+            }
+            @for (var i = _pagination.CurrentPageIndex - 3; i < _pagination.CurrentPageIndex + 4; i++)
+            {
+                @if (i < 0) continue;
+
+                var iCopy = i;
+                @if (iCopy == _pagination.CurrentPageIndex)
                 {
-                    <tr>
-                        <td>@user.Name</td>
-                        <td>@user.BankAccounts.Count()</td>
-                        <td>@user.BankAccounts.Sum(ba => ba.Balance)</td>
-                        <td>@user.BirthDate.ToShortDateString()</td>
-                        <td>
-                            <button type="button" class="btn btn-primary"
-                                onclick="window.location.href='/edit/user/@user.Username'">Edit</button>
-                        </td>
-                    </tr>
+                    <li class="page-item active"><a class="page-link" @onclick="async () => await _pagination.SetCurrentPageIndexAsync(iCopy)">@iCopy</a></li>
                 }
-            </tbody>
-        </TableBody>
-    </RoundedTable>
+                else
+                {
+                    <li class="page-item"><a class="page-link" @onclick="async () => await _pagination.SetCurrentPageIndexAsync(iCopy)">@iCopy</a></li>
+                }
+            }
+            @if (_pagination.CurrentPageIndex < _pagination.LastPageIndex)
+            {
+            <li class="page-item"><a class="page-link" @onclick="async () => await _pagination.SetCurrentPageIndexAsync(_pagination.CurrentPageIndex + 1)">Next</a></li>
+            }
+        </ul>
+    </nav>
 </div>
 }
 
 @code {
-    [CascadingParameter]
-    private HttpContext? HttpContext { get; set; }
+    readonly PaginationState _pagination = new() { ItemsPerPage = 10 };
 
-    private List<UserDto>? _users = null;
+    private IQueryable<UserDto>? _users;
 
     protected override async Task OnInitializedAsync()
     {
-        _users = await UserService.GetAllUsersWithBankAccountsAsync();
+        _users = (await UserService.GetAllUsersWithBankAccountsAsync()).AsQueryable();
     }
 }
