@@ -9,44 +9,26 @@
 @rendermode InteractiveServer
 <PageTitle>Admin</PageTitle>
 
-<h1>Admin</h1>
+<div>
+    <h1>Admin</h1>
+    <p>Edit and delete users from the application.</p>
 @if (_users != null)
 {
-<div>
-    <div class="overflow-hidden rounded card" style="border-bottom: none;">
-        <QuickGrid class="table card-body table bg-secondary mb-0" Items="_users" Pagination="_pagination">
-            <PropertyColumn Property="@(u => u.Username)" Sortable="true"/>
-            <PropertyColumn Property="@(u => u.BirthDate)" Format="yyyy-MM-dd" Sortable="true"/>
-        </QuickGrid>
-        <nav aria-label="Pagination" class="mt-3">
-            <ul class="pagination justify-content-center">
-                @if (_pagination.CurrentPageIndex > 0)
-                {
-                    <li class="page-item"><a class="page-link" @onclick="async () => await _pagination.SetCurrentPageIndexAsync(_pagination.CurrentPageIndex - 1)">Previous</a></li>
-                }
-                @for (var i = _pagination.CurrentPageIndex - 3; i < _pagination.CurrentPageIndex + 4; i++)
-                {
-                    @if (i < 0) continue;
-
-                    var iCopy = i;
-                    @if (iCopy == _pagination.CurrentPageIndex)
-                    {
-                        <li class="page-item active"><a class="page-link" @onclick="async () => await _pagination.SetCurrentPageIndexAsync(iCopy)">@iCopy</a></li>
-                    }
-                    else
-                    {
-                        <li class="page-item"><a class="page-link" @onclick="async () => await _pagination.SetCurrentPageIndexAsync(iCopy)">@iCopy</a></li>
-                    }
-                }
-                @if (_pagination.CurrentPageIndex < _pagination.LastPageIndex)
-                {
-                    <li class="page-item"><a class="page-link" @onclick="async () => await _pagination.SetCurrentPageIndexAsync(_pagination.CurrentPageIndex + 1)">Next</a></li>
-                }
-            </ul>
-        </nav>
+    <div>
+        <div class="overflow-hidden rounded card">
+            <QuickGrid class="table table-responsive mb-0" Items="_users" Pagination="_pagination">
+                <PropertyColumn Property="@(u => u.Username)" Sortable="true"/>
+                <PropertyColumn Property="@(u => u.BirthDate)" Format="yyyy-MM-dd" Sortable="true"/>
+                <TemplateColumn Title="Actions" class="d-flex flex-row gap-3">
+                    <a class="btn btn-sm btn-primary" href="/edit/user/@context.Username">Edit</a>
+                    <button class="btn btn-sm btn-danger" href="/delete/user/@context.Username">Delete</button>
+                </TemplateColumn>
+            </QuickGrid>
+            <Paginator State="_pagination"></Paginator>
+        </div>
     </div>
-</div>
 }
+</div>
 
 @code {
     readonly PaginationState _pagination = new() { ItemsPerPage = 10 };
@@ -57,4 +39,15 @@
     {
         _users = (await UserService.GetAllUsersWithBankAccountsAsync()).AsQueryable();
     }
+
+    private Task HandleEditUser(UserDto context)
+    {
+        throw new NotImplementedException();
+    }
+
+    private Task HandleDeleteUser(UserDto context)
+    {
+        throw new NotImplementedException();
+    }
+
 }
