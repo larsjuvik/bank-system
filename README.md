@@ -1,4 +1,4 @@
-# Bank System
+# BlueFlare Bank
 
 [![CI](https://github.com/larsjuvik/BankSystem/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/larsjuvik/BankSystem/actions/workflows/CI.yml)
 
