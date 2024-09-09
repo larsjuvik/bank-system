@@ -5,6 +5,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.QuickGrid
 @attribute [Authorize(Roles = "Admin")]
+@attribute [StreamRendering]
 @rendermode InteractiveServer
 <PageTitle>Admin</PageTitle>
 
@@ -13,7 +14,6 @@
 {
 <div>
     <QuickGrid class="table" Items="_users" Pagination="_pagination">
-        <PropertyColumn Property="@(u => u.Name)" Sortable="true" />
         <PropertyColumn Property="@(u => u.Username)" Sortable="true" />
         <PropertyColumn Property="@(u => u.BirthDate)" Format="yyyy-MM-dd" Sortable="true" />
     </QuickGrid>
