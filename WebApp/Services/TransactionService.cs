@@ -6,21 +6,21 @@ namespace WebApp.Services;
 
 public class TransactionService(TransactionRepository transactionRepository, IMapper mapper)
 {
-    public async Task<List<TransactionDto>> GetAllTransactionsByIdAsync(int id)
+    public async Task<List<TransactionDto>> GetAllTransactionsByUserIdAsync(int id)
     {
-        var model = await transactionRepository.GetAllTransactionsByIdAsync(id);
+        var model = await transactionRepository.GetAllTransactionsByUserIdAsync(id);
         return mapper.Map<List<TransactionDto>>(model);
     }
 
-    public async Task<List<TransactionDto>> GetFromTransactionsByIdAsync(int id)
+    public async Task<List<TransactionDto>> GetFromTransactionsByUserIdAsync(int id)
     {
-        var model = await transactionRepository.GetFromTransactionsByIdAsync(id);
+        var model = await transactionRepository.GetFromTransactionsByUserIdAsync(id);
         return mapper.Map<List<TransactionDto>>(model);
     }
 
-    public async Task<List<TransactionDto>> GetToTransactionsByIdAsync(int id)
+    public async Task<List<TransactionDto>> GetToTransactionsByUserIdAsync(int id)
     {
-        var model = await transactionRepository.GetToTransactionsByIdAsync(id);
+        var model = await transactionRepository.GetToTransactionsByUserIdAsync(id);
         return mapper.Map<List<TransactionDto>>(model);
     }
 }

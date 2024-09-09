@@ -10,7 +10,7 @@ public class TransactionRepository(BankContext context)
     /// </summary>
     /// <param name="id">The id of the user</param>
     /// <returns>A list of transactions</returns>
-    public async Task<List<Transaction>> GetAllTransactionsByIdAsync(int id)
+    public async Task<List<Transaction>> GetAllTransactionsByUserIdAsync(int id)
     {
         return await context.Transactions
             .Include(t => t.From)
@@ -24,7 +24,7 @@ public class TransactionRepository(BankContext context)
     /// </summary>
     /// <param name="id">The id of the user</param>
     /// <returns>A list of transactions</returns>
-    public async Task<List<Transaction>> GetFromTransactionsByIdAsync(int id)
+    public async Task<List<Transaction>> GetFromTransactionsByUserIdAsync(int id)
     {
         return await context.Transactions
             .Include(t => t.From)
@@ -38,7 +38,7 @@ public class TransactionRepository(BankContext context)
     /// </summary>
     /// <param name="id">The id of the user</param>
     /// <returns>A list of transactions</returns>
-    public async Task<List<Transaction>> GetToTransactionsByIdAsync(int id)
+    public async Task<List<Transaction>> GetToTransactionsByUserIdAsync(int id)
     {
         return await context.Transactions
             .Include(t => t.From)
