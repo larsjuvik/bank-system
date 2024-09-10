@@ -49,7 +49,7 @@ builder.Services.AddDbContext<BankContext>(options => options.UseInMemoryDatabas
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.Cookie.Name = "BankSystemDemo";
+        options.Cookie.Name = "Authentication";
         options.LoginPath = "/login";
         options.LogoutPath = "/logout";
         options.AccessDeniedPath = "/access-denied";
