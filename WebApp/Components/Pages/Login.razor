@@ -1,5 +1,6 @@
 @page "/login"
 @using System.Security.Claims
+@using System.Text.Json
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Authentication.Cookies
 @using WebApp.DTOs
@@ -7,6 +8,7 @@
 @inject UserService UserService
 @inject NavigationManager Navigation
 @using static WebApp.Authorization.RoleHelper
+@inject HttpClient HttpClient
 
 <PageTitle>Login</PageTitle>
 
@@ -20,22 +22,19 @@
                 <p class="text-danger">@_errorMessage</p>
             }
 
-            <EditForm Model="LoginData" OnValidSubmit="HandleValidSubmit" FormName="login" Enhance>
-                <DataAnnotationsValidator />
+            <form action="api/authentication/login" method="post">
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
-                    <InputText id="username" class="form-control" @bind-Value="LoginData.Username" />
-                    <ValidationMessage For="@(() => LoginData.Username)" class="text-danger" />
+                    <input name="username" id="username" class="form-control" type="text" />
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
-                    <InputText id="password" class="form-control" type="password" @bind-Value="LoginData.Password" />
-                    <ValidationMessage For="@(() => LoginData.Password)" class="text-danger" />
+                    <input name="password" id="password" class="form-control" type="password" />
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Login</button>
 
                 <p class="mt-3 mb-0">Don't have an account? <a href="/register">Register here</a></p>
-            </EditForm>
+            </form>
         </div>
     </div>
 </div>
@@ -76,46 +75,11 @@
             return;
         }
 
-        // Check if the user exists
-        var userExists = await UserService.UserExistsAsync(LoginData.Username);
-        if (!userExists)
-        {
-            _errorMessage = "Invalid credentials";
-            return;
-        }
-
-        // Verify the password
-        var credentialsVerified = await UserService.VerifyUserCredentialsAsync(LoginData.Username, LoginData.Password);
-        if (!credentialsVerified)
-        {
-            _errorMessage = "Invalid credentials";
-            return;
-        }
-
-        // Create a new identity for a user
-        var identity = new ClaimsIdentity(
-        [
-        new Claim(ClaimTypes.Name, LoginData.Username),
-new Claim(ClaimTypes.Role, GetRoleName(Role.User))
-        ], CookieAuthenticationDefaults.AuthenticationScheme);
-
-        // Check if the user is an admin
-        if (await UserService.IsAdminAsync(LoginData.Username))
-        {
-            identity.AddClaim(new Claim(ClaimTypes.Role, GetRoleName(Role.Admin)));
-        }
-
-        // Create a new ClaimsPrincipal with the identity
-        var user = new ClaimsPrincipal(identity);
-
-        // Sign in the user
-        if (HttpContext == null)
-        {
-            _errorMessage = "An unexpected error occured, please try again";
-            return;
-        }
-        await HttpContext.SignInAsync(user);
-        GracefulRedirect();
+        // POST sign in
+        var content = new StringContent(JsonSerializer.Serialize(LoginData), null, "application/json");
+        var uri = $"{Navigation.BaseUri}api/authentication/login";
+        var result = await HttpClient.PostAsync(uri, content);
+        //GracefulRedirect();
     }
 
     /// <summary>
