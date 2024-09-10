@@ -20,7 +20,7 @@ public class AuthenticationController : Controller
     }
     
     [HttpPost("[action]")]
-    public async Task<IActionResult> Login([FromForm] LoginDto loginDTO, string returnUrl = "/")
+    public async Task<IActionResult> Login([FromBody] LoginDto loginDTO)
     {
         var errorMessage = string.Empty;
         
@@ -64,6 +64,6 @@ public class AuthenticationController : Controller
         }
         await HttpContext.SignInAsync(user);
 
-        return LocalRedirect(returnUrl);
+        return Ok();
     }
 }
