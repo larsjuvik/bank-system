@@ -56,6 +56,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.Cookie.MaxAge = TimeSpan.FromDays(30);
     });
 builder.Services.AddAuthorization();
+builder.Services.AddControllers();
 builder.Services.AddCascadingAuthenticationState();
 
 var app = builder.Build();
@@ -80,7 +81,23 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAntiforgery();
 
+var cookiePolicyOptions = new CookiePolicyOptions
+{
+    MinimumSameSitePolicy = SameSiteMode.Strict
+};
+app.UseCookiePolicy(cookiePolicyOptions);
+
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+
+// Add routes for login/logout
+app.UseAuthentication();
+app.UseRouting();
+app.UseAuthorization();
+app.UseAntiforgery();
+app.UseEndpoints(options =>
+{
+    options.MapControllers();
+});
 
 app.Run();
