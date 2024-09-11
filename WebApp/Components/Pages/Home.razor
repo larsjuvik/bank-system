@@ -10,79 +10,12 @@
 @inject TransactionService TransactionService
 @inject BankAccountService BankAccountService
 
-
 <PageTitle>Overview</PageTitle>
 
-<div>
-    <h1>Hi, @_firstName</h1>
-
-    <div class="card">
-        <div class="card-body">
-            <div class="d-flex flex-column justify-content-between gap-2">
-                <div class="d-flex flex-row justify-content-between gap-3">
-                    <div class="flex-grow-1">
-                        <label for="name" class="form-label">Name</label>
-                        <input id="name" class="form-control" placeholder="..." value="@_user?.Name" disabled/>
-                    </div>
-                    <div>
-                        <label for="username" class="form-label">Birthdate</label>
-                        <input id="username" class="form-control" placeholder="..."
-                               value="@_user?.BirthDate.ToShortDateString()" disabled/>
-                    </div>
-                </div>
-                <div class="d-flex flex-row justify-content-between gap-3">
-                    <div class="flex-grow-1">
-                        <label for="totalBalance" class="form-label">Balance</label>
-                        <input id="totalBalance"
-                               class="form-control bg-opacity-25 @(_totalBalance != null && _totalBalance != 0 ? (_totalBalance > 0 ? "bg-success" : "bg-danger") : string.Empty)"
-                               type="number" placeholder="..." value="@_totalBalance" disabled/>
-                    </div>
-                    <div>
-                        <label for="accounts" class="form-label">Accounts</label>
-                        <input id="accounts" class="form-control" placeholder="..." value="@_bankAccounts?.Count"
-                               disabled/>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div>
-    <h2>Accounts</h2>
-    @if (_bankAccounts == null || _bankAccounts?.Count == 0)
-    {
-    <p>No accounts registered.</p>
-    <button class="btn btn-sm btn-primary">Create account</button>
-    }
-    else
-    {
-    <RoundedTable>
-        <TableHead>
-            <thead>
-                <tr>
-                    <th>Type</th>
-                    <th>Balance</th>
-                    <th>Account number</th>
-                </tr>
-            </thead>
-        </TableHead>
-        <TableBody>
-            <tbody>
-            @foreach (var bankAccount in _bankAccounts)
-                {
-                    <tr>
-                        <td>@bankAccount.AccountType</td>
-                        <td>@bankAccount.Balance</td>
-                        <td>@bankAccount.AccountNumber</td>
-                    </tr>
-                }
-            </tbody>
-        </TableBody>
-    </RoundedTable>
-    }
-</div>
+@if (_user?.Name.Split(" ").FirstOrDefault() != null)
+{
+    <h1>Hi, @_user.Name.Split(" ").First()</h1>
+}
 
 <div>
     <h2>Cards</h2>
@@ -117,7 +50,7 @@ else
     {
         // Get id from current user
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var username = authState.User?.Identity?.Name;
+        var username = authState.User.Identity?.Name;
         if (username == null)
         {
             return;
