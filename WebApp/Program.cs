@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApp.Components;
 using WebApp.DTOs;
 using WebApp.Services;
+using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,6 +58,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     });
 builder.Services.AddAuthorization();
 builder.Services.AddCascadingAuthenticationState();
+
+builder.Services.AddMudServices();
 
 var app = builder.Build();
 
