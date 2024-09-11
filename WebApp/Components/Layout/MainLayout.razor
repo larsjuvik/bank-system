@@ -25,24 +25,24 @@
         <MudNavMenu>
             <AuthorizeView>
                 <Authorized>
-                    <MudNavLink Href="/" Match="NavLinkMatch.All"><MudIcon Icon="@Icons.Material.Filled.Dashboard"></MudIcon>Overview</MudNavLink>
+                    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Dashboard">Overview</MudNavLink>
                 </Authorized>
             </AuthorizeView>
             <AuthorizeView>
                 <Authorized>
-                    <MudNavLink Href="/transactions" Match="NavLinkMatch.Prefix">Transactions</MudNavLink>
+                    <MudNavLink Href="/transactions" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Money">Transactions</MudNavLink>
                 </Authorized>
             </AuthorizeView>
             <AuthorizeView Roles="Admin">
                 <Authorized>
-                    <MudNavGroup Title="Admin" Expanded="true">
-                        <MudNavLink Href="/admin/users"  Match="NavLinkMatch.Prefix">Users</MudNavLink>
+                    <MudNavGroup Title="Admin" Expanded="true" Icon="@Icons.Material.Filled.Warning">
+                        <MudNavLink Href="/admin/users"  Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Person">Users</MudNavLink>
                     </MudNavGroup>
                 </Authorized>
             </AuthorizeView>
             <AuthorizeView>
                 <Authorized>
-                    <MudNavLink Href="/logout"  Match="NavLinkMatch.Prefix">Log out</MudNavLink>
+                    <MudNavLink Href="/logout"  Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Logout">Log out</MudNavLink>
                 </Authorized>
             </AuthorizeView>
         </MudNavMenu>
