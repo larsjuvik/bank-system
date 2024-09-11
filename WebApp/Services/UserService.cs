@@ -19,10 +19,10 @@ public class UserService(UserRepository userRepository, IMapper mapper)
         await userRepository.SaveUserAsync(model);
     }
 
-    public async Task<List<UserDto>> GetAllUsersWithBankAccountsAsync()
+    public IQueryable<UserDto> GetAllUsersWithBankAccountsAsQueryableAsync()
     {
-        var models = await userRepository.GetAllUsersWithBankAccountsAsync();
-        return mapper.Map<List<UserDto>>(models);
+        var models = userRepository.GetAllUsersWithBankAccountsAsQueryableAsync();
+        return mapper.ProjectTo<UserDto>(models);
     }
 
     public async Task CreateUserAsync(RegisterDto registerUser, bool isAdmin = false)

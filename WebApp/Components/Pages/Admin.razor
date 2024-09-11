@@ -10,7 +10,7 @@
 <h1>Admin</h1>
 
 <MudDataGrid T="UserDto" MultiSelection="true" Items="@_users" SortMode="SortMode.Multiple" Filterable="true" QuickFilter="@SearchFilter"
-             Hideable="true" RowClick="@RowClicked" SelectedItemsChanged="@SelectedItemsChanged">
+             Hideable="true" RowClick="@RowClicked" SelectedItemsChanged="@SelectedItemsChanged" Virtualize>
     <ToolBarContent>
         <MudText Typo="Typo.h6">Users</MudText>
         <MudSpacer />
@@ -33,9 +33,9 @@
     private IQueryable<UserDto>? _users;
     private string? _searchString;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        _users = (await UserService.GetAllUsersWithBankAccountsAsync()).AsQueryable();
+        _users = UserService.GetAllUsersWithBankAccountsAsQueryableAsync();
     }
     
     private Func<UserDto, bool> SearchFilter => u =>
@@ -61,5 +61,4 @@
     {
         // TODO
     }
-
 }
