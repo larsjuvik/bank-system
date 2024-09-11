@@ -1,30 +1,40 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    @* Required *@
-    <MudThemeProvider />
-    <MudPopoverProvider />
+<MudThemeProvider />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
 
-    @* Needed for dialogs *@
-    <MudDialogProvider />
-
-    @* Needed for snackbars *@
-    <MudSnackbarProvider />
-    <div class="sidebarWrapper card">
-        <div class="sidebar">
-            <NavMenu/>
-        </div>
-    </div>
-
-    <main>
-        <article class="mainContent">
+<MudLayout>
+    <MudAppBar>
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer" />
+        BlueFlare
+    </MudAppBar>
+    <MudDrawer @bind-Open="@_navMenuDrawerOpen">
+        <MudNavMenu>
+            <MudNavLink Href="/" Match="NavLinkMatch.All"><MudIcon Icon="@Icons.Material.Filled.Dashboard"></MudIcon>Overview</MudNavLink>
+            <MudNavLink Href="/transactions" Match="NavLinkMatch.Prefix">Transactions</MudNavLink>
+            <MudNavLink Href="/admin"  Match="NavLinkMatch.Prefix">Admin</MudNavLink>
+            <MudNavLink Href="/logout"  Match="NavLinkMatch.Prefix">Log out</MudNavLink>
+        </MudNavMenu>
+    </MudDrawer>
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.Medium">
             @Body
-        </article>
-    </main>
-</div>
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
 
 <div id="blazor-error-ui">
     An unhandled error has occurred.
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+@code {
+    bool _navMenuDrawerOpen = true;
+
+    void ToggleDrawer()
+    {
+        _navMenuDrawerOpen = !_navMenuDrawerOpen;
+    }
+}
