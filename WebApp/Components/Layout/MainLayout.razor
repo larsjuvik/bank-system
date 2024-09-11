@@ -1,4 +1,5 @@
-﻿@inherits LayoutComponentBase
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@inherits LayoutComponentBase
 
 <MudThemeProvider />
 <MudPopoverProvider />
@@ -12,10 +13,26 @@
     </MudAppBar>
     <MudDrawer @bind-Open="@_navMenuDrawerOpen">
         <MudNavMenu>
-            <MudNavLink Href="/" Match="NavLinkMatch.All"><MudIcon Icon="@Icons.Material.Filled.Dashboard"></MudIcon>Overview</MudNavLink>
-            <MudNavLink Href="/transactions" Match="NavLinkMatch.Prefix">Transactions</MudNavLink>
-            <MudNavLink Href="/admin"  Match="NavLinkMatch.Prefix">Admin</MudNavLink>
-            <MudNavLink Href="/logout"  Match="NavLinkMatch.Prefix">Log out</MudNavLink>
+            <AuthorizeView>
+                <Authorized>
+                    <MudNavLink Href="/" Match="NavLinkMatch.All"><MudIcon Icon="@Icons.Material.Filled.Dashboard"></MudIcon>Overview</MudNavLink>
+                </Authorized>
+            </AuthorizeView>
+            <AuthorizeView>
+                <Authorized>
+                    <MudNavLink Href="/transactions" Match="NavLinkMatch.Prefix">Transactions</MudNavLink>
+                </Authorized>
+            </AuthorizeView>
+            <AuthorizeView Roles="Admin">
+                <Authorized>
+                    <MudNavLink Href="/admin"  Match="NavLinkMatch.Prefix">Admin</MudNavLink>
+                </Authorized>
+            </AuthorizeView>
+            <AuthorizeView>
+                <Authorized>
+                    <MudNavLink Href="/logout"  Match="NavLinkMatch.Prefix">Log out</MudNavLink>
+                </Authorized>
+            </AuthorizeView>
         </MudNavMenu>
     </MudDrawer>
     <MudMainContent>
