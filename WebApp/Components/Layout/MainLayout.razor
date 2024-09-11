@@ -35,7 +35,9 @@
             </AuthorizeView>
             <AuthorizeView Roles="Admin">
                 <Authorized>
-                    <MudNavLink Href="/admin"  Match="NavLinkMatch.Prefix">Admin</MudNavLink>
+                    <MudNavGroup Title="Admin" Expanded="true">
+                        <MudNavLink Href="/admin"  Match="NavLinkMatch.Prefix">Admin</MudNavLink>
+                    </MudNavGroup>
                 </Authorized>
             </AuthorizeView>
             <AuthorizeView>
