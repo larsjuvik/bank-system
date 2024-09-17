@@ -7,7 +7,7 @@
 
 This is a demo of a (fictional) bank system called BlueFlare, written in Blazor Web App, with .NET 8.
 
-![A screenshot of the application](./docs/Screenshot.png)
+![A screenshot of the application](./docs/Screenshot_Home.png)
 
 ## Building the application
 
