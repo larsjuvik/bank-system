@@ -1,0 +1,16 @@
+@using WebApp.DTOs
+<div class="card-scroller">
+    @foreach (var bankAccount in CardAccounts)
+    {
+    <DebitCard
+        Title="@bankAccount.Owner.Name"
+        DescriptionLeft="@bankAccount.AccountNumber"
+        DescriptionRight="@bankAccount.Balance.ToString()"
+        Id="@bankAccount.AccountNumber" />
+    }
+</div>
+
+@code {
+    [Parameter]
+    public ICollection<BankAccountDto> CardAccounts { get; set; }
+}

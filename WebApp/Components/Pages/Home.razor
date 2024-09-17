@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @using WebApp.DTOs
 @using WebApp.Services
+@using WebApp.Components.Components
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @attribute [Authorize]
 @attribute [StreamRendering]
@@ -48,23 +49,14 @@ else
 
 <div>
     <h2>Cards</h2>
-@if (_bankAccounts == null || _bankAccounts?.Where(b => b.HasDebitCard).Count() == 0)
+@if (_bankAccounts?.Where(b => b.HasDebitCard).Count() is 0)
 {
     <p>No cards registered.</p>
     <button class="btn btn-sm btn-primary">Create card</button>
 }
 else
 {
-    <div class="d-flex flex-row gap-4 pb-4 ps-1 pe-4" style="overflow-x: auto; overflow-y: visible !important;">
-    @foreach (var bankAccount in _bankAccounts.Where(b => b.HasDebitCard))
-    {
-        <DebitCard
-            Title="@bankAccount.Owner.Name"
-            DescriptionLeft="@bankAccount.AccountNumber"
-            DescriptionRight="@bankAccount.Balance.ToString()"
-            Id="@bankAccount.AccountNumber" />
-    }
-    </div>
+    <DebitCardCollection CardAccounts="_bankAccounts?.Where(b => b.HasDebitCard).ToList()" />
 }
 </div>
 
