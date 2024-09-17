@@ -9,6 +9,7 @@
 @inject UserService UserService
 @inject TransactionService TransactionService
 @inject BankAccountService BankAccountService
+@inject NavigationManager NavigationManager
 
 <PageTitle>Overview</PageTitle>
 
@@ -16,6 +17,34 @@
 {
     <h1>Hi, @_user.Name.Split(" ").First()</h1>
 }
+
+@if (_user?.BankAccounts.Count is > 0)
+{
+<MudTable Items="_user.BankAccounts" Hover="true" Breakpoint="Breakpoint.Sm" OnRowClick="BankAccountClicked">
+    <HeaderContent>
+        <MudTh>Account</MudTh>
+        <MudTh>Balance</MudTh>
+        <MudTh>Type</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Nr">@context.AccountNumber</MudTd>
+        <MudTd DataLabel="Sign">@context.Balance</MudTd>
+        <MudTd DataLabel="Name">@context.AccountType</MudTd>
+    </RowTemplate>
+</MudTable>
+}
+else
+{
+    <MudCard>
+        <MudCardContent>
+            <MudText>You don't have any bank accounts.</MudText>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton Variant="Variant.Text" Color="Color.Primary">Create one</MudButton>
+        </MudCardActions>
+    </MudCard>
+}
+
 
 <div>
     <h2>Cards</h2>
@@ -64,5 +93,16 @@ else
 
         // Calculate remaining fields
         _totalBalance = _bankAccounts?.Sum(ba => ba.Balance);
+    }
+
+    private void BankAccountClicked(TableRowClickEventArgs<BankAccountDto> obj)
+    {
+        var bankAccountNumber = obj.Item?.AccountNumber;
+        if (bankAccountNumber == null)
+        {
+            return;
+        }
+
+        NavigationManager.NavigateTo($"/bankaccount/${bankAccountNumber}");
     }
 }
