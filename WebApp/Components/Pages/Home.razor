@@ -20,7 +20,7 @@
 
 @if (_user?.BankAccounts.Count is > 0)
 {
-<MudTable Items="_user.BankAccounts" Hover="true" Breakpoint="Breakpoint.Sm" OnRowClick="BankAccountClicked">
+<MudTable Items="_user.BankAccounts" Hover="true" Breakpoint="Breakpoint.Sm" T="BankAccountDto" OnRowClick="BankAccountClicked">
     <HeaderContent>
         <MudTh>Account</MudTh>
         <MudTh>Balance</MudTh>
