@@ -11,11 +11,10 @@ public class UserRepository(BankContext context)
         await context.SaveChangesAsync();
     }
 
-    public async Task<List<User>> GetAllUsersWithBankAccountsAsync()
+    public IQueryable<User> GetAllUsersWithBankAccountsAsQueryableAsync()
     {
-        return await context.Users
-            .Include(u => u.BankAccounts)
-            .ToListAsync();
+        return context.Users
+            .Include(u => u.BankAccounts);
     }
 
     public async Task CreateUserAsync(string username, string password, string name, DateTime birthDate, bool isAdmin = false)

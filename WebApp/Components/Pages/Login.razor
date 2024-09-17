@@ -1,9 +1,13 @@
 @page "/login"
-@using System.Text.Json
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
 @using WebApp.DTOs
+@using WebApp.Services
+@inject UserService UserService
 @inject NavigationManager Navigation
-@inject IJSRuntime JS
-@rendermode InteractiveServer
+@using static WebApp.Authorization.RoleHelper
+@attribute [ExcludeFromInteractiveRouting]
 
 <PageTitle>Login</PageTitle>
 
@@ -36,24 +40,6 @@
         </div>
     </div>
 </div>
-<script>
-    /// Parameter is a serialized object containing "Username" and "Password" fields
-    window.login = async (loginDataSerialized) => {
-        console.info("Trying to log in:", username);
-        
-        let result = await fetch("/api/authentication/login", {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: loginDataSerialized
-        });
-        return result.ok;
-    }
-
-
-</script>
 @code {
     [SupplyParameterFromForm(FormName = "login")]
     private LoginDto LoginData { get; set; } = new();
@@ -91,25 +77,59 @@
             return;
         }
 
-        // Try to login
-        // The login call is called from the clients js, to store the cookies in the clients browser
-        var loginDataSerialized = JsonSerializer.Serialize(LoginData);
-        var loggedIn = await JS.InvokeAsync<bool>("login", loginDataSerialized);
-        if (loggedIn)
+        // Check if the user exists
+        var userExists = await UserService.UserExistsAsync(LoginData.Username);
+        if (!userExists)
         {
-            RedirectAfterLogin();
+            _errorMessage = "Invalid credentials";
+            return;
         }
+
+        // Verify the password
+        var credentialsVerified = await UserService.VerifyUserCredentialsAsync(LoginData.Username, LoginData.Password);
+        if (!credentialsVerified)
+        {
+            _errorMessage = "Invalid credentials";
+            return;
+        }
+
+        // Create a new identity for a user
+        var identity = new ClaimsIdentity(
+        [
+        new Claim(ClaimTypes.Name, LoginData.Username),
+new Claim(ClaimTypes.Role, GetRoleName(Role.User))
+        ], CookieAuthenticationDefaults.AuthenticationScheme);
+
+        // Check if the user is an admin
+        if (await UserService.IsAdminAsync(LoginData.Username))
+        {
+            identity.AddClaim(new Claim(ClaimTypes.Role, GetRoleName(Role.Admin)));
+        }
+
+        // Create a new ClaimsPrincipal with the identity
+        var user = new ClaimsPrincipal(identity);
+
+        // Sign in the user
+        if (HttpContext == null)
+        {
+            _errorMessage = "An unexpected error occured, please try again";
+            return;
+        }
+        await HttpContext.SignInAsync(user);
+        GracefulRedirect();
     }
 
     /// <summary>
-    /// Redirects to returnUrl if set, or just returns to home screen and then does full refresh
+    /// Gracefully redirects to returnUrl if set, or just returns to home screen
     /// </summary>
-    private void RedirectAfterLogin()
+    private void GracefulRedirect()
     {
         var uri = new Uri(Navigation.Uri);
         var returnUrl = System.Web.HttpUtility.ParseQueryString(uri.Query).Get("returnUrl");
 
-        Navigation.NavigateTo(returnUrl ?? "/");
-        Navigation.Refresh(true);
+        if (returnUrl == null)
+        {
+            Navigation.NavigateTo("/");
+        }
     }
 }
