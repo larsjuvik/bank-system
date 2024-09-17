@@ -14,52 +14,55 @@
 
 <PageTitle>Overview</PageTitle>
 
-@if (_user?.Name.Split(" ").FirstOrDefault() != null)
-{
-    <h1>Hi, @_user.Name.Split(" ").First()</h1>
-}
+<div class="wrapper">
+    <div>
+    @if (_user?.Name.Split(" ").FirstOrDefault() != null)
+    {
+        <h1>Hi, @_user.Name.Split(" ").First()</h1>
+    }
 
-@if (_user?.BankAccounts.Count is > 0)
-{
-<MudTable Items="_user.BankAccounts" Hover="true" Breakpoint="Breakpoint.Sm" T="BankAccountDto" OnRowClick="BankAccountClicked">
-    <HeaderContent>
-        <MudTh>Account</MudTh>
-        <MudTh>Balance</MudTh>
-        <MudTh>Type</MudTh>
-    </HeaderContent>
-    <RowTemplate>
-        <MudTd DataLabel="Nr">@context.AccountNumber</MudTd>
-        <MudTd DataLabel="Sign">@context.Balance</MudTd>
-        <MudTd DataLabel="Name">@context.AccountType</MudTd>
-    </RowTemplate>
-</MudTable>
-}
-else
-{
-    <MudCard>
-        <MudCardContent>
-            <MudText>You don't have any bank accounts.</MudText>
-        </MudCardContent>
-        <MudCardActions>
-            <MudButton Variant="Variant.Text" Color="Color.Primary">Create one</MudButton>
-        </MudCardActions>
-    </MudCard>
-}
+    @if (_bankAccounts.Count is > 0)
+    {
+    <h2>Bank Accounts</h2>
+    <MudTable Items="_bankAccounts" Hover="true" Breakpoint="Breakpoint.Sm" T="BankAccountDto" OnRowClick="BankAccountClicked">
+        <HeaderContent>
+            <MudTh>Account</MudTh>
+            <MudTh>Balance</MudTh>
+            <MudTh>Type</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Nr">@context.AccountNumber</MudTd>
+            <MudTd DataLabel="Sign">@context.Balance</MudTd>
+            <MudTd DataLabel="Name">@context.AccountType</MudTd>
+        </RowTemplate>
+    </MudTable>
+    }
+    else
+    {
+        <MudCard>
+            <MudCardContent>
+                <MudText>You don't have any bank accounts.</MudText>
+            </MudCardContent>
+            <MudCardActions>
+                <MudButton Variant="Variant.Text" Color="Color.Primary">Create one</MudButton>
+            </MudCardActions>
+        </MudCard>
+    }
+    </div>
 
-
-<div>
-    <h2>Cards</h2>
-@if (_bankAccounts?.Where(b => b.HasDebitCard).Count() is 0)
-{
-    <p>No cards registered.</p>
-    <button class="btn btn-sm btn-primary">Create card</button>
-}
-else
-{
-    <DebitCardCollection CardAccounts="_bankAccounts?.Where(b => b.HasDebitCard).ToList()" />
-}
+    <div>
+        <h2>Cards</h2>
+    @if (_bankAccounts?.Where(b => b.HasDebitCard).Count() is 0)
+    {
+        <p>No cards registered.</p>
+        <button class="btn btn-sm btn-primary">Create card</button>
+    }
+    else
+    {
+        <DebitCardCollection CardAccounts="_bankAccounts?.Where(b => b.HasDebitCard).ToList()" />
+    }
+    </div>
 </div>
-
 @code {
     private UserDto? _user = null;
     private List<TransactionDto>? _transactions = null;
