@@ -5,7 +5,7 @@
 **This project is a demo, and should not be considered production-ready.**
 **Still under development.**
 
-This is a demo of a (fictional) bank system called BlueFlare, written in Blazor Web App, with .NET 8.
+This is a demo of a (fictional) bank system called BlueFlare, written in Blazor Web App, with .NET 9.
 
 ![A screenshot of the application](./docs/Screenshot_Home.png)
 
