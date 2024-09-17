@@ -50,13 +50,14 @@ builder.Services.AddDbContext<BankContext>(options => options.UseInMemoryDatabas
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.Cookie.Name = "BankSystemDemo";
+        options.Cookie.Name = "Authentication";
         options.LoginPath = "/login";
         options.LogoutPath = "/logout";
         options.AccessDeniedPath = "/access-denied";
         options.Cookie.MaxAge = TimeSpan.FromDays(30);
     });
 builder.Services.AddAuthorization();
+builder.Services.AddControllers();
 builder.Services.AddCascadingAuthenticationState();
 
 builder.Services.AddMudServices();
@@ -82,8 +83,21 @@ app.UseStatusCodePages();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAntiforgery();
+app.UseCookiePolicy(new CookiePolicyOptions
+{
+    MinimumSameSitePolicy = SameSiteMode.Strict
+});
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+
+app.UseAuthentication();
+app.UseRouting();
+app.UseAuthorization();
+app.UseAntiforgery();
+app.UseEndpoints(options =>
+{
+    options.MapControllers();
+});
 
 app.Run();

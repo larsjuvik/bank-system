@@ -38,7 +38,7 @@ else
             return;
         }
 
-        // Check if the user is authenticated
+        // Check if the user is not authenticated
         if (!identity.IsAuthenticated)
         {
             Navigation.NavigateTo("/login");
@@ -49,6 +49,6 @@ else
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         _tryingToLogOut = false;
 
-        Navigation.NavigateTo("/logout");
+        Navigation.NavigateTo("/login", true, true);
     }
 }

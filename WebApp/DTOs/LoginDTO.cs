@@ -1,6 +1,7 @@
 namespace WebApp.DTOs;
 using System.ComponentModel.DataAnnotations;
 
+[Serializable]
 public class LoginDto
 {
     [Required]
