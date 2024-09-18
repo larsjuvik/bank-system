@@ -11,3 +11,10 @@ public class BankAccountDto
     public ICollection<TransactionDto> FromTransactions { get; set; }
     public ICollection<TransactionDto> ToTransactions { get; set; }
 }
+
+public class CreateBankAccountDto
+{
+    public int UserId { get; set; }
+    public bool HasDebitCard { get; set; }
+    public BankAccountType AccountType { get; set; }
+}

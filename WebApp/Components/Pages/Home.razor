@@ -2,8 +2,10 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using WebApp.DTOs
+@using System.Globalization
 @using WebApp.Services
 @using WebApp.Components.Components
+@using WebApp.Components.Dialogs
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @attribute [Authorize]
 @attribute [StreamRendering]
@@ -11,6 +13,7 @@
 @inject TransactionService TransactionService
 @inject BankAccountService BankAccountService
 @inject NavigationManager NavigationManager
+@inject IDialogService DialogService
 
 <PageTitle>Overview</PageTitle>
 
@@ -38,7 +41,7 @@
             <MudTd DataLabel="AccountType">@context.AccountType</MudTd>
         </RowTemplate>
     </MudTable>
-    <MudButton OnClick="CreateBankAccountClicked" StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Text" Color="Color.Primary">Create account</MudButton>
+    <MudButton @onclick="CreateBankAccountClicked" StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Text" Color="Color.Primary">Create account</MudButton>
     }
     else
     {
@@ -47,7 +50,7 @@
                 <MudText>You don't have any bank accounts.</MudText>
             </MudCardContent>
             <MudCardActions>
-                <MudButton StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Text" Color="Color.Primary">Create one</MudButton>
+                <MudButton @onclick="CreateBankAccountClicked" StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Text" Color="Color.Primary">Create one</MudButton>
             </MudCardActions>
         </MudCard>
     }
@@ -93,8 +96,10 @@
         _totalBalance = _bankAccounts?.Sum(ba => ba.Balance);
     }
 
-    private void CreateBankAccountClicked(EventCallback<MouseEventArgs> obj)
+    private async Task CreateBankAccountClicked()
     {
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+        await DialogService.ShowAsync<AddBankAccountDialog>("Add Bank Account", options);
     }
 
     private void BankAccountClicked(TableRowClickEventArgs<BankAccountDto> obj)
