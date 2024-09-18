@@ -23,19 +23,22 @@
 
     @if (_bankAccounts.Count is > 0)
     {
-    <h2>Bank Accounts</h2>
-    <MudTable Items="_bankAccounts" Hover="true" Breakpoint="Breakpoint.Sm" T="BankAccountDto" OnRowClick="BankAccountClicked">
+    <MudTable Dense="true" Items="_bankAccounts" Hover="true" T="BankAccountDto" OnRowClick="BankAccountClicked">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Bank Accounts</MudText>
+        </ToolBarContent>
         <HeaderContent>
             <MudTh>Account</MudTh>
             <MudTh>Balance</MudTh>
             <MudTh>Type</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Nr">@context.AccountNumber</MudTd>
-            <MudTd DataLabel="Sign">@context.Balance</MudTd>
-            <MudTd DataLabel="Name">@context.AccountType</MudTd>
+            <MudTd DataLabel="AccountNumber">@context.AccountNumber</MudTd>
+            <MudTd DataLabel="Balance">@(context.Balance.ToString("C", CultureInfo.GetCultureInfo("en-US")))$</MudTd>
+            <MudTd DataLabel="AccountType">@context.AccountType</MudTd>
         </RowTemplate>
     </MudTable>
+    <MudButton OnClick="CreateBankAccountClicked" StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Text" Color="Color.Primary">Create account</MudButton>
     }
     else
     {
@@ -88,6 +91,10 @@
 
         // Calculate remaining fields
         _totalBalance = _bankAccounts?.Sum(ba => ba.Balance);
+    }
+
+    private void CreateBankAccountClicked(EventCallback<MouseEventArgs> obj)
+    {
     }
 
     private void BankAccountClicked(TableRowClickEventArgs<BankAccountDto> obj)
