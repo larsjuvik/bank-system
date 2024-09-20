@@ -36,8 +36,5 @@ docker run --name bank-system -d -p 8080:8080 bank-system
 Thank you to the following libraries and frameworks :heart:
 
 - [Blazor](https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor)
-- [Bootstrap](https://getbootstrap.com)
-- [Popper.js](https://github.com/floating-ui/floating-ui)
-  - [Old branch](https://github.com/floating-ui/floating-ui/tree/v2.x)
-- [Bootstrap Icons](https://icons.getbootstrap.com)
+- [MudBlazor](https://mudblazor.com)
 - [AutoMapper](https://github.com/AutoMapper/AutoMapper)
