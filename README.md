@@ -31,6 +31,12 @@ docker build -t bank-system .
 docker run --name bank-system -d -p 8080:8080 bank-system
 ```
 
+## Goals (as of yet)
+
+- [ ] A data table for Admins to manage users
+- [ ] A home page for users, where they can add bank accounts
+- [ ] A transactions page, where users can see transactions from a specific account
+
 ## Attributions
 
 Thank you to the following libraries and frameworks :heart:
