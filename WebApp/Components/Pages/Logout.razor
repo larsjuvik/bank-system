@@ -1,7 +1,7 @@
 @page "/logout"
-@using Microsoft.AspNetCore.Authentication
-@using Microsoft.AspNetCore.Authentication.Cookies
 @inject NavigationManager Navigation
+@inject IJSRuntime JS
+@rendermode InteractiveServer
 
 <PageTitle>Logout</PageTitle>
 
@@ -17,6 +17,20 @@ else
 <a href="/login">
     Press here to login.
 </a>
+<script>
+    window.logout = async () => {
+        let result = await fetch("/api/authentication/logout", {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+        });
+        return result.ok;
+    }
+
+
+</script>
 
 @code {
     private bool _tryingToLogOut = false;
@@ -24,30 +38,29 @@ else
     [CascadingParameter]
     private HttpContext? HttpContext { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (HttpContext == null)
-        {
-            return;
-        }
-
-        var identity = HttpContext.User.Identity;
-        if (identity == null)
-        {
-            return;
-        }
-
-        // Check if the user is not authenticated
-        if (!identity.IsAuthenticated)
-        {
-            Navigation.NavigateTo("/login");
-            return;
-        }
-
+        if (!firstRender) return;
+        
+        // Try to log out
         _tryingToLogOut = true;
-        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        var loggedOut = await JS.InvokeAsync<bool>("logout");
         _tryingToLogOut = false;
-
-        Navigation.NavigateTo("/login", true, true);
+        
+        if (loggedOut)
+        {
+            RedirectAfterLogout();
+        }
+    }
+    
+    /// <summary>
+    /// Redirects to returnUrl if set, or just returns to home screen and then does full refresh
+    /// </summary>
+    private void RedirectAfterLogout()
+    {
+        var uri = new Uri(Navigation.Uri);
+        var returnUrl = System.Web.HttpUtility.ParseQueryString(uri.Query).Get("returnUrl");
+        
+        Navigation.NavigateTo(returnUrl ?? "/login", true, true);
     }
 }

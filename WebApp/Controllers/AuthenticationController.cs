@@ -10,45 +10,40 @@ namespace WebApp.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AuthenticationController : Controller
+public class AuthenticationController(UserService userService) : Controller
 {
-    private readonly UserService _userService;
-
-    public AuthenticationController(UserService userService)
-    {
-        _userService = userService;
-    }
-    
     [HttpPost("[action]")]
-    public async Task<IActionResult> Login([FromBody] LoginDto loginDTO)
+    public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
     {
-        var errorMessage = string.Empty;
-        
+        // Null-checks
+        if (loginDto.Username == null || loginDto.Password == null)
+        {
+            return BadRequest("Please provide non-null username and password");
+        }
+
         // Check if the user exists
-        var userExists = await _userService.UserExistsAsync(loginDTO.Username);
+        var userExists = await userService.UserExistsAsync(loginDto.Username);
         if (!userExists)
         {
-            errorMessage = "Invalid credentials";
-            return BadRequest(errorMessage);
+            return BadRequest("Invalid credentials");
         }
 
         // Verify the password
-        var credentialsVerified = await _userService.VerifyUserCredentialsAsync(loginDTO.Username, loginDTO.Password);
+        var credentialsVerified = await userService.VerifyUserCredentialsAsync(loginDto.Username, loginDto.Password);
         if (!credentialsVerified)
         {
-            errorMessage = "Invalid credentials";
-            return BadRequest(errorMessage);
+            return BadRequest("Invalid credentials");
         }
 
-        // Create a new identity for a user
+        // Create identity for user
         var identity = new ClaimsIdentity(
         [
-            new Claim(ClaimTypes.Name, loginDTO.Username),
+            new Claim(ClaimTypes.Name, loginDto.Username),
             new Claim(ClaimTypes.Role, RoleHelper.GetRoleName(RoleHelper.Role.User))
         ], CookieAuthenticationDefaults.AuthenticationScheme);
 
         // Check if the user is an admin
-        if (await _userService.IsAdminAsync(loginDTO.Username))
+        if (await userService.IsAdminAsync(loginDto.Username))
         {
             identity.AddClaim(new Claim(ClaimTypes.Role, RoleHelper.GetRoleName(RoleHelper.Role.Admin)));
         }
@@ -57,13 +52,24 @@ public class AuthenticationController : Controller
         var user = new ClaimsPrincipal(identity);
 
         // Sign in the user
-        if (HttpContext == null)
-        {
-            errorMessage = "An unexpected error occured, please try again";
-            return BadRequest(errorMessage);
-        }
         await HttpContext.SignInAsync(user);
-
+        return Ok();
+    }
+    
+    [HttpPost("[action]")]
+    public async Task<IActionResult> Logout()
+    {
+        // Check that a user is logged in
+        if (HttpContext.User.Identity == null || !HttpContext.User.Identity.IsAuthenticated)
+        {
+            return BadRequest("Not logged in");
+        }
+        
+        // Sign out the user
+        await HttpContext.SignOutAsync();
+        
+        // Delete auth cookie
+        HttpContext.Response.Cookies.Delete("Authentication");
         return Ok();
     }
 }
