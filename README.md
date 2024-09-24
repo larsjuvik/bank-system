@@ -37,6 +37,13 @@ docker run --name bank-system -d -p 8080:8080 bank-system
 - [ ] A home page for users, where they can add bank accounts
 - [ ] A transactions page, where users can see transactions from a specific account
 
+## Security
+
+This application uses cookie-based authentication and authorization, and has areas for improvement regarding security.
+Due to the persistent nature of SignalR connection when using Blazor, the application does not detect cookie expiration immediately.
+Therefore, if a user is still on the same SignalR connection after logging in, they may be logged in and authenticated
+even after the cookie has expired. On page refresh, the user will be redirected to the login page.
+
 ## Attributions
 
 Thank you to the following libraries and frameworks :heart:
