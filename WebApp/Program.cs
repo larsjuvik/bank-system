@@ -57,7 +57,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.Cookie.HttpOnly = true;
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         options.Cookie.SameSite = SameSiteMode.Strict;
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+        options.ExpireTimeSpan = TimeSpan.FromSeconds(10);
         options.SlidingExpiration = true;
     });
 builder.Services.AddAuthorization();
@@ -104,5 +104,11 @@ app.UseEndpoints(options =>
 {
     options.MapControllers();
 });
+
+// Close connection if user's authentication cookie has expired
+app.MapBlazorHub(options =>
+{
+    options.CloseOnAuthenticationExpiration = true;
+}).WithOrder(-1);
 
 app.Run();
