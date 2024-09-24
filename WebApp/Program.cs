@@ -14,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-// Repostiories
+// Repositories
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<TransactionRepository>();
 builder.Services.AddScoped<BankAccountRepository>();
@@ -53,7 +53,11 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LoginPath = "/login";
         options.LogoutPath = "/logout";
         options.AccessDeniedPath = "/access-denied";
-        options.Cookie.MaxAge = TimeSpan.FromDays(30);
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.SameSite = SameSiteMode.Strict;
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+        options.SlidingExpiration = true;
     });
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
@@ -92,6 +96,7 @@ app.UseAuthentication();
 app.UseRouting();
 app.UseAuthorization();
 app.UseAntiforgery();
+
 app.UseEndpoints(options =>
 {
     options.MapControllers();
