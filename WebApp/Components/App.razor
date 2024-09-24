@@ -14,16 +14,9 @@
 </head>
 
 <body>
-    <Routes @rendermode="RenderMode" />
+    <Routes @rendermode="InteractiveServer" />
     <script src="_framework/blazor.web.js"></script>
     <script src="_content/MudBlazor/MudBlazor.min.js"></script>
 </body>
 
 </html>
-@code {
-    [CascadingParameter]
-    private HttpContext? HttpContext { get; set; }
-
-    private IComponentRenderMode? RenderMode
-        => HttpContext != null ? HttpContext.AcceptsInteractiveRouting() ? InteractiveServer : null : null;
-}
