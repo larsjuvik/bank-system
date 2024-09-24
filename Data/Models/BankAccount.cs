@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Data.Helpers;
 
 namespace Data.Models;
 
@@ -13,15 +14,7 @@ public class BankAccount
     public DateTime CreatedDate { get; set; }
     public bool HasDebitCard { get; set; }
     public BankAccountType? Type { get; set; }
-    public string BankAccountTypeName =>
-        Type switch
-        {
-            BankAccountType.Checking => "Checking",
-            BankAccountType.Savings => "Savings",
-            BankAccountType.CertificateOfDeposit => "Certificate of Deposit",
-            BankAccountType.Investing => "Investing",
-            _ => throw new ArgumentOutOfRangeException("No such bank account type")
-        };
+    public string BankAccountTypeName => BankAccountTypeHelper.GetStringFromBankAccountType(Type);
 
     public User? Owner { get; init; }
     public ICollection<Transaction>? FromTransactions { get; set; }

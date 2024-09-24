@@ -2,12 +2,13 @@
 
 [![CI](https://github.com/larsjuvik/BankSystem/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/larsjuvik/BankSystem/actions/workflows/CI.yml)
 
-**This is a demo application, and is not production ready.**
+**This project is a demo, and should not be considered production-ready.**
+**Still under development.**
 
-This is a demo of a (fictional) bank system called BlueFlare, written in Blazor Web App, with .NET 8.
-It has basic cookie-based authentication, and uses authorization roles.
+This is a demo of a (fictional) bank system called BlueFlare, written in Blazor Web App, with .NET 9.
 
-![A screenshot of the application](./docs/Screenshot.png)
+![A screenshot of the application](./docs/Screenshot_Home.png)
+All data in the screenshot are fictional.
 
 ## Building the application
 
@@ -30,13 +31,16 @@ docker build -t bank-system .
 docker run --name bank-system -d -p 8080:8080 bank-system
 ```
 
+## Goals (as of yet)
+
+- [ ] A data table for Admins to manage users
+- [ ] A home page for users, where they can add bank accounts
+- [ ] A transactions page, where users can see transactions from a specific account
+
 ## Attributions
 
 Thank you to the following libraries and frameworks :heart:
 
 - [Blazor](https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor)
-- [Bootstrap](https://getbootstrap.com)
-- [Popper.js](https://github.com/floating-ui/floating-ui)
-  - [Old branch](https://github.com/floating-ui/floating-ui/tree/v2.x)
-- [Bootstrap Icons](https://icons.getbootstrap.com)
+- [MudBlazor](https://mudblazor.com)
 - [AutoMapper](https://github.com/AutoMapper/AutoMapper)

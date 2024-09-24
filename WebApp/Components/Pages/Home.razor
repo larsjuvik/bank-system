@@ -2,111 +2,73 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using WebApp.DTOs
+@using System.Globalization
 @using WebApp.Services
+@using WebApp.Components.Components
+@using WebApp.Components.Dialogs
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@rendermode InteractiveServer
 @attribute [Authorize]
 @attribute [StreamRendering]
 @inject UserService UserService
 @inject TransactionService TransactionService
 @inject BankAccountService BankAccountService
-
+@inject NavigationManager NavigationManager
+@inject IDialogService DialogService
 
 <PageTitle>Overview</PageTitle>
 
-<div>
-    <h1>Hi, @_firstName</h1>
-
-    <div class="card">
-        <div class="card-body">
-            <div class="d-flex flex-column justify-content-between gap-2">
-                <div class="d-flex flex-row justify-content-between gap-3">
-                    <div class="flex-grow-1">
-                        <label for="name" class="form-label">Name</label>
-                        <input id="name" class="form-control" placeholder="..." value="@_user?.Name" disabled/>
-                    </div>
-                    <div>
-                        <label for="username" class="form-label">Birthdate</label>
-                        <input id="username" class="form-control" placeholder="..."
-                               value="@_user?.BirthDate.ToShortDateString()" disabled/>
-                    </div>
-                </div>
-                <div class="d-flex flex-row justify-content-between gap-3">
-                    <div class="flex-grow-1">
-                        <label for="totalBalance" class="form-label">Balance</label>
-                        <input id="totalBalance"
-                               class="form-control bg-opacity-25 @(_totalBalance != null && _totalBalance != 0 ? (_totalBalance > 0 ? "bg-success" : "bg-danger") : string.Empty)"
-                               type="number" placeholder="..." value="@_totalBalance" disabled/>
-                    </div>
-                    <div>
-                        <label for="accounts" class="form-label">Accounts</label>
-                        <input id="accounts" class="form-control" placeholder="..." value="@_bankAccounts?.Count"
-                               disabled/>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div>
-    <h2>Accounts</h2>
-    @if (_bankAccounts == null || _bankAccounts?.Count == 0)
+<div class="wrapper">
+    <div>
+    @if (_user?.Name.Split(" ").FirstOrDefault() != null)
     {
-    <p>No accounts registered.</p>
-    <button class="btn btn-sm btn-primary">Create account</button>
+        <h1>Hi, @_user.Name.Split(" ").First()</h1>
+    }
+
+    @if (_bankAccounts.Count is > 0)
+    {
+    <MudTable Dense="true" Items="_bankAccounts" Hover="true" T="BankAccountDto" OnRowClick="BankAccountClicked">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Bank Accounts</MudText>
+        </ToolBarContent>
+        <HeaderContent>
+            <MudTh>Account</MudTh>
+            <MudTh>Balance</MudTh>
+            <MudTh>Type</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="AccountNumber">@context.AccountNumber</MudTd>
+            <MudTd DataLabel="Balance">@(context.Balance.ToString("C", CultureInfo.GetCultureInfo("en-US")))$</MudTd>
+            <MudTd DataLabel="AccountType">@context.AccountType</MudTd>
+        </RowTemplate>
+    </MudTable>
+    <MudButton @onclick="CreateBankAccountClicked" StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Text" Color="Color.Primary">Create account</MudButton>
     }
     else
     {
-    <RoundedTable>
-        <TableHead>
-            <thead>
-                <tr>
-                    <th>Type</th>
-                    <th>Balance</th>
-                    <th>Account number</th>
-                </tr>
-            </thead>
-        </TableHead>
-        <TableBody>
-            <tbody>
-            @foreach (var bankAccount in _bankAccounts)
-                {
-                    <tr>
-                        <td>@bankAccount.AccountType</td>
-                        <td>@bankAccount.Balance</td>
-                        <td>@bankAccount.AccountNumber</td>
-                    </tr>
-                }
-            </tbody>
-        </TableBody>
-    </RoundedTable>
-    }
-</div>
-
-<div>
-    <h2>Cards</h2>
-@if (_bankAccounts == null || _bankAccounts?.Where(b => b.HasDebitCard).Count() == 0)
-{
-    <p>No cards registered.</p>
-    <button class="btn btn-sm btn-primary">Create card</button>
-}
-else
-{
-    <div class="d-flex flex-row gap-4 pb-4 ps-1 pe-4" style="overflow-x: auto; overflow-y: visible !important;">
-    @foreach (var bankAccount in _bankAccounts.Where(b => b.HasDebitCard))
-    {
-        <DebitCard
-            Title="@bankAccount.Owner.Name"
-            DescriptionLeft="@bankAccount.AccountNumber"
-            DescriptionRight="@bankAccount.Balance.ToString()"
-            Id="@bankAccount.AccountNumber" />
+        <MudCard>
+            <MudCardContent>
+                <MudText>You don't have any bank accounts.</MudText>
+            </MudCardContent>
+            <MudCardActions>
+                <MudButton @onclick="CreateBankAccountClicked" StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Text" Color="Color.Primary">Create one</MudButton>
+            </MudCardActions>
+        </MudCard>
     }
     </div>
-}
-</div>
 
+    <div>
+        <h2>Cards</h2>
+    @if (_bankAccounts?.Where(b => b.HasDebitCard).Count() is 0)
+    {
+        <p>No cards registered.</p>
+        <button class="btn btn-sm btn-primary">Create card</button>
+    }
+    else
+    {
+        <DebitCardCollection CardAccounts="_bankAccounts?.Where(b => b.HasDebitCard).ToList()" />
+    }
+    </div>
+</div>
 @code {
     private UserDto? _user = null;
     private List<TransactionDto>? _transactions = null;
@@ -118,7 +80,7 @@ else
     {
         // Get id from current user
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var username = authState.User?.Identity?.Name;
+        var username = authState.User.Identity?.Name;
         if (username == null)
         {
             return;
@@ -132,5 +94,22 @@ else
 
         // Calculate remaining fields
         _totalBalance = _bankAccounts?.Sum(ba => ba.Balance);
+    }
+
+    private async Task CreateBankAccountClicked()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+        await DialogService.ShowAsync<AddBankAccountDialog>("Add Bank Account", options);
+    }
+
+    private void BankAccountClicked(TableRowClickEventArgs<BankAccountDto> obj)
+    {
+        var bankAccountNumber = obj.Item?.AccountNumber;
+        if (bankAccountNumber == null)
+        {
+            return;
+        }
+
+        NavigationManager.NavigateTo($"/bankaccount/${bankAccountNumber}");
     }
 }

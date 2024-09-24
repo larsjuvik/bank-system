@@ -1,11 +1,13 @@
 @namespace WebApp.Components
 
-<div id="wrapper" class="@_coverArt shadow card ratio ratio-16x9" style="border: none;min-width: 210px; max-width: 280px;">
-    <div class="card-body d-flex flex-column justify-content-between">
-        <h5 class="card-title" style="color: white">@Title</h5>
+<div class="wrapper @_coverArt">
+    <div class="card-body">
+        <h5 class="card-title">@Title</h5>
 
-        <div class="d-flex flex-row justify-content-between"><p style="color: white">@DescriptionLeft</p>
-        <p style="color: white">@DescriptionRight</p></div>
+        <div class="description-container">
+            <p>@DescriptionLeft</p>
+            <p>@DescriptionRight</p>
+        </div>
         
 
     </div>
