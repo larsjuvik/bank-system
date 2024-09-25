@@ -1,17 +1,15 @@
 @page "/register"
-@using Microsoft.AspNetCore.Authentication
-@using Microsoft.AspNetCore.Authentication.Cookies
-@using System.Security.Claims
+@using System.Text.Json
+@using Microsoft.AspNetCore.Components.Authorization
 @using WebApp.DTOs
-@using WebApp.Services
-@using static WebApp.Authorization.RoleHelper
+@inject IJSRuntime JS
 @inject NavigationManager Navigation
-@inject UserService UserService
+@inject ISnackbar Snackbar
 
 <PageTitle>Register</PageTitle>
 
 <div>
-<h1>Register</h1>
+    <h1>Register</h1>
 
     <EditForm Model="RegisterData" OnValidSubmit="HandleValidSubmit" FormName="login" Enhance>
         <DataAnnotationsValidator />
@@ -20,23 +18,24 @@
                 <MudTextField Label="Name"
                               @bind-Value="RegisterData.Name" For="@(() => RegisterData.Name)"></MudTextField>
                 <MudDatePicker Label="Birthdate" HelperText="dd.MM.yyyy" Class="mt-3" DateFormat="dd.MM.yyyy"
-                              @bind-Date="RegisterData.BirthDate" For="@(() => RegisterData.BirthDate)"></MudDatePicker>
+                               @bind-Date="RegisterData.BirthDate" For="@(() => RegisterData.BirthDate)"></MudDatePicker>
                 <MudTextField Label="Username" Class="mt-3"
                               @bind-Value="RegisterData.Username" For="@(() => RegisterData.Username)"/>
                 <MudTextField Label="Password" Class="mt-3"
                               @bind-Value="RegisterData.Password" For="@(() => RegisterData.Password)" InputType="InputType.Password"/>
                 <MudTextField Label="Password" Class="mt-3"
                               @bind-Value="RegisterData.RepeatPassword" For="@(() => RegisterData.RepeatPassword)" InputType="InputType.Password"/>
+                <MudSwitch @bind-Value="RegisterData.IsAdmin" For="@(() => RegisterData.IsAdmin)" Color="Color.Primary" />
             </MudCardContent>
             <MudCardActions>
                 <div class="d-flex flex-grow-1 justify-end">
                     @if (_isAttemptingRegistering)
                     {
-                    <MudProgressCircular Color="Color.Primary" Indeterminate="true"/>
+                        <MudProgressCircular Color="Color.Primary" Indeterminate="true"/>
                     }
                     else
                     {
-                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Register</MudButton>
+                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Register</MudButton>
                     }
                 </div>
             </MudCardActions>
@@ -44,13 +43,27 @@
         Already have an account? <MudLink Href="/login">Login here</MudLink>
     </EditForm>
 </div>
+<script>
+    /// Parameter is a serialized object of @(nameof(RegisterDto))
+    window.registerAccount = async (registerDataSerialized) => {
+        let result = await fetch("/api/authentication/register", {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: registerDataSerialized
+        });
+        return result.ok;
+    }
+</script>
 
 @code {
     [SupplyParameterFromForm(FormName = "register")]
     private RegisterDto RegisterData { get; set; } = new();
-
+    
     [CascadingParameter]
-    private HttpContext? HttpContext { get; set; }
+    private Task<AuthenticationState>? authenticationState { get; set; }
 
     private string? _errorMessage = null;
     
@@ -59,72 +72,50 @@
 
     private async Task HandleValidSubmit()
     {
-        if (RegisterData?.Username == null || RegisterData?.Password == null || RegisterData?.RepeatPassword == null)
-        {
-            return;
-        }
-
-        // Check if the user exists
+        var registerDataSerialized = JsonSerializer.Serialize(RegisterData);
         _isAttemptingRegistering = true;
-        var userExists = await UserService.UserExistsAsync(RegisterData.Username);
-        if (userExists)
-        {
-            _errorMessage = "Username already exists";
-            _isAttemptingRegistering = false;
-            return;
-        }
-
-        // Save
-        await UserService.CreateUserAsync(RegisterData, false);
-
-        // Create a new ClaimsIdentity with the user's name and role
-        var identity = new ClaimsIdentity(
-        [
-        new Claim(ClaimTypes.Name, RegisterData.Username),
-new Claim(ClaimTypes.Role, GetRoleName(Role.User))
-        ], CookieAuthenticationDefaults.AuthenticationScheme);
-
-        // Create a new ClaimsPrincipal with the identity
-        var user = new ClaimsPrincipal(identity);
-
-        // Sign in the user
-        if (HttpContext == null)
-        {
-            _errorMessage = "An unexpected error occured, please try again";
-            _isAttemptingRegistering = false;
-            return;
-        }
-        await HttpContext.SignInAsync(user);
+        var registered = await JS.InvokeAsync<bool>("registerAccount", registerDataSerialized);
         _isAttemptingRegistering = false;
-        GracefulRedirect();
+        if (registered)
+        {
+            Snackbar.Add("Registered account", Severity.Success);
+            RedirectAfterRegister();
+        }
+        else
+        {
+            Snackbar.Add("Could not register, check fields and try again", Severity.Error);
+        }
     }
     
-    protected override void OnInitialized()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var identity = HttpContext?.User.Identity;
-        if (identity == null)
+        if (!firstRender) return;
+        if (authenticationState == null) return;
+        
+        var authState = await authenticationState;
+        if (authState.User.Identity == null)
         {
             return;
         }
 
         // User is already logged in
-        if (identity.IsAuthenticated)
+        if (authState.User.Identity.IsAuthenticated)
         {
-            Navigation.NavigateTo("/");
+            Snackbar.Add("Already logged in", Severity.Warning, options =>
+            {
+                options.CloseAfterNavigation = false;
+            });
+            Navigation.NavigateTo("/", false, true);
         }
     }
 
     /// <summary>
-    /// Gracefully redirects to returnUrl if set, or just returns to home screen
+    /// Redirects to returnUrl if set, or just returns to home screen and then does full refresh
     /// </summary>
-    private void GracefulRedirect()
+    private void RedirectAfterRegister()
     {
         var uri = new Uri(Navigation.Uri);
         var returnUrl = System.Web.HttpUtility.ParseQueryString(uri.Query).Get("returnUrl");
-
-        if (returnUrl == null)
-        {
-            Navigation.NavigateTo("/");
-        }
+        Navigation.NavigateTo(returnUrl ?? "/", true, true);
     }
 }

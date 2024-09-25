@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -59,7 +60,50 @@ public class AuthenticationController(UserService userService, AuthenticationSet
         await HttpContext.SignInAsync(user);
         return Ok();
     }
-    
+
+    [HttpPost]
+    [AllowAnonymous]
+    public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
+    {
+        // Check if the user exists
+        var userExists = await userService.UserExistsAsync(registerDto.Username);
+        if (userExists)
+        {
+            return BadRequest("Username already exists");
+        }
+        
+        // TODO: validate attributes
+        var validationContext = new ValidationContext(registerDto);
+        var validObject = Validator.TryValidateObject(registerDto, validationContext, null, true);
+        if (!validObject)
+        {
+            return BadRequest("Validation failed");
+        }
+
+        // Save
+        await userService.CreateUserAsync(registerDto);
+
+        // Create a new ClaimsIdentity with the user's name and role
+        var identity = new ClaimsIdentity(
+        [
+            new Claim(ClaimTypes.Name, registerDto.Username),
+            new Claim(ClaimTypes.Role, RoleHelper.GetRoleName(RoleHelper.Role.User))
+        ], CookieAuthenticationDefaults.AuthenticationScheme);
+
+        // If admin, give admin rights
+        if (registerDto.IsAdmin)
+        {
+            identity.AddClaim(new Claim(ClaimTypes.Role, RoleHelper.GetRoleName(RoleHelper.Role.Admin)));
+        }
+
+        // Create a new ClaimsPrincipal with the identity
+        var user = new ClaimsPrincipal(identity);
+
+        // Sign in the user
+        await HttpContext.SignInAsync(user);
+        return Ok();
+    }
+
     [HttpPost]
     public async Task<IActionResult> Logout()
     {

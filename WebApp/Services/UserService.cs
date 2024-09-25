@@ -25,14 +25,14 @@ public class UserService(UserRepository userRepository, IMapper mapper)
         return mapper.ProjectTo<UserDto>(models);
     }
 
-    public async Task CreateUserAsync(RegisterDto registerUser, bool isAdmin = false)
+    public async Task CreateUserAsync(RegisterDto registerUser)
     {
         if (registerUser.BirthDate == null)
         {
             throw new NullReferenceException("Please provide a non-null birth date.");
         }
 
-        await userRepository.CreateUserAsync(registerUser.Username, registerUser.Password, registerUser.Name, registerUser.BirthDate.Value, isAdmin);
+        await userRepository.CreateUserAsync(registerUser.Username, registerUser.Password, registerUser.Name, registerUser.BirthDate.Value, registerUser.IsAdmin);
     }
 
     public async Task<bool> VerifyUserCredentialsAsync(string username, string password)

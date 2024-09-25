@@ -32,8 +32,10 @@ docker run --name bank-system -d -p 8080:8080 bank-system
 
 ### Notes
 
-This application will only function correctly over `https`. If this is not desirable, change the
+* This application will only function correctly over `https`. If this is not desirable, change the
 `options.Cookie.SecurePolicy` to your liking.
+
+* For demo purposes, any new account have the option to be created with admin privileges
 
 ## Goals and nice-to-have's
 
