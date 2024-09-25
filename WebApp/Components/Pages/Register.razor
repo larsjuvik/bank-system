@@ -65,6 +65,7 @@
         if (usernameAlreadyExists)
         {
             Snackbar.Add("Username is already taken", Severity.Error);
+            _isAttemptingRegistering = false;
             return;
         }
 
