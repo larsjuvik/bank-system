@@ -8,6 +8,7 @@ public class BankContext(DbContextOptions<BankContext> options) : DbContext(opti
     public DbSet<BankAccount> BankAccounts { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<UserLogin> UserLogins { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -30,13 +31,22 @@ public class BankContext(DbContextOptions<BankContext> options) : DbContext(opti
             .WithOne(b => b.Owner)
             .HasForeignKey(b => b.UserId)
             .OnDelete(DeleteBehavior.Restrict);
+        
+        // User to user logins
+        modelBuilder.Entity<User>()
+            .HasMany(u => u.UserLogins)
+            .WithOne(ul => ul.User)
+            .HasForeignKey(ul => ul.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
 
+        // Bank account to from-transactions
         modelBuilder.Entity<BankAccount>()
             .HasMany(b => b.FromTransactions)
             .WithOne(t => t.From)
             .HasForeignKey(t => t.FromId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        // Bank account to to-transactions
         modelBuilder.Entity<BankAccount>()
             .HasMany(b => b.ToTransactions)
             .WithOne(t => t.To)

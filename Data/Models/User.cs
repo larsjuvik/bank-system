@@ -11,12 +11,15 @@ namespace Data.Models
         public required string Username { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] Salt { get; set; }
-        public string Name { get; set; }
+        
+        [MinLength(1)]
+        [MaxLength(50)]
+        public required string Name { get; set; }
         public DateTime BirthDate { get; set; }
         public bool IsAdmin { get; set; } = false;
 
-        // Bank accounts
         public ICollection<BankAccount>? BankAccounts { get; set; }
+        public ICollection<UserLogin>? UserLogins { get; set; }
 
         public static void CreateSaltAndHash(string password, out byte[] salt, out byte[] passwordHash)
         {
