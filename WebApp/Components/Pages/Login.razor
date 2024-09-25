@@ -37,7 +37,7 @@
     </EditForm>
 </div>
 <script>
-    /// Parameter is a serialized object containing "Username" and "Password" fields
+    /// Parameter is a serialized object of @(nameof(LoginDto))
     window.login = async (loginDataSerialized) => {        
         let result = await fetch("/api/authentication/login", {
             method: 'POST',
