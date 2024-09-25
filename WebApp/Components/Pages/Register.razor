@@ -1,4 +1,5 @@
 @page "/register"
+@using System.Security.Principal
 @using System.Text.Json
 @using Microsoft.AspNetCore.Components.Authorization
 @using WebApp.Components.Helpers
@@ -55,9 +56,11 @@
     
     private async Task HandleValidSubmit()
     {
-        var registerDataSerialized = JsonSerializer.Serialize(RegisterData);
         _isAttemptingRegistering = true;
+        
+        var registerDataSerialized = JsonSerializer.Serialize(RegisterData);
         var registered = await Js.InvokeAsync<bool>("registerAccount", registerDataSerialized);
+        
         _isAttemptingRegistering = false;
         if (registered)
         {
@@ -66,29 +69,39 @@
         }
         else
         {
+            // TODO: give a better error message, e.g. is username already taken?
             Snackbar.Add("Could not register, check fields and try again", Severity.Error);
         }
     }
     
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnInitializedAsync()
     {
-        if (!firstRender) return;
-        if (AuthenticationState == null) return;
-        
-        var authState = await AuthenticationState;
-        if (authState.User.Identity == null)
+        if (AuthenticationState == null)
         {
+            SnackbarHelper.GenericError(Snackbar);
+            return;
+        }
+        
+        var authState = (await AuthenticationState).User.Identity;
+        if (authState == null)
+        {
+            // User not logged in
             return;
         }
 
-        // User is already logged in
-        if (authState.User.Identity.IsAuthenticated)
-        {
-            Snackbar.Add("Already logged in", Severity.Warning, options =>
-            {
-                options.CloseAfterNavigation = false;
-            });
-            Navigation.NavigateTo("/", false, true);
-        }
+        RedirectIfAuthenticated(authState);
     }
+
+    private void RedirectIfAuthenticated(IIdentity authState)
+    {
+        if (!authState.IsAuthenticated) return;
+        
+        // User is already logged in, redirect to home page
+        Snackbar.Add("Already logged in", Severity.Warning, options =>
+        {
+            options.CloseAfterNavigation = false;
+        });
+        Navigation.NavigateTo("/");
+    }
+
 }
