@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApp.Authorization;
 using WebApp.DTOs;
@@ -10,10 +11,12 @@ using WebApp.Settings;
 namespace WebApp.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/[controller]/[action]")]
+[Authorize]
 public class AuthenticationController(UserService userService, AuthenticationSettings authSettings) : Controller
 {
-    [HttpPost("[action]")]
+    [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
     {
         // Null-checks
@@ -57,7 +60,7 @@ public class AuthenticationController(UserService userService, AuthenticationSet
         return Ok();
     }
     
-    [HttpPost("[action]")]
+    [HttpPost]
     public async Task<IActionResult> Logout()
     {
         // Check that a user is logged in
