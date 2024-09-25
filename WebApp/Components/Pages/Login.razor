@@ -19,7 +19,16 @@
                               @bind-Value="LoginData.Password" For="@(() => LoginData.Password)" InputType="InputType.Password"/>
             </MudCardContent>
             <MudCardActions>
-                <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Login</MudButton>
+                <div class="d-flex flex-grow-1 justify-end">
+                    @if (_isAttemptingLoggingIn)
+                    {
+                    <MudProgressCircular Color="Color.Primary" Indeterminate="true"/>
+                    }
+                    else
+                    {
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Login</MudButton>
+                    }
+                </div>
             </MudCardActions>
         </MudCard>
     </EditForm>
@@ -49,6 +58,8 @@
 
     private string? _errorMessage;
 
+    private bool _isAttemptingLoggingIn = false;
+
     protected override Task OnInitializedAsync()
     {
         var identity = HttpContext?.User.Identity;
@@ -76,7 +87,9 @@
 
         // Login: the call is from clients browser, such that cookies are stored in the clients browser
         var loginDataSerialized = JsonSerializer.Serialize(LoginData);
+        _isAttemptingLoggingIn = true;
         var loggedIn = await JS.InvokeAsync<bool>("login", loginDataSerialized);
+        _isAttemptingLoggingIn = false;
         if (loggedIn)
         {
             RedirectAfterLogin();
