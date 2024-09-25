@@ -1,7 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
+@using WebApp.Components.Theming
 @inherits LayoutComponentBase
 
-<MudThemeProvider @ref="_mudThemeProvider" @bind-IsDarkMode="@_darkMode" />
+<MudThemeProvider Theme="@_mudTheme" @ref="_mudThemeProvider" @bind-IsDarkMode="@_darkMode" />
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
@@ -72,6 +73,7 @@
     bool _navMenuDrawerOpen = true;
     private bool _darkMode;
     private MudThemeProvider? _mudThemeProvider;
+    private MudTheme _mudTheme = Theme.GetApplicationTheme();
 
     void ToggleDrawer()
     {
