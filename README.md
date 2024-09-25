@@ -30,13 +30,16 @@ docker build -t bank-system .
 docker run --name bank-system -d -p 8080:8080 bank-system
 ```
 
-### Notes
+## Security notes
+
+This application is a demo at heart, and settings promoting easy development has been used.
 
 * This application will only function correctly over `https`. If this is not desirable, change the
 `options.Cookie.SecurePolicy` to your liking
 * For demo purposes, any new account have the option to be created with admin privileges
 * If you create a user and then restart the application, you may need to remove the authentication cookie
   * The user still has an authentication cookie, but all database-data for this user is lost on restart, which can cause errors
+* The settings for the cookies could be more strict, especially 
 
 ## Goals and nice-to-have's
 
