@@ -116,6 +116,8 @@
     private async Task CreateCreditCardClicked()
     {
         var options = new DialogOptions { CloseOnEscapeKey = true };
-        await DialogService.ShowAsync<ConnectCreditCardDialog>("Connect Credit Card", options);
+        
+        var parameters = new DialogParameters<ConnectCreditCardDialog>{{ x => x.AvailableBankAccounts, _bankAccounts }};
+        await DialogService.ShowAsync<ConnectCreditCardDialog>("Connect Credit Card", parameters, options);
     }
 }

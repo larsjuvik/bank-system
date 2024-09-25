@@ -1,21 +1,19 @@
-@using Data.Helpers
-@using Data.Models
 @using WebApp.DTOs
 <MudDialog>
     <TitleContent>
-        Connect Credit Card to a Bank Account
+        Connect Card to a Bank Account
     </TitleContent>
     <DialogContent>
         <EditForm EditContext="_editContext">
             <DataAnnotationsValidator/>
             <MudStack>
-                <MudSelect T="BankAccountType" Label="Account Type" MultiSelection="false" @bind-Value="_model.AccountType">
-                    @foreach (var accountType in Enum.GetValues(typeof(BankAccountType)).Cast<BankAccountType>().ToList())
+                <MudSelect T="BankAccountDto" Label="Connected Bank Account" MultiSelection="false" @bind-Value="_model.ConnectedBankAccountDto">
+                    @foreach (var bankAccount in AvailableBankAccounts)
                     {
-                        <MudSelectItem T="BankAccountType" Value="@accountType">@BankAccountTypeHelper.GetStringFromBankAccountType(accountType)</MudSelectItem>
+                        <MudSelectItem T="string" Value="@bankAccount.AccountNumber">@bankAccount.AccountNumber</MudSelectItem>
                     }
                 </MudSelect>
-                <MudSwitch LabelPosition="LabelPosition.Start" Label="Debit Card" For="@(() => _model.HasDebitCard)" Color="Color.Primary" />
+                <MudTextField Label="Name" @bind-Value="_model.Name" For="@(() => _model.Name)" />
             </MudStack>
         </EditForm>
     </DialogContent>
@@ -26,11 +24,14 @@
 </MudDialog>
 
 @code {
-    private static CreateBankAccountDto _model = new();
+    private static ConnectCreditCardToBankAccountDto _model = new();
     private EditContext _editContext = new(_model);
     
     [CascadingParameter]
-    private MudDialogInstance MudDialog { get; set; }
+    private MudDialogInstance? MudDialog { get; set; }
+
+    [Parameter]
+    public List<BankAccountDto> AvailableBankAccounts { get; set; } = [];
 
     private void Submit()
     {
@@ -38,9 +39,9 @@
         if (!validated) return;
         
         // TODO: connect credit card
-        
-        MudDialog.Close(DialogResult.Ok(true));
+
+        MudDialog?.Close(DialogResult.Ok(true));
     }
 
-    private void Cancel() => MudDialog.Cancel();
+    private void Cancel() => MudDialog?.Cancel();
 }
