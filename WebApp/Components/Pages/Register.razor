@@ -38,7 +38,7 @@
                     }
                     else
                     {
-                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Register</MudButton>
+                        <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.PersonAdd" Color="Color.Primary" ButtonType="ButtonType.Submit" Class="ml-auto">Register</MudButton>
                     }
                 </div>
             </MudCardActions>
@@ -46,20 +46,6 @@
         Already have an account? <MudLink Href="/login">Login here</MudLink>
     </EditForm>
 </div>
-<script>
-    /// Parameter is a serialized object of @(nameof(RegisterDto))
-    window.registerAccount = async (registerDataSerialized) => {
-        let result = await fetch("/api/authentication/register", {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: registerDataSerialized
-        });
-        return result.ok;
-    }
-</script>
 
 @code {
     [SupplyParameterFromForm(FormName = "register")]
