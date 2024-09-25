@@ -8,6 +8,7 @@ using WebApp.Components;
 using WebApp.DTOs;
 using WebApp.Services;
 using MudBlazor.Services;
+using WebApp.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,11 @@ builder.Services.AddScoped<BankAccountRepository>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<TransactionService>();
 builder.Services.AddScoped<BankAccountService>();
+
+// App Settings
+var authenticationSettings = new AuthenticationSettings();
+builder.Configuration.GetSection(AuthenticationSettings.SectionKey).Bind(authenticationSettings);
+builder.Services.AddSingleton(authenticationSettings);
 
 // AutoMapper
 var autoMapperConfig = new MapperConfiguration(cfg =>
@@ -50,14 +56,14 @@ builder.Services.AddDbContext<BankContext>(options => options.UseInMemoryDatabas
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.Cookie.Name = "Authentication";
+        options.Cookie.Name = authenticationSettings.CookieName;
         options.LoginPath = "/login";
         options.LogoutPath = "/logout";
         options.AccessDeniedPath = "/access-denied";
         options.Cookie.HttpOnly = true;
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         options.Cookie.SameSite = SameSiteMode.Strict;
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(authenticationSettings.CookieExpirationMinutes);
         options.SlidingExpiration = true;
     });
 builder.Services.AddAuthorization();
