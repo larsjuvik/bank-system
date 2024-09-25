@@ -11,21 +11,21 @@
 <div>
     <h1>Register</h1>
 
-    <EditForm Model="RegisterData" OnValidSubmit="HandleValidSubmit" FormName="login" Enhance>
+    <EditForm Model="RegisterData" OnValidSubmit="HandleValidSubmit" FormName="register" Enhance>
         <DataAnnotationsValidator />
         <MudCard>
             <MudCardContent>
                 <MudTextField Label="Name"
                               @bind-Value="RegisterData.Name" For="@(() => RegisterData.Name)"></MudTextField>
                 <MudDatePicker Label="Birthdate" HelperText="dd.MM.yyyy" Class="mt-3" DateFormat="dd.MM.yyyy"
-                               @bind-Date="RegisterData.BirthDate" For="@(() => RegisterData.BirthDate)"></MudDatePicker>
+                               Editable="true" Mask="@(new DateMask("dd.MM.yyyy"))" @bind-Date="RegisterData.BirthDate" For="@(() => RegisterData.BirthDate)"></MudDatePicker>
                 <MudTextField Label="Username" Class="mt-3"
                               @bind-Value="RegisterData.Username" For="@(() => RegisterData.Username)"/>
                 <MudTextField Label="Password" Class="mt-3"
                               @bind-Value="RegisterData.Password" For="@(() => RegisterData.Password)" InputType="InputType.Password"/>
                 <MudTextField Label="Password" Class="mt-3"
                               @bind-Value="RegisterData.RepeatPassword" For="@(() => RegisterData.RepeatPassword)" InputType="InputType.Password"/>
-                <MudSwitch @bind-Value="RegisterData.IsAdmin" For="@(() => RegisterData.IsAdmin)" Color="Color.Primary" />
+                <MudSwitch Label="Admin" @bind-Value="RegisterData.IsAdmin" For="@(() => RegisterData.IsAdmin)" Color="Color.Primary" />
             </MudCardContent>
             <MudCardActions>
                 <div class="d-flex flex-grow-1 justify-end">
