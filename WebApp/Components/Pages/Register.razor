@@ -15,17 +15,17 @@
         <DataAnnotationsValidator />
         <MudCard>
             <MudCardContent>
-                <MudTextField Label="Name"
+                <MudTextField Label="Name" Placeholder="Enter full name"
                               @bind-Value="RegisterData.Name" For="@(() => RegisterData.Name)"></MudTextField>
-                <MudDatePicker Label="Birthdate" HelperText="dd.MM.yyyy" Class="mt-3" DateFormat="dd.MM.yyyy"
-                               Editable="true" Mask="@(new DateMask("dd.MM.yyyy"))" @bind-Date="RegisterData.BirthDate" For="@(() => RegisterData.BirthDate)"></MudDatePicker>
-                <MudTextField Label="Username" Class="mt-3"
+                <MudDatePicker Label="Birthdate" Placeholder="Enter date of birth" HelperText="dd.MM.yyyy" Class="mt-3" DateFormat="dd.MM.yyyy"
+                               @bind-Date="RegisterData.BirthDate" For="@(() => RegisterData.BirthDate)" />
+                <MudTextField Label="Username" Placeholder="Enter desired username" Class="mt-3"
                               @bind-Value="RegisterData.Username" For="@(() => RegisterData.Username)"/>
-                <MudTextField Label="Password" Class="mt-3"
+                <MudTextField Label="Password" Placeholder="Enter desired password" Class="mt-3"
                               @bind-Value="RegisterData.Password" For="@(() => RegisterData.Password)" InputType="InputType.Password"/>
-                <MudTextField Label="Password" Class="mt-3"
+                <MudTextField Label="Password" Placeholder="Repeat password" Class="mt-3"
                               @bind-Value="RegisterData.RepeatPassword" For="@(() => RegisterData.RepeatPassword)" InputType="InputType.Password"/>
-                <MudSwitch Label="Admin" @bind-Value="RegisterData.IsAdmin" For="@(() => RegisterData.IsAdmin)" Color="Color.Primary" />
+                <MudSwitch Label="Admin Rights" Class="mt-3" @bind-Value="RegisterData.IsAdmin" For="@(() => RegisterData.IsAdmin)" Color="Color.Primary" />
             </MudCardContent>
             <MudCardActions>
                 <div class="d-flex flex-grow-1 justify-end">
@@ -66,7 +66,6 @@
     private Task<AuthenticationState>? authenticationState { get; set; }
 
     private string? _errorMessage = null;
-    
     private bool _isAttemptingRegistering = false;
 
 
