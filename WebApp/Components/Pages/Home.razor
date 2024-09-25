@@ -61,7 +61,7 @@
     @if (_bankAccounts?.Where(b => b.HasDebitCard).Count() is 0)
     {
         <p>No cards registered.</p>
-        <button class="btn btn-sm btn-primary">Create card</button>
+        <MudButton @onclick="CreateCreditCardClicked" StartIcon="@Icons.Material.Filled.CreditCard" Variant="Variant.Text" Color="Color.Primary">Create card</MudButton>
     }
     else
     {
@@ -111,5 +111,11 @@
         }
 
         NavigationManager.NavigateTo($"/bankaccount/${bankAccountNumber}");
+    }
+
+    private async Task CreateCreditCardClicked()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+        await DialogService.ShowAsync<ConnectCreditCardDialog>("Connect Credit Card", options);
     }
 }

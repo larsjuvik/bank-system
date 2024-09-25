@@ -1,0 +1,46 @@
+@using Data.Helpers
+@using Data.Models
+@using WebApp.DTOs
+<MudDialog>
+    <TitleContent>
+        Connect Credit Card to a Bank Account
+    </TitleContent>
+    <DialogContent>
+        <EditForm EditContext="_editContext">
+            <DataAnnotationsValidator/>
+            <MudStack>
+                <MudSelect T="BankAccountType" Label="Account Type" MultiSelection="false" @bind-Value="_model.AccountType">
+                    @foreach (var accountType in Enum.GetValues(typeof(BankAccountType)).Cast<BankAccountType>().ToList())
+                    {
+                        <MudSelectItem T="BankAccountType" Value="@accountType">@BankAccountTypeHelper.GetStringFromBankAccountType(accountType)</MudSelectItem>
+                    }
+                </MudSelect>
+                <MudSwitch LabelPosition="LabelPosition.Start" Label="Debit Card" For="@(() => _model.HasDebitCard)" Color="Color.Primary" />
+            </MudStack>
+        </EditForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    private static CreateBankAccountDto _model = new();
+    private EditContext _editContext = new(_model);
+    
+    [CascadingParameter]
+    private MudDialogInstance MudDialog { get; set; }
+
+    private void Submit()
+    {
+        var validated = _editContext.Validate();
+        if (!validated) return;
+        
+        // TODO: connect credit card
+        
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+}
