@@ -30,7 +30,7 @@ window.logout = async () => {
 </script>
 
 @code {
-    private bool _tryingToLogOut = false;
+    private bool _tryingToLogOut;
 
     [CascadingParameter]
     private HttpContext? HttpContext { get; set; }

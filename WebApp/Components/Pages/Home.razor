@@ -17,64 +17,56 @@
 
 <PageTitle>Overview</PageTitle>
 
-<div class="wrapper">
-    <div>
-    @if (_user?.Name.Split(" ").FirstOrDefault() != null)
-    {
-        <h1>Hi, @_user.Name.Split(" ").First()</h1>
-    }
+@if (_user?.Name.Split(" ").FirstOrDefault() != null)
+{
+    <h1>Hi, @_user.Name.Split(" ").First()</h1>
+}
 
-    @if (_bankAccounts.Count is > 0)
-    {
-    <MudTable Dense="true" Items="_bankAccounts" Hover="true" T="BankAccountDto" OnRowClick="BankAccountClicked">
-        <ToolBarContent>
-            <MudText Typo="Typo.h6">Bank Accounts</MudText>
-        </ToolBarContent>
-        <HeaderContent>
-            <MudTh>Account</MudTh>
-            <MudTh>Balance</MudTh>
-            <MudTh>Type</MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="AccountNumber">@context.AccountNumber</MudTd>
-            <MudTd DataLabel="Balance">@(context.Balance.ToString("C", CultureInfo.GetCultureInfo("en-US")))$</MudTd>
-            <MudTd DataLabel="AccountType">@context.AccountType</MudTd>
-        </RowTemplate>
-    </MudTable>
-    <MudButton @onclick="CreateBankAccountClicked" StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Text" Color="Color.Primary">Create account</MudButton>
-    }
-    else
-    {
-        <MudCard>
-            <MudCardContent>
-                <MudText>You don't have any bank accounts.</MudText>
-            </MudCardContent>
-            <MudCardActions>
-                <MudButton @onclick="CreateBankAccountClicked" StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Text" Color="Color.Primary">Create one</MudButton>
-            </MudCardActions>
-        </MudCard>
-    }
-    </div>
+@if (_bankAccounts?.Count is > 0)
+{
+<MudTable Dense="true" Items="_bankAccounts" Hover="true" T="BankAccountDto" OnRowClick="BankAccountClicked">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Bank Accounts</MudText>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Account</MudTh>
+        <MudTh>Balance</MudTh>
+        <MudTh>Type</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="AccountNumber">@context.AccountNumber</MudTd>
+        <MudTd DataLabel="Balance">@(context.Balance.ToString("C", CultureInfo.GetCultureInfo("en-US")))$</MudTd>
+        <MudTd DataLabel="AccountType">@context.AccountType</MudTd>
+    </RowTemplate>
+</MudTable>
+<MudButton @onclick="CreateBankAccountClicked" StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Text" Color="Color.Primary">Create account</MudButton>
+}
+else
+{
+    <MudCard>
+        <MudCardContent>
+            <MudText>You don't have any bank accounts.</MudText>
+        </MudCardContent>
+        <MudCardActions>
+            <MudButton @onclick="CreateBankAccountClicked" StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Text" Color="Color.Primary">Create one</MudButton>
+        </MudCardActions>
+    </MudCard>
+}
 
-    <div>
-        <h2>Cards</h2>
-    @if (_bankAccounts?.Where(b => b.HasDebitCard).Count() is 0)
-    {
-        <p>No cards registered.</p>
-        <MudButton @onclick="CreateCreditCardClicked" StartIcon="@Icons.Material.Filled.CreditCard" Variant="Variant.Text" Color="Color.Primary">Create card</MudButton>
-    }
-    else
-    {
-        <DebitCardCollection CardAccounts="_bankAccounts?.Where(b => b.HasDebitCard).ToList()" />
-    }
-    </div>
-</div>
+<h2>Cards</h2>
+@if (_bankAccounts?.Where(b => b.HasDebitCard).Count() is 0)
+{
+    <p>No cards registered.</p>
+    <MudButton @onclick="CreateCreditCardClicked" StartIcon="@Icons.Material.Filled.CreditCard" Variant="Variant.Text" Color="Color.Primary">Create card</MudButton>
+}
+else
+{
+    <DebitCardCollection CardAccounts="_bankAccounts?.Where(b => b.HasDebitCard).ToList()" />
+}
+
 @code {
-    private UserDto? _user = null;
-    private List<TransactionDto>? _transactions = null;
-    private List<BankAccountDto>? _bankAccounts = null;
-    private decimal? _totalBalance = null;
-    private string? _firstName = null;
+    private UserDto? _user;
+    private List<BankAccountDto>? _bankAccounts;
 
     protected override async Task OnInitializedAsync()
     {
@@ -88,12 +80,7 @@
 
         var userId = await UserService.GetIdByUsernameAsync(username);
         _user = await UserService.GetUserByUsernameAsync(username);
-        _firstName = _user.Name.Split(" ").FirstOrDefault() ?? "?";
-        _transactions = await TransactionService.GetAllTransactionsByUserIdAsync(userId);
         _bankAccounts = await BankAccountService.GetAllBankAccountsByUserIdAsync(userId);
-
-        // Calculate remaining fields
-        _totalBalance = _bankAccounts?.Sum(ba => ba.Balance);
     }
 
     private async Task CreateBankAccountClicked()

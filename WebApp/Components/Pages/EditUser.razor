@@ -46,9 +46,9 @@ else
     public string Username { get; set; }
 
     [SupplyParameterFromForm(FormName = "editUser")]
-    private EditUserDto? EditUserData { get; set; } = null;
+    private EditUserDto? EditUserData { get; set; }
 
-    private string? _errorMessage = null;
+    private string? _errorMessage;
 
     protected override async Task OnInitializedAsync()
     {

@@ -85,8 +85,8 @@ else if (AccountId != null && _transactions != null)
 }
 
 @code {
-    private List<BankAccountDto>? _bankAccounts = null;
-    private List<TransactionDto>? _transactions = null;
+    private List<BankAccountDto>? _bankAccounts;
+    private List<TransactionDto>? _transactions;
     
     [Parameter]
     public string? AccountId { get; set; }

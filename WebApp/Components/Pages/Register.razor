@@ -51,7 +51,7 @@
     private Task<AuthenticationState>? authenticationState { get; set; }
 
     private string? _errorMessage = null;
-    private bool _isAttemptingRegistering = false;
+    private bool _isAttemptingRegistering;
 
 
     private async Task HandleValidSubmit()
