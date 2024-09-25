@@ -6,11 +6,10 @@
 @using WebApp.Services
 @using WebApp.Components.Components
 @using WebApp.Components.Dialogs
-@inject AuthenticationStateProvider AuthenticationStateProvider
 @attribute [Authorize]
 @attribute [StreamRendering]
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject UserService UserService
-@inject TransactionService TransactionService
 @inject BankAccountService BankAccountService
 @inject NavigationManager NavigationManager
 @inject IDialogService DialogService
