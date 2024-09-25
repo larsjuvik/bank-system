@@ -5,12 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 using WebApp.Authorization;
 using WebApp.DTOs;
 using WebApp.Services;
+using WebApp.Settings;
 
 namespace WebApp.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AuthenticationController(UserService userService) : Controller
+public class AuthenticationController(UserService userService, AuthenticationSettings authSettings) : Controller
 {
     [HttpPost("[action]")]
     public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
@@ -69,7 +70,7 @@ public class AuthenticationController(UserService userService) : Controller
         await HttpContext.SignOutAsync();
         
         // Delete auth cookie
-        HttpContext.Response.Cookies.Delete("Authentication");
+        HttpContext.Response.Cookies.Delete(authSettings.CookieName);
         return Ok();
     }
 }
