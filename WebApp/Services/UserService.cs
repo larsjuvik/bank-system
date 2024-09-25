@@ -27,7 +27,12 @@ public class UserService(UserRepository userRepository, IMapper mapper)
 
     public async Task CreateUserAsync(RegisterDto registerUser, bool isAdmin = false)
     {
-        await userRepository.CreateUserAsync(registerUser.Username, registerUser.Password, registerUser.Name, registerUser.BirthDate, isAdmin);
+        if (registerUser.BirthDate == null)
+        {
+            throw new NullReferenceException("Please provide a non-null birth date.");
+        }
+
+        await userRepository.CreateUserAsync(registerUser.Username, registerUser.Password, registerUser.Name, registerUser.BirthDate.Value, isAdmin);
     }
 
     public async Task<bool> VerifyUserCredentialsAsync(string username, string password)

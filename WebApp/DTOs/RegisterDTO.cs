@@ -27,7 +27,7 @@ public class RegisterDto
     [DataType(DataType.Date)]
     [Display(Name = "Date of Birth")]
     [MinimumAge(18, ErrorMessage = "You must be at least 18 years old.")]
-    public DateTime BirthDate { get; set; } = DateTime.Now;
+    public DateTime? BirthDate { get; set; }
 
     [Required]
     [MinLength(1)]
