@@ -25,6 +25,13 @@ public class AuthenticationController(UserService userService, AuthenticationSet
         {
             return BadRequest("Please provide non-null username and password");
         }
+        
+        var validationContext = new ValidationContext(loginDto);
+        var validObject = Validator.TryValidateObject(loginDto, validationContext, null, true);
+        if (!validObject)
+        {
+            return BadRequest("Validation failed");
+        }
 
         // Check if the user exists
         var userExists = await userService.UserExistsAsync(loginDto.Username);
