@@ -2,7 +2,7 @@ using MudBlazor;
 
 namespace WebApp.Components.Theming;
 
-public class Theme
+public static class Theme
 {
     public static MudTheme GetApplicationTheme()
     {
