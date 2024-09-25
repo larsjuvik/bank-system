@@ -194,6 +194,25 @@ public class BankContext(DbContextOptions<BankContext> options) : DbContext(opti
         }
         modelBuilder.Entity<User>().HasData(users);
         
+        // Add random login datetimes
+        var userLoginIndex = 1;
+        var logins = new List<UserLogin>();
+        foreach (var user in users)
+        {
+            var amountOfLogins = random.Next(0, 20);
+            for (var i = 0; i < amountOfLogins; i++)
+            {
+                logins.Add(new UserLogin
+                {
+                    Id = userLoginIndex,
+                    UserId = user.Id,
+                    LoginDateTime = GetRandomDateTime()
+                });
+                userLoginIndex++;
+            }
+        }
+        modelBuilder.Entity<UserLogin>().HasData(logins);
+
         var bankAccountIndex = bankAccountIndexStart;
         var bankAccounts = new List<BankAccount>();
         foreach (var user in users)
