@@ -17,18 +17,16 @@ else
     Press here to login.
 </a>
 <script>
-    window.logout = async () => {
-        let result = await fetch("/api/authentication/logout", {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-        });
-        return result.ok;
-    }
-
-
+window.logout = async () => {
+    let result = await fetch("/api/authentication/logout", {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+    });
+    return result.ok;
+}
 </script>
 
 @code {

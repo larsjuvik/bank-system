@@ -37,9 +37,7 @@
 </div>
 <script>
     /// Parameter is a serialized object containing "Username" and "Password" fields
-    window.login = async (loginDataSerialized) => {
-        console.info("Trying to log in:", username);
-        
+    window.login = async (loginDataSerialized) => {        
         let result = await fetch("/api/authentication/login", {
             method: 'POST',
             headers: {
@@ -60,19 +58,14 @@
     [CascadingParameter]
     private HttpContext? HttpContext { get; set; }
 
-    private string? _errorMessage = null;
+    private string? _errorMessage;
 
-    protected override async Task OnInitializedAsync()
+    protected override Task OnInitializedAsync()
     {
-        if (HttpContext == null)
-        {
-            return;
-        }
-
-        var identity = HttpContext.User.Identity;
+        var identity = HttpContext?.User.Identity;
         if (identity == null)
         {
-            return;
+            return Task.CompletedTask;
         }
 
         // User is already logged in
@@ -80,6 +73,8 @@
         {
             Navigation.NavigateTo("/");
         }
+
+        return Task.CompletedTask;
     }
 
     private async Task HandleValidSubmit()
