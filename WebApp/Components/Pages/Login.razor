@@ -1,8 +1,10 @@
 @page "/login"
 @using System.Text.Json
+@using Microsoft.AspNetCore.Components.Authorization
 @using WebApp.DTOs
 @inject NavigationManager Navigation
 @inject IJSRuntime JS
+@inject ISnackbar Snackbar
 
 <PageTitle>Login</PageTitle>
 
@@ -54,27 +56,29 @@
     private LoginDto LoginData { get; set; } = new();
 
     [CascadingParameter]
-    private HttpContext? HttpContext { get; set; }
+    private Task<AuthenticationState>? authenticationState { get; set; }
 
     private string? _errorMessage;
 
     private bool _isAttemptingLoggingIn = false;
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var identity = HttpContext?.User.Identity;
-        if (identity == null)
-        {
-            return Task.CompletedTask;
-        }
+        if (!firstRender) return;
+        if (authenticationState == null) return;
+        
+        var identity = await authenticationState;
 
-        // User is already logged in
-        if (identity.IsAuthenticated)
+        // If user is not authenticated, return
+        if (identity.User.Identity is not { IsAuthenticated: true }) return;
+        
+        // User is logged in
+        var username = identity.User.Identity.Name;
+        Snackbar.Add("Logged in as " + username, Severity.Success, options =>
         {
-            Navigation.NavigateTo("/");
-        }
-
-        return Task.CompletedTask;
+            options.CloseAfterNavigation = false;
+        });
+        RedirectAfterLogin();
     }
 
     private async Task HandleValidSubmit()
@@ -92,7 +96,12 @@
         _isAttemptingLoggingIn = false;
         if (loggedIn)
         {
-            RedirectAfterLogin();
+            // Hard refresh page to load cookies
+            Navigation.Refresh(true);
+        }
+        else
+        {
+            Snackbar.Add("Could not log in, check credentials and try again", Severity.Error);
         }
     }
 
@@ -103,7 +112,6 @@
     {
         var uri = new Uri(Navigation.Uri);
         var returnUrl = System.Web.HttpUtility.ParseQueryString(uri.Query).Get("returnUrl");
-
-        Navigation.NavigateTo(returnUrl ?? "/", true, true);
+        Navigation.NavigateTo(returnUrl ?? "/", false, true);
     }
 }

@@ -4,6 +4,7 @@ using Data.Models;
 using Data.Repositories;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using MudBlazor;
 using WebApp.Components;
 using WebApp.DTOs;
 using WebApp.Services;
@@ -70,7 +71,10 @@ builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddCascadingAuthenticationState();
 
-builder.Services.AddMudServices();
+builder.Services.AddMudServices(config =>
+{
+    config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomRight;
+});
 
 var app = builder.Build();
 
