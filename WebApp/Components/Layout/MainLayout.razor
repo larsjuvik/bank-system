@@ -2,7 +2,7 @@
 @using WebApp.Components.Theming
 @inherits LayoutComponentBase
 
-<MudThemeProvider Theme="@_mudTheme" @ref="_mudThemeProvider" @bind-IsDarkMode="@_darkMode" />
+<MudThemeProvider Theme="@_mudTheme" @bind-IsDarkMode="@_darkMode" />
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
@@ -72,20 +72,10 @@
 @code {
     bool _navMenuDrawerOpen = true;
     private bool _darkMode;
-    private MudThemeProvider? _mudThemeProvider;
-    private MudTheme _mudTheme = Theme.GetApplicationTheme();
+    private readonly MudTheme _mudTheme = Theme.GetApplicationTheme();
 
     void ToggleDrawer()
     {
         _navMenuDrawerOpen = !_navMenuDrawerOpen;
-    }
-    
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (!firstRender) return;
-        if (_mudThemeProvider == null) return;
-        
-        //_darkMode = await _mudThemeProvider.GetSystemPreference();
-        //StateHasChanged();
     }
 }
