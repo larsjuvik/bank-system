@@ -4,8 +4,10 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @using WebApp.Components.Helpers
 @using WebApp.DTOs
+@using WebApp.Services
 @inject IJSRuntime Js
 @inject NavigationManager Navigation
+@inject UserService UserService
 @inject ISnackbar Snackbar
 
 <PageTitle>Register</PageTitle>
@@ -58,6 +60,14 @@
     {
         _isAttemptingRegistering = true;
         
+        // Check if username already exists
+        var usernameAlreadyExists = await UserService.UserExistsAsync(RegisterData.Username);
+        if (usernameAlreadyExists)
+        {
+            Snackbar.Add("Username is already taken", Severity.Error);
+            return;
+        }
+
         var registerDataSerialized = JsonSerializer.Serialize(RegisterData);
         var registered = await Js.InvokeAsync<bool>("registerAccount", registerDataSerialized);
         
@@ -69,8 +79,8 @@
         }
         else
         {
-            // TODO: give a better error message, e.g. is username already taken?
-            Snackbar.Add("Could not register, check fields and try again", Severity.Error);
+            // TODO: a bit too generic?
+            Snackbar.Add("Something went wrong during registration", Severity.Error);
         }
     }
     
