@@ -86,29 +86,18 @@ if (!app.Environment.IsDevelopment())
 app.UseStatusCodePages();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseAntiforgery();
-app.UseCookiePolicy(new CookiePolicyOptions
-{
-    MinimumSameSitePolicy = SameSiteMode.Strict
-});
-
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
-
-app.UseAuthentication();
 app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 app.UseAntiforgery();
-
-app.UseEndpoints(options =>
-{
-    options.MapControllers();
-});
+app.MapControllers();
 
 // Close connection if user's authentication cookie has expired
 app.MapBlazorHub(options =>
 {
     options.CloseOnAuthenticationExpiration = true;
 }).WithOrder(-1);
+
+app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 
 app.Run();
