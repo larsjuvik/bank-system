@@ -8,34 +8,34 @@
 
 <PageTitle>Login</PageTitle>
 
-<div>
-    <h1>Login</h1>
+<EditForm Model="LoginData" OnValidSubmit="HandleValidSubmit" FormName="login" Enhance>
+    <DataAnnotationsValidator />
+    <MudCard>
+        <MudCardHeader>
+            <MudText Typo="Typo.h6">Login to BlueFlare</MudText>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudTextField Label="Username"
+                          @bind-Value="LoginData.Username" For="@(() => LoginData.Username)"/>
+            <MudTextField Label="Password" Class="mt-3"
+                          @bind-Value="LoginData.Password" For="@(() => LoginData.Password)" InputType="InputType.Password"/>
+        </MudCardContent>
+        <MudCardActions>
+            <div class="d-flex flex-grow-1 justify-end">
+                @if (_isAttemptingLoggingIn)
+                {
+                    <MudProgressCircular Color="Color.Primary" Indeterminate="true"/>
+                }
+                else
+                {
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Login</MudButton>
+                }
+            </div>
+        </MudCardActions>
+    </MudCard>
+    Don't have an account? <MudLink Href="/register">Register here</MudLink>
+</EditForm>
 
-    <EditForm Model="LoginData" OnValidSubmit="HandleValidSubmit" FormName="login" Enhance>
-        <DataAnnotationsValidator />
-        <MudCard>
-            <MudCardContent>
-                <MudTextField Label="Username"
-                              @bind-Value="LoginData.Username" For="@(() => LoginData.Username)"/>
-                <MudTextField Label="Password" Class="mt-3"
-                              @bind-Value="LoginData.Password" For="@(() => LoginData.Password)" InputType="InputType.Password"/>
-            </MudCardContent>
-            <MudCardActions>
-                <div class="d-flex flex-grow-1 justify-end">
-                    @if (_isAttemptingLoggingIn)
-                    {
-                        <MudProgressCircular Color="Color.Primary" Indeterminate="true"/>
-                    }
-                    else
-                    {
-                        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Login</MudButton>
-                    }
-                </div>
-            </MudCardActions>
-        </MudCard>
-        Don't have an account? <MudLink Href="/register">Register here</MudLink>
-    </EditForm>
-</div>
 <script>
     /// Parameter is a serialized object of @(nameof(LoginDto))
     window.login = async (loginDataSerialized) => {        
