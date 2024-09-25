@@ -72,7 +72,6 @@ public class AuthenticationController(UserService userService, AuthenticationSet
             return BadRequest("Username already exists");
         }
         
-        // TODO: validate attributes
         var validationContext = new ValidationContext(registerDto);
         var validObject = Validator.TryValidateObject(registerDto, validationContext, null, true);
         if (!validObject)
