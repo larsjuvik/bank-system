@@ -1,8 +1,9 @@
 @page "/register"
 @using System.Text.Json
 @using Microsoft.AspNetCore.Components.Authorization
+@using WebApp.Components.Helpers
 @using WebApp.DTOs
-@inject IJSRuntime JS
+@inject IJSRuntime Js
 @inject NavigationManager Navigation
 @inject ISnackbar Snackbar
 
@@ -15,15 +16,15 @@
             <MudText Typo="Typo.h4">Register a BlueFlare-account</MudText>
         </MudCardHeader>
         <MudCardContent>
-            <MudTextField Label="Name" Placeholder="Enter full name"
+            <MudTextField Label="Name" Placeholder="Jane Doe"
                           @bind-Value="RegisterData.Name" For="@(() => RegisterData.Name)"></MudTextField>
-            <MudDatePicker Label="Birthdate" Placeholder="Enter date of birth" HelperText="dd.MM.yyyy" Class="mt-3" DateFormat="dd.MM.yyyy"
+            <MudDatePicker Label="Birthdate" HelperText="dd.MM.yyyy" Class="mt-3" DateFormat="dd.MM.yyyy"
                            @bind-Date="RegisterData.BirthDate" For="@(() => RegisterData.BirthDate)" />
-            <MudTextField Label="Username" Placeholder="Enter desired username" Class="mt-3"
+            <MudTextField Label="Username" Class="mt-3"
                           @bind-Value="RegisterData.Username" For="@(() => RegisterData.Username)"/>
-            <MudTextField Label="Password" Placeholder="Enter desired password" Class="mt-3"
+            <MudTextField Label="Password" Class="mt-3"
                           @bind-Value="RegisterData.Password" For="@(() => RegisterData.Password)" InputType="InputType.Password"/>
-            <MudTextField Label="Password" Placeholder="Repeat password" Class="mt-3"
+            <MudTextField Label="Password" Class="mt-3"
                           @bind-Value="RegisterData.RepeatPassword" For="@(() => RegisterData.RepeatPassword)" InputType="InputType.Password"/>
             <MudSwitch Label="Admin Rights" Class="mt-3" @bind-Value="RegisterData.IsAdmin" For="@(() => RegisterData.IsAdmin)" Color="Color.Primary" />
         </MudCardContent>
@@ -48,22 +49,20 @@
     private RegisterDto RegisterData { get; set; } = new();
     
     [CascadingParameter]
-    private Task<AuthenticationState>? authenticationState { get; set; }
+    private Task<AuthenticationState>? AuthenticationState { get; set; }
 
-    private string? _errorMessage = null;
     private bool _isAttemptingRegistering;
-
-
+    
     private async Task HandleValidSubmit()
     {
         var registerDataSerialized = JsonSerializer.Serialize(RegisterData);
         _isAttemptingRegistering = true;
-        var registered = await JS.InvokeAsync<bool>("registerAccount", registerDataSerialized);
+        var registered = await Js.InvokeAsync<bool>("registerAccount", registerDataSerialized);
         _isAttemptingRegistering = false;
         if (registered)
         {
             Snackbar.Add("Registered account", Severity.Success);
-            RedirectAfterRegister();
+            NavigationHelper.ForceRedirectReturnUrlOrHome(Navigation);
         }
         else
         {
@@ -74,9 +73,9 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender) return;
-        if (authenticationState == null) return;
+        if (AuthenticationState == null) return;
         
-        var authState = await authenticationState;
+        var authState = await AuthenticationState;
         if (authState.User.Identity == null)
         {
             return;
@@ -91,15 +90,5 @@
             });
             Navigation.NavigateTo("/", false, true);
         }
-    }
-
-    /// <summary>
-    /// Redirects to returnUrl if set, or just returns to home screen and then does full refresh
-    /// </summary>
-    private void RedirectAfterRegister()
-    {
-        var uri = new Uri(Navigation.Uri);
-        var returnUrl = System.Web.HttpUtility.ParseQueryString(uri.Query).Get("returnUrl");
-        Navigation.NavigateTo(returnUrl ?? "/", true, true);
     }
 }
