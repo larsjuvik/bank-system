@@ -1,4 +1,6 @@
 @using WebApp.DTOs
+@using WebApp.Services
+@inject BankAccountService BankAccountService
 <MudDialog>
     <TitleContent>
         Connect Card to a Bank Account
@@ -7,7 +9,7 @@
         <EditForm EditContext="_editContext">
             <DataAnnotationsValidator/>
             <MudStack>
-                <MudSelect T="BankAccountDto" Label="Connected Bank Account" MultiSelection="false" @bind-Value="_model.ConnectedBankAccountDto">
+                <MudSelect T="string" Label="Connected Bank Account" MultiSelection="false" @bind-Value="_model.ConnectedBankAccountNumber">
                     @foreach (var bankAccount in AvailableBankAccounts)
                     {
                         <MudSelectItem T="string" Value="@bankAccount.AccountNumber">@bankAccount.AccountNumber</MudSelectItem>
@@ -24,7 +26,7 @@
 </MudDialog>
 
 @code {
-    private static ConnectCreditCardToBankAccountDto _model = new();
+    private static ConnectCardToBankAccountDto _model = new();
     private EditContext _editContext = new(_model);
     
     [CascadingParameter]
@@ -33,12 +35,13 @@
     [Parameter]
     public List<BankAccountDto> AvailableBankAccounts { get; set; } = [];
 
-    private void Submit()
+    private async Task Submit()
     {
         var validated = _editContext.Validate();
         if (!validated) return;
-        
-        // TODO: connect credit card
+
+        // TODO: we want to access error message in case of fail
+        await BankAccountService.ConnectCardToBankAccount(_model);
 
         MudDialog?.Close(DialogResult.Ok(true));
     }
