@@ -17,9 +17,9 @@ public class UserLoginService(UserLoginRepository userLoginRepository, UserRepos
         await userLoginRepository.AddUserLogin(model);
     }
     
-    public IQueryable<UserLoginDto> GetUserLoginsAsQueryable()
+    public IQueryable<UserLoginDto> GetUserLoginsWithUserAsQueryable()
     {
-        var queryable = userLoginRepository.GetUserLoginsAsQueryable();
+        var queryable = userLoginRepository.GetUserLoginsWithUserAsQueryable();
         return mapper.ProjectTo<UserLoginDto>(queryable);
     }
 }

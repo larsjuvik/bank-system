@@ -1,7 +1,7 @@
 @page "/admin/logins"
 @using WebApp.DTOs
 @using WebApp.Services
-@inject UserService UserService
+@inject UserLoginService UserLoginService
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize(Roles = "Admin")]
 @attribute [StreamRendering]
@@ -9,7 +9,7 @@
 
 <h1>Admin</h1>
 
-<MudDataGrid T="UserDto" MultiSelection="true" Items="@_users" SortMode="SortMode.Multiple" Filterable="true" QuickFilter="@SearchFilter"
+<MudDataGrid T="UserLoginDto" MultiSelection="true" Items="@_userLogins" SortMode="SortMode.Multiple" Filterable="true" QuickFilter="@SearchFilter"
              Hideable="true" RowClick="@RowClicked" SelectedItemsChanged="@SelectedItemsChanged" Virtualize>
     <ToolBarContent>
         <MudText Typo="Typo.h6">Users</MudText>
@@ -18,47 +18,39 @@
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <Columns>
-        <SelectColumn T="UserDto" />
-        <PropertyColumn Property="u => u.Name" />
+        <SelectColumn T="UserLoginDto" />
         <PropertyColumn Property="u => u.Username" />
-        <PropertyColumn Property="u => u.BirthDate" />
-        <PropertyColumn Property="u => u.BankAccounts.Count" Title="Accounts" />
+        <PropertyColumn Property="u => u.LoginDateTime" />
     </Columns>
     <PagerContent>
-        <MudDataGridPager T="UserDto" />
+        <MudDataGridPager T="UserLoginDto" />
     </PagerContent>
 </MudDataGrid>
 
 @code {
-private IQueryable<UserDto>? _users;
-private string? _searchString;
+    private IQueryable<UserLoginDto>? _userLogins;
+    private string? _searchString;
 
-protected override void OnInitialized()
-{
-_users = UserService.GetAllUsersWithBankAccountsAsQueryable();
-}
+    protected override void OnInitialized()
+    {
+        _userLogins = UserLoginService.GetUserLoginsWithUserAsQueryable();
+    }
 
-private Func<UserDto, bool> SearchFilter => u =>
-{
-if (string.IsNullOrWhiteSpace(_searchString))
-return true;
+    private Func<UserLoginDto, bool> SearchFilter => u =>
+    {
+        if (u.Username.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
 
-if (u.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
-return true;
+        return false;
+    };
 
-if (u.Username.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
-return true;
+    private void SelectedItemsChanged(HashSet<UserLoginDto> obj)
+    {
+        // TODO
+    }
 
-return false;
-};
-
-private void SelectedItemsChanged(HashSet<UserDto> obj)
-{
-// TODO
-}
-
-private void RowClicked(DataGridRowClickEventArgs<UserDto> obj)
-{
-// TODO
-}
+    private void RowClicked(DataGridRowClickEventArgs<UserLoginDto> obj)
+    {
+        // TODO
+    }
 }

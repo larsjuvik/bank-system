@@ -1,4 +1,5 @@
 using Data.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Data.Repositories;
 
@@ -10,8 +11,10 @@ public class UserLoginRepository(BankContext context)
         await context.SaveChangesAsync();
     }
 
-    public IQueryable<UserLogin> GetUserLoginsAsQueryable()
+    public IQueryable<UserLogin> GetUserLoginsWithUserAsQueryable()
     {
-        return context.UserLogins.AsQueryable();
+        return context.UserLogins
+            .Include(ul => ul.User)
+            .AsQueryable();
     }
 }
