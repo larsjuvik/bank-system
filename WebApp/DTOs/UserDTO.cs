@@ -1,5 +1,3 @@
-using Data.Models;
-
 namespace WebApp.DTOs;
 public class UserDto
 {
@@ -7,5 +5,5 @@ public class UserDto
     public string Name { get; set; }
     public DateTime BirthDate { get; set; }
     public ICollection<BankAccountDto> BankAccounts { get; set; }
-    public ICollection<UserLogin> UserLogins { get; set; }
+    public ICollection<UserLoginDto> UserLogins { get; set; }
 }

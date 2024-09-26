@@ -37,7 +37,7 @@
         if (lastLoggedInDateTime != null)
         {
             // TODO: format to culture
-            _lastLoggedInFormatted = lastLoggedInDateTime.ToString();
+            _lastLoggedInFormatted = lastLoggedInDateTime.LoginDateTime.ToLongTimeString();
         }
     }
 }
