@@ -16,10 +16,7 @@
 
 <PageTitle>Overview</PageTitle>
 
-@if (_user?.Name.Split(" ").FirstOrDefault() != null)
-{
-    <h1>Hi, @_user.Name.Split(" ").First()</h1>
-}
+<WelcomeUserCard UserDataWithLogins="_userDtoWithLogins" />
 
 @if (_userBankAccounts?.Count is > 0)
 {
@@ -64,7 +61,7 @@ else
 }
 
 @code {
-    private UserDto? _user;
+    private UserDto? _userDtoWithLogins;
     private List<BankAccountDto>? _userBankAccounts;
 
     protected override async Task OnInitializedAsync()
@@ -78,7 +75,7 @@ else
         }
 
         var userId = await UserService.GetIdByUsernameAsync(username);
-        _user = await UserService.GetUserByUsernameAsync(username);
+        _userDtoWithLogins = await UserService.GetUserWithLoginsByUsernameAsync(username);
         _userBankAccounts = await BankAccountService.GetAllBankAccountsByUserIdAsync(userId);
     }
 

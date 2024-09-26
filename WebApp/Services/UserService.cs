@@ -8,13 +8,13 @@ public class UserService(UserRepository userRepository, IMapper mapper)
 {
     public async Task<EditUserDto> GetEditUserDtoFromUsername(string username)
     {
-        var model = await userRepository.GetUserByUsernameAsync(username);
+        var model = await userRepository.GetUserWithLoginsByUsernameAsync(username);
         return mapper.Map<EditUserDto>(model);
     }
 
     public async Task SaveUserAsync(EditUserDto user)
     {
-        var model = await userRepository.GetUserByUsernameAsync(user.Username);
+        var model = await userRepository.GetUserWithLoginsByUsernameAsync(user.Username);
         mapper.Map(user, model);
         await userRepository.SaveUserAsync(model);
     }
@@ -47,7 +47,7 @@ public class UserService(UserRepository userRepository, IMapper mapper)
 
     public async Task<bool> IsAdminAsync(string username)
     {
-        var model = await userRepository.GetUserByUsernameAsync(username);
+        var model = await userRepository.GetUserWithLoginsByUsernameAsync(username);
         return model.IsAdmin;
     }
 
@@ -57,9 +57,9 @@ public class UserService(UserRepository userRepository, IMapper mapper)
         return model.Id;
     }
 
-    public async Task<UserDto> GetUserByUsernameAsync(string username)
+    public async Task<UserDto> GetUserWithLoginsByUsernameAsync(string username)
     {
-        var model = await userRepository.GetUserByUsernameAsync(username);
+        var model = await userRepository.GetUserWithLoginsByUsernameAsync(username);
         return mapper.Map<UserDto>(model);
     }
 }

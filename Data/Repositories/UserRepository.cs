@@ -52,9 +52,10 @@ public class UserRepository(BankContext context)
         return await context.Users.FirstAsync(u => u.Username == username);
     }
 
-    public async Task<User> GetUserByUsernameAsync(string username)
+    public async Task<User> GetUserWithLoginsByUsernameAsync(string username)
     {
         return await context.Users
+            .Include(u => u.UserLogins)
             .FirstAsync(u => u.Username == username);
     }
 }

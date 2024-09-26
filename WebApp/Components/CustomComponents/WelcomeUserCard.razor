@@ -1,0 +1,43 @@
+@using WebApp.DTOs
+
+<MudCard>
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">Hello, @UserDataWithLogins?.Name</MudText>
+        </CardHeaderContent>
+        <CardHeaderActions>
+            <MudIconButton Icon="@Icons.Material.Filled.VerifiedUser" Color="Color.Default" />
+        </CardHeaderActions>
+    </MudCardHeader>
+    <MudCardContent>
+        @if (_lastLoggedInFormatted != null)
+        {
+        <MudText>You last logged in @_lastLoggedInFormatted</MudText>
+        }
+        else
+        {
+        <MudText>Welcome to BlueFlare!</MudText>
+        }
+    </MudCardContent>
+</MudCard>
+
+@code {
+    [Parameter]
+    public UserDto? UserDataWithLogins { get; set; }
+
+    private string? _lastLoggedInFormatted = null;
+
+    protected override void OnInitialized()
+    {
+        var lastLoggedInDateTime = UserDataWithLogins?
+            .UserLogins
+            .OrderByDescending(ul => ul.LoginDateTime)
+            .FirstOrDefault();
+            
+        if (lastLoggedInDateTime != null)
+        {
+            // TODO: format to culture
+            _lastLoggedInFormatted = lastLoggedInDateTime.ToString();
+        }
+    }
+}
