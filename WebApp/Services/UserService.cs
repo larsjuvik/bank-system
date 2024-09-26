@@ -53,8 +53,7 @@ public class UserService(UserRepository userRepository, IMapper mapper)
 
     public async Task<int> GetIdByUsernameAsync(string username)
     {
-        var model = await userRepository.GetIdByUsernameAsync(username);
-        return model.Id;
+        return await userRepository.GetIdByUsernameAsync(username);
     }
 
     public async Task<UserDto> GetUserWithLoginsByUsernameAsync(string username)

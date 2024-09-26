@@ -21,11 +21,13 @@ builder.Services.AddRazorComponents()
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<TransactionRepository>();
 builder.Services.AddScoped<BankAccountRepository>();
+builder.Services.AddScoped<UserLoginRepository>();
 
 // Services
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<TransactionService>();
 builder.Services.AddScoped<BankAccountService>();
+builder.Services.AddScoped<UserLoginService>();
 
 // App Settings
 var authenticationSettings = new AuthenticationSettings();

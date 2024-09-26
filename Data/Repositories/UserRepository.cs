@@ -47,9 +47,9 @@ public class UserRepository(BankContext context)
             .AnyAsync(u => u.Username == username);
     }
 
-    public async Task<User> GetIdByUsernameAsync(string username)
+    public async Task<int> GetIdByUsernameAsync(string username)
     {
-        return await context.Users.FirstAsync(u => u.Username == username);
+        return (await context.Users.FirstAsync(u => u.Username == username)).Id;
     }
 
     public async Task<User> GetUserWithLoginsByUsernameAsync(string username)
