@@ -1,4 +1,4 @@
-@page "/admin/users"
+@page "/admin/logins"
 @using WebApp.DTOs
 @using WebApp.Services
 @inject UserService UserService
@@ -30,35 +30,35 @@
 </MudDataGrid>
 
 @code {
-    private IQueryable<UserDto>? _users;
-    private string? _searchString;
+private IQueryable<UserDto>? _users;
+private string? _searchString;
 
-    protected override void OnInitialized()
-    {
-        _users = UserService.GetAllUsersWithBankAccountsAsQueryable();
-    }
-    
-    private Func<UserDto, bool> SearchFilter => u =>
-    {
-        if (string.IsNullOrWhiteSpace(_searchString))
-            return true;
+protected override void OnInitialized()
+{
+_users = UserService.GetAllUsersWithBankAccountsAsQueryable();
+}
 
-        if (u.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
-            return true;
-        
-        if (u.Username.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
-            return true;
+private Func<UserDto, bool> SearchFilter => u =>
+{
+if (string.IsNullOrWhiteSpace(_searchString))
+return true;
 
-        return false;
-    };
+if (u.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+return true;
 
-    private void SelectedItemsChanged(HashSet<UserDto> obj)
-    {
-        // TODO
-    }
+if (u.Username.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+return true;
 
-    private void RowClicked(DataGridRowClickEventArgs<UserDto> obj)
-    {
-        // TODO
-    }
+return false;
+};
+
+private void SelectedItemsChanged(HashSet<UserDto> obj)
+{
+// TODO
+}
+
+private void RowClicked(DataGridRowClickEventArgs<UserDto> obj)
+{
+// TODO
+}
 }

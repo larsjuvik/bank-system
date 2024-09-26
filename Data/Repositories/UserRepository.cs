@@ -11,7 +11,7 @@ public class UserRepository(BankContext context)
         await context.SaveChangesAsync();
     }
 
-    public IQueryable<User> GetAllUsersWithBankAccountsAsQueryableAsync()
+    public IQueryable<User> GetAllUsersWithBankAccountsAsQueryable()
     {
         return context.Users
             .Include(u => u.BankAccounts);

@@ -19,9 +19,9 @@ public class UserService(UserRepository userRepository, IMapper mapper)
         await userRepository.SaveUserAsync(model);
     }
 
-    public IQueryable<UserDto> GetAllUsersWithBankAccountsAsQueryableAsync()
+    public IQueryable<UserDto> GetAllUsersWithBankAccountsAsQueryable()
     {
-        var models = userRepository.GetAllUsersWithBankAccountsAsQueryableAsync();
+        var models = userRepository.GetAllUsersWithBankAccountsAsQueryable();
         return mapper.ProjectTo<UserDto>(models);
     }
 

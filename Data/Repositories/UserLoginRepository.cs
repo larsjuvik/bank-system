@@ -9,4 +9,9 @@ public class UserLoginRepository(BankContext context)
         await context.UserLogins.AddAsync(userLogin);
         await context.SaveChangesAsync();
     }
+
+    public IQueryable<UserLogin> GetUserLoginsAsQueryable()
+    {
+        return context.UserLogins.AsQueryable();
+    }
 }
