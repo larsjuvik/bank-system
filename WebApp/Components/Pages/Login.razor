@@ -1,9 +1,10 @@
 @page "/login"
 @using System.Text.Json
 @using Microsoft.AspNetCore.Components.Authorization
+@using WebApp.Components.Helpers
 @using WebApp.DTOs
 @inject NavigationManager Navigation
-@inject IJSRuntime JS
+@inject IJSRuntime Js
 @inject ISnackbar Snackbar
 
 <PageTitle>Login</PageTitle>
@@ -41,48 +42,36 @@
     private LoginDto LoginData { get; set; } = new();
 
     [CascadingParameter]
-    private Task<AuthenticationState>? authenticationState { get; set; }
-
-    private string? _errorMessage;
-
+    private Task<AuthenticationState>? AuthenticationState { get; set; }
+    
     private bool _isAttemptingLoggingIn;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnInitializedAsync()
     {
-        if (!firstRender) return;
-        if (authenticationState == null) return;
+        if (AuthenticationState == null) return;
         
-        var identity = await authenticationState;
+        var identity = await AuthenticationState;
 
-        // If user is not authenticated, return
-        if (identity.User.Identity is not { IsAuthenticated: true }) return;
-        
-        // User is logged in
-        var username = identity.User.Identity.Name;
-        Snackbar.Add("Logged in as " + username, Severity.Success, options =>
+        // If user is authenticated, redirect to home page
+        if (identity.User.Identity is { IsAuthenticated: true })
         {
-            options.CloseAfterNavigation = false;
-        });
-        RedirectAfterLogin();
+            NavigationHelper.ForceRedirectHome(Navigation);
+        }
     }
 
     private async Task HandleValidSubmit()
     {
-        if (LoginData?.Username == null || LoginData?.Password == null)
+        if (LoginData.Username == null || LoginData.Password == null)
         {
-            _errorMessage = "Fill in all fields";
+            Snackbar.Add("Please fill in all fields", Severity.Error);
             return;
         }
 
-        // Login: the call is from clients browser, such that cookies are stored in the clients browser
-        var loginDataSerialized = JsonSerializer.Serialize(LoginData);
-        _isAttemptingLoggingIn = true;
-        var loggedIn = await JS.InvokeAsync<bool>("login", loginDataSerialized);
-        _isAttemptingLoggingIn = false;
+        // Calling login-api from clients browser, s.t. cookies gets stored in browser
+        var loggedIn = await AttemptLogin();
         if (loggedIn)
         {
-            // Hard refresh page to load cookies
-            Navigation.Refresh(true);
+            NavigationHelper.ForceRedirectReturnUrlOrHome(Navigation);
         }
         else
         {
@@ -90,13 +79,13 @@
         }
     }
 
-    /// <summary>
-    /// Redirects to returnUrl if set, or just returns to home screen and then does full refresh
-    /// </summary>
-    private void RedirectAfterLogin()
+    private async Task<bool> AttemptLogin()
     {
-        var uri = new Uri(Navigation.Uri);
-        var returnUrl = System.Web.HttpUtility.ParseQueryString(uri.Query).Get("returnUrl");
-        Navigation.NavigateTo(returnUrl ?? "/", false, true);
+        _isAttemptingLoggingIn = true;
+        var loginDataSerialized = JsonSerializer.Serialize(LoginData);
+        var loggedIn = await Js.InvokeAsync<bool>("login", loginDataSerialized);
+        _isAttemptingLoggingIn = false;
+
+        return loggedIn;
     }
 }
