@@ -7,8 +7,6 @@
 @attribute [StreamRendering]
 <PageTitle>User Logins</PageTitle>
 
-<h1>User Logins</h1>
-
 <MudDataGrid T="UserLoginDto" MultiSelection="true" Items="@_userLogins" SortMode="SortMode.Multiple" Filterable="true" QuickFilter="@SearchFilter"
              Hideable="true" RowClick="@RowClicked" SelectedItemsChanged="@SelectedItemsChanged" Virtualize>
     <ToolBarContent>

@@ -5,9 +5,7 @@
 @using Microsoft.AspNetCore.Authorization
 @attribute [Authorize(Roles = "Admin")]
 @attribute [StreamRendering]
-<PageTitle>Admin</PageTitle>
-
-<h1>Admin</h1>
+<PageTitle>Users</PageTitle>
 
 <MudDataGrid T="UserDto" MultiSelection="true" Items="@_users" SortMode="SortMode.Multiple" Filterable="true" QuickFilter="@SearchFilter"
              Hideable="true" RowClick="@RowClicked" SelectedItemsChanged="@SelectedItemsChanged" Virtualize>
