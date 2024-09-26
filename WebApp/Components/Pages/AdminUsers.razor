@@ -31,7 +31,7 @@
 
 @code {
     private IQueryable<UserDto>? _users;
-    private string? _searchString;
+    private string _searchString = string.Empty;
 
     protected override void OnInitialized()
     {
@@ -40,9 +40,6 @@
     
     private Func<UserDto, bool> SearchFilter => u =>
     {
-        if (string.IsNullOrWhiteSpace(_searchString))
-            return true;
-
         if (u.Name.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
             return true;
         
