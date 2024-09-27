@@ -35,18 +35,34 @@ dotnet publish -c Release
 The application is in global `InteractiveServer` mode in order to use MudBlazor.
 Uses cookie-based Authentication and authorization without `ASP.NET Core Identity`.
 On startup, the database is seeded with randomized data.
+The database is in-memory, and resets when the application resets.
 
 ## Security notes :closed_lock_with_key:
 
 This application is a demo at heart, and has settings promoting easy development on the cost of less security.
 For an overview the security, see the [Security](./docs/SECURITY.md) document.
 
-## Goals and nice-to-have's :white_check_mark:
+## Goals :white_check_mark:
 
-- [ ] A data table for Admins to manage users
-- [ ] A home page for users, where they can add bank accounts
-- [ ] A transactions page, where users can see transactions from a specific account
+- [ ] A home page for users
+  - [x] Overview over accounts and cards
+  - [ ] Functionality for adding accounts
+  - [ ] Functionality for adding cards
+- [ ] A transactions page for users
+  - Ability to see transactions on different accounts
+- [ ] A page for users to edit their own information
+- [x] An admin page for observing user logins
+- [ ] An admin page for editing user profiles
+
+### Nice-to-have's
+
+- [ ] Delete account functionality
+- [ ] Unique generated profile picture based on username
+- [ ] Change password functionality
+- [ ] Use SQL Server / PostgreSQL instead of in-memory database
 - [ ] Sliding cookie expiration within SignalR-connection
+  - Per now users are logged out when cookie expires, even if they are still using app
+- [ ] Use `ASP.NET Core Identity`
 
 ## Attributions :star:
 
