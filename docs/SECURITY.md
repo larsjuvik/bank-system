@@ -1,5 +1,13 @@
 # Security :closed_lock_with_key:
 
+## Disclaimer
+
+**This project is only a demo and is not intended for production use**.
+
+It may contain security vulnerabilities and should not be deployed in any sensitive or production environments.
+
+## Security concerns
+
 Below follows some points that are relevant when considering this applications' security:
 
 * For demo purposes, any new account have the option to be created with admin privileges
