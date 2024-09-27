@@ -51,8 +51,14 @@ For an overview the security, see the [Security](./docs/SECURITY.md) document.
 - [ ] A transactions page for users
   - Ability to see transactions on different accounts
 - [ ] A page for users to edit their own information
+- [ ] A payment menu-section for users
+  - [ ] A page for users to pay other users within the bank system
+    - [ ] Search with autocomplete for names / accounts
+  - [ ] A page for users to prompt other users for payment
+  - [ ] A page for users to see outstanding payments
 - [x] An admin page for observing user logins
 - [ ] An admin page for editing user profiles
+- [ ] Decide on a common currency / date format
 
 ### Nice-to-have's
 
