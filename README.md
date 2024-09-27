@@ -2,32 +2,32 @@
 
 [![CI](https://github.com/larsjuvik/BankSystem/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/larsjuvik/BankSystem/actions/workflows/CI.yml)
 
-**This project is a demo still under development, and should not be considered production-ready.**
+**This is a demo still under development and should not be considered production-ready.**
 
-This is a demo of a (fictional) bank system called BlueFlare, written in Blazor Web App, with .NET 9.
+This is a demo of a fictional bank system called BlueFlare, written in Blazor Web App, using .NET 8.
 
 ![A screenshot of the application](./docs/Screenshot_Home.png)
 All data in the screenshot are fictional.
 
-## Building the application
-
-### Building release version
-
-```sh
-dotnet publish -c Release
-```
-
-### Running the application
-
-```sh
-dotnet run --project WebApp
-```
+## Building & Running :hammer:
 
 ### Building and running with Docker
 
 ```sh
 docker build -t bank-system .
 docker run --name bank-system -d -p 8080:8080 bank-system
+```
+
+### Running locally
+
+```sh
+dotnet run --project WebApp
+```
+
+### Publishing release version
+
+```sh
+dotnet publish -c Release
 ```
 
 ## Security notes
