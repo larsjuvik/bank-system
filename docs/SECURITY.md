@@ -1,4 +1,4 @@
-# Security
+# Security :closed_lock_with_key:
 
 Below follows some points that are relevant when considering this applications' security:
 
