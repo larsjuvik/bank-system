@@ -40,6 +40,8 @@ The database is in-memory, and resets when the application resets.
 ## Security notes :closed_lock_with_key:
 
 This application is a demo at heart, and has settings promoting easy development on the cost of less security.
+The application may contain security vulnerabilities and should not be deployed in any sensitive or production environments.
+
 For an overview the security, see the [Security](./docs/SECURITY.md) document.
 
 ## Goals :white_check_mark:
