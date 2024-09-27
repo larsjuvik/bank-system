@@ -30,6 +30,11 @@ dotnet run --project WebApp
 dotnet publish -c Release
 ```
 
+## Application Structure
+
+The application is in global `InteractiveServer` mode in order to use MudBlazor.
+Uses cookie-based Authentication and authorization without `ASP.NET Core Identity`.
+
 ## Security notes
 
 This application is a demo at heart, and has settings promoting easy development on the cost of less security.
