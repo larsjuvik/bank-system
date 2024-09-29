@@ -5,5 +5,20 @@ public class CultureOptions
 {
     public const string SectionKey = "Culture";
     public string Culture { get; set; } = "en-GB";
-    public CultureInfo Info => CultureInfo.GetCultureInfo(Culture);
+    public string CurrencySymbol { get; set; } = "$";
+
+    public CultureInfo Info
+    {
+        get
+        {
+            var info = new CultureInfo(Culture)
+            {
+                NumberFormat =
+                {
+                    CurrencySymbol = CurrencySymbol
+                }
+            };
+            return info;
+        }
+    }
 }
