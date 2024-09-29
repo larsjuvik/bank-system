@@ -29,10 +29,13 @@ builder.Services.AddScoped<TransactionService>();
 builder.Services.AddScoped<BankAccountService>();
 builder.Services.AddScoped<UserLoginService>();
 
-// App Settings
-var authenticationSettings = new AuthenticationSettings();
-builder.Configuration.GetSection(AuthenticationSettings.SectionKey).Bind(authenticationSettings);
+// App Options
+var authenticationSettings = new AuthenticationOptions();
+builder.Configuration.GetSection(AuthenticationOptions.SectionKey).Bind(authenticationSettings);
 builder.Services.AddSingleton(authenticationSettings);
+
+var cultureOptions = builder.Configuration.GetSection(CultureOptions.SectionKey);
+builder.Services.AddSingleton(cultureOptions);
 
 // AutoMapper
 var autoMapperConfig = new MapperConfiguration(cfg =>

@@ -2,13 +2,14 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using WebApp.DTOs
-@using System.Globalization
 @using WebApp.Services
 @using WebApp.Components.CustomComponents
 @using WebApp.Components.Dialogs
+@using WebApp.Settings
 @attribute [Authorize]
 @attribute [StreamRendering]
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject CultureOptions Culture
 @inject UserService UserService
 @inject BankAccountService BankAccountService
 @inject NavigationManager NavigationManager
@@ -31,7 +32,7 @@
     </HeaderContent>
     <RowTemplate>
         <MudTd DataLabel="AccountNumber">@context.AccountNumber</MudTd>
-        <MudTd DataLabel="Balance">@(context.Balance.ToString("C", CultureInfo.GetCultureInfo("en-US")))$</MudTd>
+        <MudTd DataLabel="Balance">@(context.Balance.ToString("C", Culture.Info))$</MudTd>
         <MudTd DataLabel="AccountType">@context.AccountType</MudTd>
     </RowTemplate>
     <FooterContent>

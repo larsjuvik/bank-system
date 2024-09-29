@@ -8,13 +8,14 @@ using WebApp.Authorization;
 using WebApp.DTOs;
 using WebApp.Services;
 using WebApp.Settings;
+using AuthenticationOptions = WebApp.Settings.AuthenticationOptions;
 
 namespace WebApp.Controllers;
 
 [ApiController]
 [Route("api/[controller]/[action]")]
 [Authorize]
-public class AuthenticationController(UserService userService, AuthenticationSettings authSettings) : Controller
+public class AuthenticationController(UserService userService, AuthenticationOptions authOptions) : Controller
 {
     [HttpPost]
     [AllowAnonymous]
@@ -123,7 +124,7 @@ public class AuthenticationController(UserService userService, AuthenticationSet
         await HttpContext.SignOutAsync();
         
         // Delete auth cookie
-        HttpContext.Response.Cookies.Delete(authSettings.CookieName);
+        HttpContext.Response.Cookies.Delete(authOptions.CookieName);
         return Ok();
     }
 }

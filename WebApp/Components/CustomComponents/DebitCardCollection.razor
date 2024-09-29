@@ -1,5 +1,7 @@
 @namespace WebApp.Components.CustomComponents
 @using WebApp.DTOs
+@using WebApp.Settings
+@inject CultureOptions Culture
 
 <div class="card-scroller">
     @foreach (var bankAccount in CardAccounts)
@@ -7,7 +9,7 @@
     <DebitCard
         Title="@bankAccount.Owner.Name"
         DescriptionLeft="@bankAccount.AccountNumber"
-        DescriptionRight="@bankAccount.Balance.ToString()"
+        DescriptionRight="@bankAccount.Balance.ToString("C", Culture.Info)"
         Id="@bankAccount.AccountNumber" />
     }
 </div>

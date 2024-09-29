@@ -1,6 +1,6 @@
 namespace WebApp.Settings;
 
-public class AuthenticationSettings
+public class AuthenticationOptions
 {
     public const string SectionKey = "Authentication";
     
