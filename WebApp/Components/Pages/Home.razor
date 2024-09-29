@@ -49,16 +49,27 @@ else
     </MudCard>
 }
 
-<h2>Cards</h2>
-@if (_userBankAccounts?.Where(b => b.HasDebitCard).Count() is 0)
-{
-    <p>No cards registered.</p>
-    <MudButton @onclick="ConnectCardClicked" StartIcon="@Icons.Material.Filled.CreditCard" Variant="Variant.Text" Color="Color.Primary">Create card</MudButton>
-}
-else
-{
-    <DebitCardCollection CardAccounts="_userBankAccounts?.Where(b => b.HasDebitCard).ToList()" />
-}
+<MudCard>
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">Cards</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        @if (_userBankAccounts?.Where(b => b.HasDebitCard).Count() is 0)
+        {
+            <MudText>No cards registered.</MudText>
+        }
+        else
+        {
+            <DebitCardCollection CardAccounts="_userBankAccounts?.Where(b => b.HasDebitCard).ToList()" />
+        }
+    </MudCardContent>
+    <MudCardActions>
+        <MudButton @onclick="ConnectCardClicked" StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Text" Color="Color.Primary">Add Card</MudButton>
+    </MudCardActions>
+</MudCard>
+
 
 @code {
     private UserDto? _userDtoWithLogins;
