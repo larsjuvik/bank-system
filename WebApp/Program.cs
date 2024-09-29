@@ -35,7 +35,7 @@ builder.Configuration.GetSection(AuthenticationOptions.SectionKey).Bind(authenti
 builder.Services.AddSingleton(authenticationOptions);
 
 var cultureOptions = new CultureOptions();
-builder.Configuration.GetSection(AuthenticationOptions.SectionKey).Bind(cultureOptions);
+builder.Configuration.GetSection(CultureOptions.SectionKey).Bind(cultureOptions);
 builder.Services.AddSingleton(cultureOptions);
 
 // AutoMapper
