@@ -300,7 +300,7 @@ public class BankContext(DbContextOptions<BankContext> options) : DbContext(opti
         {
             Id = id,
             UserId = userId,
-            AccountNumber = GetRandomAccountNumber(10),
+            AccountNumber = GetRandomAccountNumber(16),
             Balance = GetRandomBalanceAmount(),
             CreatedDate = GetRandomDateTime(),
             HasDebitCard = GetRandomBoolean(),

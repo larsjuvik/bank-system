@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace WebApp.DTOs;
 using Data.Models;
 public class BankAccountDto
@@ -10,6 +12,23 @@ public class BankAccountDto
     public BankAccountType AccountType { get; set; }
     public ICollection<TransactionDto> FromTransactions { get; set; }
     public ICollection<TransactionDto> ToTransactions { get; set; }
+
+    public string AccountNumberFormatted => FormatAccountNumber(AccountNumber);
+    
+    static string FormatAccountNumber(string accountNumber)
+    {
+        var builder = new StringBuilder();
+        for (var i = 0; i < accountNumber.Length; i++)
+        {
+            var shouldAddSpace = i > 0 && i % 4 == 0;
+            if (shouldAddSpace)
+            {
+                builder.Append(' ');
+            }
+            builder.Append(accountNumber[i]);
+        }
+        return builder.ToString();
+    }
 }
 
 public class CreateBankAccountDto

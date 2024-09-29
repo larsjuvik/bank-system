@@ -5,11 +5,9 @@
         <h5 class="card-title">@Title</h5>
 
         <div class="description-container">
-            <p>@DescriptionLeft</p>
-            <p>@DescriptionRight</p>
+            <p style="font-weight: bold">@DescriptionTop</p>
+            <p style="font-weight: lighter">@DescriptionBottom</p>
         </div>
-        
-
     </div>
 </div>
 
@@ -18,10 +16,10 @@
     public string? Title { get; set; }
 
     [Parameter]
-    public string? DescriptionLeft { get; set; }
+    public string? DescriptionTop { get; set; }
 
     [Parameter]
-    public string? DescriptionRight { get; set; }
+    public string? DescriptionBottom { get; set; }
 
     [Parameter]
     public string? Id { get; set; }
