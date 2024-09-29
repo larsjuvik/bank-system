@@ -20,7 +20,7 @@
 
 @if (_userBankAccounts?.Count is > 0)
 {
-<MudTable Dense="true" Items="_userBankAccounts" Hover="true" T="BankAccountDto" OnRowClick="BankAccountClicked">
+<MudTable Breakpoint="Breakpoint.None" Dense="true" Items="_userBankAccounts" Hover="true" T="BankAccountDto" OnRowClick="BankAccountClicked">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Bank Accounts</MudText>
     </ToolBarContent>
