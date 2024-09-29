@@ -34,8 +34,10 @@
         <MudTd DataLabel="Balance">@(context.Balance.ToString("C", CultureInfo.GetCultureInfo("en-US")))$</MudTd>
         <MudTd DataLabel="AccountType">@context.AccountType</MudTd>
     </RowTemplate>
+    <FooterContent>
+        <MudButton Class="ma-2" @onclick="CreateBankAccountClicked" StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Text" Color="Color.Primary">Create account</MudButton>
+    </FooterContent>
 </MudTable>
-<MudButton @onclick="CreateBankAccountClicked" StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Text" Color="Color.Primary">Create account</MudButton>
 }
 else
 {
