@@ -30,11 +30,12 @@ builder.Services.AddScoped<BankAccountService>();
 builder.Services.AddScoped<UserLoginService>();
 
 // App Options
-var authenticationSettings = new AuthenticationOptions();
-builder.Configuration.GetSection(AuthenticationOptions.SectionKey).Bind(authenticationSettings);
-builder.Services.AddSingleton(authenticationSettings);
+var authenticationOptions = new AuthenticationOptions();
+builder.Configuration.GetSection(AuthenticationOptions.SectionKey).Bind(authenticationOptions);
+builder.Services.AddSingleton(authenticationOptions);
 
-var cultureOptions = builder.Configuration.GetSection(CultureOptions.SectionKey);
+var cultureOptions = new CultureOptions();
+builder.Configuration.GetSection(AuthenticationOptions.SectionKey).Bind(cultureOptions);
 builder.Services.AddSingleton(cultureOptions);
 
 // AutoMapper
@@ -66,14 +67,14 @@ builder.Services.AddDbContext<BankContext>(options => options.UseInMemoryDatabas
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.Cookie.Name = authenticationSettings.CookieName;
+        options.Cookie.Name = authenticationOptions.CookieName;
         options.LoginPath = "/login";
         options.LogoutPath = "/logout";
         options.AccessDeniedPath = "/access-denied";
         options.Cookie.HttpOnly = true;
         options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
         options.Cookie.SameSite = SameSiteMode.Strict;
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(authenticationSettings.CookieExpirationMinutes);
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(authenticationOptions.CookieExpirationMinutes);
         options.SlidingExpiration = true;
     });
 builder.Services.AddAuthorization();
