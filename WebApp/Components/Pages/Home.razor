@@ -31,7 +31,7 @@
         <MudTh>Type</MudTh>
     </HeaderContent>
     <RowTemplate>
-        <MudTd DataLabel="AccountNumber">@context.AccountNumber</MudTd>
+        <MudTd DataLabel="AccountNumber">@context.AccountNumberFormatted</MudTd>
         <MudTd DataLabel="Balance">@(context.Balance.ToString("C", Culture.Info))</MudTd>
         <MudTd DataLabel="AccountType">@context.AccountType</MudTd>
     </RowTemplate>
