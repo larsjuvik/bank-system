@@ -12,6 +12,13 @@
 </div>
 
 @code {
+    public static Dictionary<string, string> CoverArtOptions { get; } = new()
+    {
+        { "flatMountains", "Flat Mountains" },
+        { "rosePetals", "Rose Petals" },
+        { "endlessConstellation", "Endless Constellation" },
+        { "rainbowVortex", "Rainbow Vortex" },
+    };
     [Parameter]
     public string? Title { get; set; }
 
@@ -20,26 +27,32 @@
 
     [Parameter]
     public string? DescriptionBottom { get; set; }
+    
+    [Parameter]
+    public string? CoverArt { get; set; }
 
     [Parameter]
     public string? Id { get; set; }
 
     private string? _coverArt = string.Empty;
 
-    protected override async Task OnInitializedAsync()
+    protected override Task OnInitializedAsync()
     {
-        // Select random cover art based on account number
-        var options = new List<string>
-            {
-                "flatMountains",
-                "rosePetals",
-                "endlessConstellation",
-                "rainbowVortex"
-            };
+        _coverArt = CoverArt;
+        if (string.IsNullOrEmpty(_coverArt))
+        {
+            GetRandomCoverArt();
+        }
 
+        return Task.CompletedTask;
+    }
+
+    private void GetRandomCoverArt()
+    {
         // Convert id to int to be used as seed - not using the actual string number, can be letters there
         var random = new Random(Id.GetHashCode());
 
-        _coverArt = options[random.Next(options.Count)];
+        _coverArt = CoverArtOptions.Keys.ToList()[random.Next(CoverArtOptions.Count)];
     }
+
 }

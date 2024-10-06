@@ -1,4 +1,5 @@
 @using Microsoft.AspNetCore.Components.Authorization
+@using WebApp.Components.CustomComponents
 @using WebApp.DTOs
 @using WebApp.Services
 @inject BankAccountService BankAccountService
@@ -25,6 +26,12 @@
                         @foreach (var bankAccount in AvailableBankAccounts)
                         {
                             <MudSelectItem T="string" Value="@bankAccount.AccountNumber" Disabled="@bankAccount.HasDebitCard">@bankAccount.AccountNumber</MudSelectItem>
+                        }
+                    </MudSelect>
+                    <MudSelect T="string" Label="Cover Art" MultiSelection="false" @bind-Value="_model.CoverArt">
+                        @foreach (var coverArtOption in DebitCard.CoverArtOptions)
+                        {
+                        <MudSelectItem T="string" Value="@coverArtOption.Key">@coverArtOption.Value</MudSelectItem>
                         }
                     </MudSelect>
                 </MudStack>

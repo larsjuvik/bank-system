@@ -40,7 +40,7 @@ public class BankAccountService(BankAccountRepository bankAccountRepository, Use
         }
         
         // Add card to bank account
-        await bankAccountRepository.AddCardToBankAccountAsync(bankAccount.Id);
+        await bankAccountRepository.AddCardToBankAccountAsync(bankAccount.Id, connectCardToBankAccountDto.CoverArt);
         return null;
     }
 

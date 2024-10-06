@@ -37,11 +37,12 @@ public class BankAccountRepository(BankContext context)
             .FirstOrDefaultAsync();
     }
 
-    public async Task AddCardToBankAccountAsync(int bankAccountId)
+    public async Task AddCardToBankAccountAsync(int bankAccountId, string? coverArt)
     {
         var bankAccount = await context.BankAccounts
             .FirstAsync(b => b.Id == bankAccountId);
         bankAccount.HasDebitCard = true;
+        bankAccount.CoverArt = coverArt;
         await context.SaveChangesAsync();
     }
 }

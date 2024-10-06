@@ -8,6 +8,9 @@ public class BankAccount
     public int Id { get; init; }
     public int UserId { get; set; }
     
+    [MaxLength(50)]
+    public string? CoverArt { get; set; }
+    
     [MinLength(16)]
     [MaxLength(16)]
     public required string AccountNumber { get; set; }

@@ -136,6 +136,12 @@ else
         var options = new DialogOptions { CloseOnEscapeKey = true };
         var parameters = new DialogParameters<ConnectCreditCardDialog>{{ x => x.AvailableBankAccounts, _userBankAccounts }};
         
-        await DialogService.ShowAsync<ConnectCreditCardDialog>("Connect Credit Card", parameters, options);
+        var dialog = await DialogService.ShowAsync<ConnectCreditCardDialog>("Connect Credit Card", parameters, options);
+        var dialogResult = await dialog.Result;
+        if (dialogResult is { Canceled: false })
+        {
+            // Refresh data
+            await GetData();
+        }
     }
 }
