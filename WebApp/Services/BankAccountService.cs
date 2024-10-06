@@ -10,7 +10,7 @@ public class BankAccountService(BankAccountRepository bankAccountRepository, Use
     /// <summary>
     /// Tries to connect card to a bank account.
     ///
-    /// Returns a client-friendly error string if something went wrong.
+    /// Returns a non-null client-friendly error string if something went wrong.
     /// </summary>
     public async Task<string?> AddCardToBankAccount(string username, ConnectCardToBankAccountDto connectCardToBankAccountDto)
     {
