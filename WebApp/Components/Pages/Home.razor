@@ -104,9 +104,13 @@ else
     private async Task CreateBankAccountClicked()
     {
         var options = new DialogOptions { CloseOnEscapeKey = true };
-        await DialogService.ShowAsync<AddBankAccountDialog>("Add Bank Account", options);
-
-        await GetData();
+        var dialog = await DialogService.ShowAsync<AddBankAccountDialog>("Add Bank Account", options);
+        var dialogResult = await dialog.Result;
+        if (dialogResult is { Canceled: false })
+        {
+            // Refresh data
+            await GetData();
+        }
     }
 
     private async Task GetData()
