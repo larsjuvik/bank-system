@@ -27,7 +27,6 @@
                             <MudSelectItem T="string" Value="@bankAccount.AccountNumber" Disabled="@bankAccount.HasDebitCard">@bankAccount.AccountNumber</MudSelectItem>
                         }
                     </MudSelect>
-                    <MudTextField Label="Name" @bind-Value="_model.Name" For="@(() => _model.Name)"/>
                 </MudStack>
             </EditForm>
         }
