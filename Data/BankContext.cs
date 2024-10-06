@@ -39,14 +39,18 @@ public class BankContext(DbContextOptions<BankContext> options) : DbContext(opti
             .HasForeignKey(ul => ul.UserId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // Bank account to from-transactions
+        // Bank account
+        modelBuilder.Entity<BankAccount>()
+            .Property(b=>b.Type)
+            .HasConversion<string>();
+        
         modelBuilder.Entity<BankAccount>()
             .HasMany(b => b.FromTransactions)
             .WithOne(t => t.From)
             .HasForeignKey(t => t.FromId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // Bank account to to-transactions
+        // Bank account
         modelBuilder.Entity<BankAccount>()
             .HasMany(b => b.ToTransactions)
             .WithOne(t => t.To)

@@ -9,7 +9,7 @@ public class BankAccountDto
     public DateTime CreatedDate { get; set; }
     public UserDto Owner { get; set; }
     public bool HasDebitCard { get; set; }
-    public BankAccountType AccountType { get; set; }
+    public BankAccountType Type { get; set; }
     public ICollection<TransactionDto> FromTransactions { get; set; }
     public ICollection<TransactionDto> ToTransactions { get; set; }
 
