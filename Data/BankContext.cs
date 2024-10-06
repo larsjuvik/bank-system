@@ -188,7 +188,7 @@ public class BankContext(DbContextOptions<BankContext> options) : DbContext(opti
         foreach (var name in names)
         {
             var username = name.Replace(" ", string.Empty) + random.Next(1000, 9999);
-            var password = GetRandomAccountNumber(34) + GetRandomBalanceAmount();
+            var password = GetRandomAccountNumber() + GetRandomBalanceAmount();
             users.Add(GetDummyUser(userIndex, username, password, name, GetRandomBoolean()));
             userIndex++;
         }
@@ -300,7 +300,7 @@ public class BankContext(DbContextOptions<BankContext> options) : DbContext(opti
         {
             Id = id,
             UserId = userId,
-            AccountNumber = GetRandomAccountNumber(16),
+            AccountNumber = GetRandomAccountNumber(),
             Balance = GetRandomBalanceAmount(),
             CreatedDate = GetRandomDateTime(),
             HasDebitCard = GetRandomBoolean(),
@@ -357,11 +357,11 @@ public class BankContext(DbContextOptions<BankContext> options) : DbContext(opti
         return (BankAccountType)random.Next(0, 3);
     }
 
-    private static string GetRandomAccountNumber(int length)
+    public static string GetRandomAccountNumber()
     {
         var random = new Random();
         const string chars = "0123456789";
-        return new string(Enumerable.Repeat(chars, length)
+        return new string(Enumerable.Repeat(chars, 16)
             .Select(s => s[random.Next(s.Length)]).ToArray());
     }
 }

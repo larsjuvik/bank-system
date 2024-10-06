@@ -4,11 +4,11 @@ using WebApp.DTOs;
 
 namespace WebApp.Services;
 
-public class BankAccountService(BankAccountRepository bankAccountRepository, IMapper mapper)
+public class BankAccountService(BankAccountRepository bankAccountRepository, UserRepository userRepository, IMapper mapper)
 {
     public async Task ConnectCardToBankAccount(ConnectCardToBankAccountDto connectCardToBankAccountDto)
     {
-        // TODO make sure no cards are connected to this account number
+        // TODO make sure no cards are already connected to this account number
         
         // TODO make sure this is user's own bank account
         throw new NotImplementedException();
@@ -18,5 +18,11 @@ public class BankAccountService(BankAccountRepository bankAccountRepository, IMa
     {
         var model = await bankAccountRepository.GetAllBankAccountsByUserIdAsync(id);
         return mapper.Map<List<BankAccountDto>>(model);
+    }
+
+    public async Task AddBankAccount(string username, CreateBankAccountDto model)
+    {
+        var userId = await userRepository.GetIdByUsernameAsync(username);
+        await bankAccountRepository.AddBankAccount(userId, model.AccountType, model.HasDebitCard);
     }
 }

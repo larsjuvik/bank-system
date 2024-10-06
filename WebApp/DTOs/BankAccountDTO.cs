@@ -33,7 +33,6 @@ public class BankAccountDto
 
 public class CreateBankAccountDto
 {
-    public int UserId { get; set; }
     public bool HasDebitCard { get; set; }
     public BankAccountType AccountType { get; set; }
 }

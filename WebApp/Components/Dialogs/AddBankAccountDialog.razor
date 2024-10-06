@@ -1,21 +1,31 @@
 @using Data.Helpers
 @using Data.Models
+@using Microsoft.AspNetCore.Components.Authorization
 @using WebApp.DTOs
+@using WebApp.Services
+@inject BankAccountService BankAccountService
+@inject ISnackbar Snackbar
+
 <MudDialog>
     <TitleContent>
         Add Bank Account
     </TitleContent>
     <DialogContent>
+        @if (_errorMessage != null)
+        {
+            <p class="error">@_errorMessage</p>
+        }
+        <p></p>
         <EditForm EditContext="_editContext">
             <DataAnnotationsValidator/>
-            <MudStack>
+            <MudStack Class="pa-4" Spacing="4">
                 <MudSelect T="BankAccountType" Label="Account Type" MultiSelection="false" @bind-Value="_model.AccountType">
                     @foreach (var accountType in Enum.GetValues(typeof(BankAccountType)).Cast<BankAccountType>().ToList())
                     {
                         <MudSelectItem T="BankAccountType" Value="@accountType">@BankAccountTypeHelper.GetStringFromBankAccountType(accountType)</MudSelectItem>
                     }
                 </MudSelect>
-                <MudSwitch LabelPosition="LabelPosition.Start" Label="Debit Card" For="@(() => _model.HasDebitCard)" Color="Color.Primary" />
+                <MudSwitch LabelPosition="LabelPosition.End" Label="Debit Card" For="@(() => _model.HasDebitCard)" Color="Color.Primary"/>
             </MudStack>
         </EditForm>
     </DialogContent>
@@ -26,18 +36,57 @@
 </MudDialog>
 
 @code {
+    private string? _errorMessage = null;
     private static CreateBankAccountDto _model = new();
     private EditContext _editContext = new(_model);
     
     [CascadingParameter]
     private MudDialogInstance MudDialog { get; set; }
+    
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthenticationState { get; set; }
 
-    private void Submit()
+    private async Task Submit()
     {
-        var validated = _editContext.Validate();
-        if (!validated) return;
+        // Reset error message every attempt
+        _errorMessage = "";
         
-        // TODO: save bank account
+        var validated = _editContext.Validate();
+        if (!validated)
+        {
+            _errorMessage = "Could not validate form, check fields";
+            return;
+        }
+        
+        if (AuthenticationState == null)
+        {
+            _errorMessage = "Could not authenticate, log in and try again";
+            return;
+        }
+        
+        var username = (await AuthenticationState).User.Identity?.Name;
+        if (username == null)
+        {
+            _errorMessage = "Could not get username, log in and try again";
+            return;
+        }
+
+        try
+        {
+            await BankAccountService.AddBankAccount(username, _model);
+            var feedback = _model.HasDebitCard ? "Created new bank account with card" : "Created new bank account";
+            Snackbar.Add(feedback, Severity.Success, (options) =>
+            {
+                options.CloseAfterNavigation = false;
+            });
+        }
+        catch (Exception)
+        {
+            Snackbar.Add("An error occurred when creating bank account", Severity.Error, (options) =>
+            {
+                options.CloseAfterNavigation = false;
+            });
+        }
         
         MudDialog.Close(DialogResult.Ok(true));
     }

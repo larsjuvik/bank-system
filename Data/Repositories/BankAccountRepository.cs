@@ -11,4 +11,19 @@ public class BankAccountRepository(BankContext context)
             .Include(b => b.Owner)
             .Where(b => b.Owner.Id == id).ToListAsync();
     }
+
+    public async Task AddBankAccount(int userId, BankAccountType modelAccountType, bool modelHasDebitCard)
+    {
+        var model = new BankAccount()
+        {
+            UserId = userId,
+            AccountNumber = BankContext.GetRandomAccountNumber(),  // TODO: ensure this is not taken
+            CreatedDate = DateTime.UtcNow,
+            Balance = 0,
+            HasDebitCard = modelHasDebitCard,
+            Type = modelAccountType
+        };
+        await context.BankAccounts.AddAsync(model);
+        await context.SaveChangesAsync();
+    }
 }
