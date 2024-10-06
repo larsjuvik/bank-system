@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using Data.Helpers
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using WebApp.DTOs
@@ -33,7 +34,7 @@
     <RowTemplate>
         <MudTd DataLabel="AccountNumber">@context.AccountNumberFormatted</MudTd>
         <MudTd DataLabel="Balance">@(context.Balance.ToString("C", Culture.Info))</MudTd>
-        <MudTd DataLabel="AccountType">@context.AccountType</MudTd>
+        <MudTd DataLabel="AccountType">@BankAccountTypeHelper.GetStringFromBankAccountType(context.AccountType)</MudTd>
     </RowTemplate>
     <FooterContent>
         <MudButton Class="ma-2" @onclick="CreateBankAccountClicked" StartIcon="@Icons.Material.Filled.Add" Variant="Variant.Text" Color="Color.Primary">Create account</MudButton>

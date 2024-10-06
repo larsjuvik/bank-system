@@ -25,7 +25,7 @@
                         <MudSelectItem T="BankAccountType" Value="@accountType">@BankAccountTypeHelper.GetStringFromBankAccountType(accountType)</MudSelectItem>
                     }
                 </MudSelect>
-                <MudSwitch LabelPosition="LabelPosition.End" Label="Debit Card" For="@(() => _model.HasDebitCard)" Color="Color.Primary"/>
+                <MudSwitch LabelPosition="LabelPosition.End" Label="Debit Card" @bind-Value="@_model.HasDebitCard" For="@(() => _model.HasDebitCard)" Color="Color.Primary"/>
             </MudStack>
         </EditForm>
     </DialogContent>
