@@ -81,17 +81,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        // Get username from authentication state
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var username = authState.User.Identity?.Name;
-        if (username == null)
-        {
-            return;
-        }
-
-        var userId = await UserService.GetIdByUsernameAsync(username);
-        _userDtoWithLogins = await UserService.GetUserWithLoginsByUsernameAsync(username);
-        _userBankAccounts = await BankAccountService.GetAllBankAccountsByUserIdAsync(userId);
+        await GetData();
     }
 
     /// <summary>
@@ -115,6 +105,23 @@ else
     {
         var options = new DialogOptions { CloseOnEscapeKey = true };
         await DialogService.ShowAsync<AddBankAccountDialog>("Add Bank Account", options);
+
+        await GetData();
+    }
+
+    private async Task GetData()
+    {
+        // Get username from authentication state
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var username = authState.User.Identity?.Name;
+        if (username == null)
+        {
+            return;
+        }
+
+        var userId = await UserService.GetIdByUsernameAsync(username);
+        _userDtoWithLogins = await UserService.GetUserWithLoginsByUsernameAsync(username);
+        _userBankAccounts = await BankAccountService.GetAllBankAccountsByUserIdAsync(userId);
     }
 
     /// <summary>
