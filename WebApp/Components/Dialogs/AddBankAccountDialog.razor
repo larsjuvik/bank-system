@@ -18,7 +18,7 @@
         <p></p>
         <EditForm EditContext="_editContext">
             <DataAnnotationsValidator/>
-            <MudStack Class="pa-4" Spacing="4">
+            <MudStack AlignItems="AlignItems.Stretch" Style="min-width: 300px" Class="pa-4" Spacing="4">
                 <MudSelect T="BankAccountType" Label="Account Type" MultiSelection="false" @bind-Value="_model.AccountType">
                     @foreach (var accountType in Enum.GetValues(typeof(BankAccountType)).Cast<BankAccountType>().ToList())
                     {
@@ -49,7 +49,7 @@
     private async Task Submit()
     {
         // Reset error message every attempt
-        _errorMessage = "";
+        _errorMessage = null;
         
         var validated = _editContext.Validate();
         if (!validated)
@@ -79,6 +79,7 @@
             {
                 options.CloseAfterNavigation = false;
             });
+            MudDialog.Close(DialogResult.Ok(true));
         }
         catch (Exception)
         {
@@ -87,8 +88,6 @@
                 options.CloseAfterNavigation = false;
             });
         }
-        
-        MudDialog.Close(DialogResult.Ok(true));
     }
 
     private void Cancel() => MudDialog.Cancel();

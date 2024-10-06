@@ -1,23 +1,36 @@
+@using Microsoft.AspNetCore.Components.Authorization
 @using WebApp.DTOs
 @using WebApp.Services
 @inject BankAccountService BankAccountService
+@inject ISnackbar Snackbar
 <MudDialog>
     <TitleContent>
         Connect Card to a Bank Account
     </TitleContent>
     <DialogContent>
-        <EditForm EditContext="_editContext">
-            <DataAnnotationsValidator/>
-            <MudStack>
-                <MudSelect T="string" Label="Connected Bank Account" MultiSelection="false" @bind-Value="_model.ConnectedBankAccountNumber">
-                    @foreach (var bankAccount in AvailableBankAccounts)
-                    {
-                        <MudSelectItem T="string" Value="@bankAccount.AccountNumber">@bankAccount.AccountNumber</MudSelectItem>
-                    }
-                </MudSelect>
-                <MudTextField Label="Name" @bind-Value="_model.Name" For="@(() => _model.Name)" />
-            </MudStack>
-        </EditForm>
+        @if (_errorMessage != null)
+        {
+            <p class="error">@_errorMessage</p>
+        }
+        @if (AvailableBankAccounts.Count == 0)
+        {
+            <p class="error">You need to create a bank account in order to connect a card.</p>
+        }
+        else
+        {
+            <EditForm EditContext="_editContext">
+                <DataAnnotationsValidator/>
+                <MudStack AlignItems="AlignItems.Stretch" Style="min-width: 300px" Class="pa-4" Spacing="4">
+                    <MudSelect T="string" Label="Connected Bank Account" MultiSelection="false" @bind-Value="_model.ConnectedBankAccountNumber">
+                        @foreach (var bankAccount in AvailableBankAccounts)
+                        {
+                            <MudSelectItem T="string" Value="@bankAccount.AccountNumber" Disabled="@bankAccount.HasDebitCard">@bankAccount.AccountNumber</MudSelectItem>
+                        }
+                    </MudSelect>
+                    <MudTextField Label="Name" @bind-Value="_model.Name" For="@(() => _model.Name)"/>
+                </MudStack>
+            </EditForm>
+        }
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
@@ -28,22 +41,55 @@
 @code {
     private static ConnectCardToBankAccountDto _model = new();
     private EditContext _editContext = new(_model);
-    
+    private string? _errorMessage;
+
     [CascadingParameter]
     private MudDialogInstance? MudDialog { get; set; }
 
     [Parameter]
     public List<BankAccountDto> AvailableBankAccounts { get; set; } = [];
+    
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthenticationState { get; set; }
 
     private async Task Submit()
     {
+        _errorMessage = null;
         var validated = _editContext.Validate();
         if (!validated) return;
 
-        // TODO: we want to access error message in case of fail
-        await BankAccountService.ConnectCardToBankAccount(_model);
-
-        MudDialog?.Close(DialogResult.Ok(true));
+        try
+        {
+            if (AuthenticationState == null)
+            {
+                _errorMessage = "Could not authenticate, log in and try again";
+                return;
+            }
+        
+            var username = (await AuthenticationState).User.Identity?.Name;
+            if (username == null)
+            {
+                _errorMessage = "Could not get username, log in and try again";
+                return;
+            }
+            _errorMessage = await BankAccountService.AddCardToBankAccount(username, _model);
+            if (_errorMessage == null)
+            {
+                // Success
+                MudDialog?.Close(DialogResult.Ok(true));
+                Snackbar.Add("Connected card to bank account", Severity.Success, (options) =>
+                {
+                    options.CloseAfterNavigation = false;
+                });
+            }
+        }
+        catch (Exception)
+        {
+            Snackbar.Add("Something went wrong on our side, please try again", Severity.Error, (options) =>
+            {
+                options.CloseAfterNavigation = false;
+            });
+        }
     }
 
     private void Cancel() => MudDialog?.Cancel();

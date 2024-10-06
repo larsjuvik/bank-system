@@ -9,7 +9,9 @@ public class BankAccountRepository(BankContext context)
     {
         return await context.BankAccounts
             .Include(b => b.Owner)
-            .Where(b => b.Owner.Id == id).ToListAsync();
+            .Where(b => b.Owner.Id == id)
+            .AsNoTracking()
+            .ToListAsync();
     }
 
     public async Task AddBankAccount(int userId, BankAccountType modelAccountType, bool modelHasDebitCard)
@@ -24,6 +26,22 @@ public class BankAccountRepository(BankContext context)
             Type = modelAccountType
         };
         await context.BankAccounts.AddAsync(model);
+        await context.SaveChangesAsync();
+    }
+
+    public async Task<BankAccount?> GetBankAccountByAccountNumberAsync(string accountNumber)
+    {
+        return await context.BankAccounts
+            .Include(b => b.Owner)
+            .Where(b => b.AccountNumber == accountNumber)
+            .FirstOrDefaultAsync();
+    }
+
+    public async Task AddCardToBankAccountAsync(int bankAccountId)
+    {
+        var bankAccount = await context.BankAccounts
+            .FirstAsync(b => b.Id == bankAccountId);
+        bankAccount.HasDebitCard = true;
         await context.SaveChangesAsync();
     }
 }
