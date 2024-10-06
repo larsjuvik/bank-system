@@ -5,10 +5,10 @@ namespace Data;
 
 public class BankContext(DbContextOptions<BankContext> options) : DbContext(options)
 {
-    public DbSet<BankAccount> BankAccounts { get; set; }
-    public DbSet<Transaction> Transactions { get; set; }
-    public DbSet<User> Users { get; set; }
-    public DbSet<UserLogin> UserLogins { get; set; }
+    public DbSet<BankAccount> BankAccounts { get; init; }
+    public DbSet<Transaction> Transactions { get; init; }
+    public DbSet<User> Users { get; init; }
+    public DbSet<UserLogin> UserLogins { get; init; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
