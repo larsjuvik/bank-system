@@ -1,6 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
+@using WebApp.Components.Dialogs
 @using WebApp.Components.Theming
 @inherits LayoutComponentBase
+@inject IDialogService DialogService
 
 <MudThemeProvider Theme="@_mudTheme" @bind-IsDarkMode="@_darkMode" />
 <MudPopoverProvider />
@@ -17,6 +19,7 @@
         BlueFlare
         <MudSpacer/>
 
+        <MudButton Class="me-3" OnClick="ShowCreditsDialogForCardCoverArt" Icon="@Icons.Material.Filled.QuestionMark" Color="Color.Inherit" Edge="Edge.End">Credits</MudButton>
         @if (_darkMode)
         {
             <MudIconButton OnClick="() => _darkMode = false" Icon="@Icons.Material.Filled.LightMode" Color="Color.Inherit" Edge="Edge.End"/>
@@ -78,5 +81,13 @@
     void ToggleDrawer()
     {
         _navMenuDrawerOpen = !_navMenuDrawerOpen;
+    }
+    
+    private async Task ShowCreditsDialogForCardCoverArt(MouseEventArgs arg)
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+        var parameters = new DialogParameters<CoverArtCreditsDialog>();
+        
+        await DialogService.ShowAsync<CoverArtCreditsDialog>("Connect Credit Card", parameters, options);
     }
 }
