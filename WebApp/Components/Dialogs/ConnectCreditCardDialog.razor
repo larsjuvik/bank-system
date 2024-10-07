@@ -27,7 +27,7 @@
                     <MudSelect T="string" Label="Connected Bank Account" MultiSelection="false" @bind-Value="_model.ConnectedBankAccountNumber">
                         @foreach (var bankAccount in AvailableBankAccounts)
                         {
-                            <MudSelectItem T="string" Value="@bankAccount.AccountNumber" Disabled="@bankAccount.HasDebitCard">@bankAccount.AccountNumber</MudSelectItem>
+                            <MudSelectItem T="string" Value="@bankAccount.AccountNumber" Disabled="@bankAccount.HasDebitCard">@bankAccount.AccountNumber @(bankAccount.HasDebitCard ? "(has card)" : string.Empty)</MudSelectItem>
                         }
                     </MudSelect>
                     <MudSelect T="string" Label="Cover Art" MultiSelection="false" @bind-Value="_model.CoverArt">
