@@ -24,20 +24,20 @@
             <EditForm EditContext="_editContext">
                 <DataAnnotationsValidator/>
                 <MudStack AlignItems="AlignItems.Stretch" Style="min-width: 300px" Class="pa-4" Spacing="4">
-                    <MudSelect T="string" Label="Connected Bank Account" MultiSelection="false" @bind-Value="_model.ConnectedBankAccountNumber">
+                    <MudSelect T="string" Label="Connected Bank Account" MultiSelection="false" @bind-Value="Model.ConnectedBankAccountNumber">
                         @foreach (var bankAccount in AvailableBankAccounts)
                         {
                             <MudSelectItem T="string" Value="@bankAccount.AccountNumber" Disabled="@bankAccount.HasDebitCard">@bankAccount.AccountNumber @(bankAccount.HasDebitCard ? "(has card)" : string.Empty)</MudSelectItem>
                         }
                     </MudSelect>
-                    <MudSelect T="string" Label="Cover Art" MultiSelection="false" @bind-Value="_model.CoverArt">
+                    <MudSelect T="string" Label="Cover Art" MultiSelection="false" @bind-Value="Model.CoverArt">
                         @foreach (var coverArtOption in DebitCard.CoverArtOptions)
                         {
                             <MudSelectItem T="string" Value="@coverArtOption.Key">@coverArtOption.Value</MudSelectItem>
                         }
                     </MudSelect>
-                    <DebitCard Title="Your name here" CoverArt="@(string.IsNullOrEmpty(_model.CoverArt) ? _defaultCoverArt : _model.CoverArt)"
-                               DescriptionTop="@(AvailableBankAccounts.FirstOrDefault(b=>b.AccountNumber == _model.ConnectedBankAccountNumber)?.Balance.ToString("C", Culture.Info))" DescriptionBottom="@_model.ConnectedBankAccountNumber"></DebitCard>
+                    <DebitCard Title="Your name here" CoverArt="@(string.IsNullOrEmpty(Model.CoverArt) ? _defaultCoverArt : Model.CoverArt)"
+                               DescriptionTop="@(AvailableBankAccounts.FirstOrDefault(b=>b.AccountNumber == Model.ConnectedBankAccountNumber)?.Balance.ToString("C", Culture.Info))" DescriptionBottom="@Model.ConnectedBankAccountNumber"></DebitCard>
                 </MudStack>
             </EditForm>
         }
@@ -49,10 +49,11 @@
 </MudDialog>
 
 @code {
-    private static ConnectCardToBankAccountDto _model = new();
-    private EditContext _editContext = new(_model);
+    private static readonly ConnectCardToBankAccountDto Model = new();
+    private readonly EditContext _editContext = new(Model);
+    
     private string? _errorMessage;
-    private string? _defaultCoverArt = DebitCard.CoverArtOptions.Keys.Skip(1).FirstOrDefault();
+    private readonly string? _defaultCoverArt = DebitCard.CoverArtOptions.Keys.Skip(1).FirstOrDefault();
 
     [CascadingParameter]
     private MudDialogInstance? MudDialog { get; set; }
@@ -83,7 +84,7 @@
                 _errorMessage = "Could not get username, log in and try again";
                 return;
             }
-            _errorMessage = await BankAccountService.AddCardToBankAccount(username, _model);
+            _errorMessage = await BankAccountService.AddCardToBankAccount(username, Model);
             if (_errorMessage == null)
             {
                 // Success
