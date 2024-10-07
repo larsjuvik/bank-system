@@ -36,7 +36,7 @@
                             <MudSelectItem T="string" Value="@coverArtOption.Key">@coverArtOption.Value</MudSelectItem>
                         }
                     </MudSelect>
-                    <DebitCard Title="Your name here" CoverArt="@_model.CoverArt"
+                    <DebitCard Title="Your name here" CoverArt="@(string.IsNullOrEmpty(_model.CoverArt) ? _defaultCoverArt : _model.CoverArt)"
                                DescriptionTop="@(AvailableBankAccounts.FirstOrDefault(b=>b.AccountNumber == _model.ConnectedBankAccountNumber)?.Balance.ToString("C", Culture.Info))" DescriptionBottom="@_model.ConnectedBankAccountNumber"></DebitCard>
                 </MudStack>
             </EditForm>
@@ -52,6 +52,7 @@
     private static ConnectCardToBankAccountDto _model = new();
     private EditContext _editContext = new(_model);
     private string? _errorMessage;
+    private string? _defaultCoverArt = DebitCard.CoverArtOptions.Keys.Skip(1).FirstOrDefault();
 
     [CascadingParameter]
     private MudDialogInstance? MudDialog { get; set; }
