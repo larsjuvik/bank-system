@@ -6,11 +6,12 @@
 <div class="card-scroller">
     @foreach (var bankAccount in CardAccounts)
     {
-    <DebitCard
-        Title="@bankAccount.Owner.Name"
-        DescriptionTop="@bankAccount.Balance.ToString("C", Culture.Info)"
-        DescriptionBottom="@bankAccount.AccountNumberFormatted"
-        Id="@bankAccount.AccountNumber" />
+        <DebitCard
+            CoverArt="@bankAccount.CoverArt"
+            Title="@bankAccount.Owner.Name"
+            DescriptionTop="@bankAccount.Balance.ToString("C", Culture.Info)"
+            DescriptionBottom="@bankAccount.AccountNumberFormatted"
+            Id="@bankAccount.AccountNumber" />
     }
 </div>
 

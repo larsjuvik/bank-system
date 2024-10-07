@@ -2,8 +2,10 @@
 @using WebApp.Components.CustomComponents
 @using WebApp.DTOs
 @using WebApp.Services
+@using WebApp.Settings
 @inject BankAccountService BankAccountService
 @inject ISnackbar Snackbar
+@inject CultureOptions Culture
 <MudDialog>
     <TitleContent>
         Connect Card to a Bank Account
@@ -31,9 +33,11 @@
                     <MudSelect T="string" Label="Cover Art" MultiSelection="false" @bind-Value="_model.CoverArt">
                         @foreach (var coverArtOption in DebitCard.CoverArtOptions)
                         {
-                        <MudSelectItem T="string" Value="@coverArtOption.Key">@coverArtOption.Value</MudSelectItem>
+                            <MudSelectItem T="string" Value="@coverArtOption.Key">@coverArtOption.Value</MudSelectItem>
                         }
                     </MudSelect>
+                    <DebitCard Title="Your name here" CoverArt="@_model.CoverArt"
+                               DescriptionTop="@(AvailableBankAccounts.FirstOrDefault(b=>b.AccountNumber == _model.ConnectedBankAccountNumber)?.Balance.ToString("C", Culture.Info))" DescriptionBottom="@_model.ConnectedBankAccountNumber"></DebitCard>
                 </MudStack>
             </EditForm>
         }

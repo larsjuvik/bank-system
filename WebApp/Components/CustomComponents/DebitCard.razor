@@ -1,3 +1,4 @@
+@using System.Globalization
 @namespace WebApp.Components.CustomComponents
 
 <div class="wrapper @_coverArt">
@@ -49,8 +50,15 @@
 
     private void GetRandomCoverArt()
     {
+        var id = Id;
+        if (id == null)
+        {
+            var rand = new Random();
+            id = rand.NextDouble().ToString(CultureInfo.InvariantCulture);
+        }
+
         // Convert id to int to be used as seed - not using the actual string number, can be letters there
-        var random = new Random(Id.GetHashCode());
+        var random = new Random(id.GetHashCode());
 
         _coverArt = CoverArtOptions.Keys.ToList()[random.Next(CoverArtOptions.Count)];
     }
