@@ -46,10 +46,10 @@ For an overview the security, see the [Security](./docs/SECURITY.md) document.
 
 ## Goals :white_check_mark:
 
-- [ ] A home page for users
+- [x] A home page for users
   - [x] Overview over accounts and cards
-  - [ ] Functionality for adding accounts
-  - [ ] Functionality for adding cards
+  - [x] Functionality for adding accounts
+  - [x] Functionality for adding cards
 - [ ] A transactions page for users
   - Ability to see transactions on different accounts
 - [ ] A page for users to edit their own information
@@ -61,6 +61,7 @@ For an overview the security, see the [Security](./docs/SECURITY.md) document.
 - [x] An admin page for observing user logins
 - [ ] An admin page for editing user profiles
 - [ ] Decide on a common currency / date format
+- [ ] Logging
 
 ### Nice-to-have's
 
