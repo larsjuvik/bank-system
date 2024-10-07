@@ -25,7 +25,6 @@
                         <MudSelectItem T="BankAccountType" Value="@accountType">@BankAccountTypeHelper.GetStringFromBankAccountType(accountType)</MudSelectItem>
                     }
                 </MudSelect>
-                <MudSwitch LabelPosition="LabelPosition.End" Label="Debit Card" @bind-Value="@_model.HasDebitCard" For="@(() => _model.HasDebitCard)" Color="Color.Primary"/>
             </MudStack>
         </EditForm>
     </DialogContent>
@@ -74,7 +73,7 @@
         try
         {
             await BankAccountService.AddBankAccount(username, _model);
-            var feedback = _model.HasDebitCard ? "Created new bank account with card" : "Created new bank account";
+            const string feedback = "Created new bank account";
             Snackbar.Add(feedback, Severity.Success, (options) =>
             {
                 options.CloseAfterNavigation = false;

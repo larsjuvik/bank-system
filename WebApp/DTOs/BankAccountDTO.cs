@@ -34,6 +34,5 @@ public class BankAccountDto
 
 public class CreateBankAccountDto
 {
-    public bool HasDebitCard { get; set; }
     public BankAccountType AccountType { get; set; }
 }

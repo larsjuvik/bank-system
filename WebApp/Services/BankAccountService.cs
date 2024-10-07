@@ -53,6 +53,6 @@ public class BankAccountService(BankAccountRepository bankAccountRepository, Use
     public async Task AddBankAccount(string username, CreateBankAccountDto model)
     {
         var userId = await userRepository.GetIdByUsernameAsync(username);
-        await bankAccountRepository.AddBankAccount(userId, model.AccountType, model.HasDebitCard);
+        await bankAccountRepository.AddBankAccount(userId, model.AccountType, false);
     }
 }
