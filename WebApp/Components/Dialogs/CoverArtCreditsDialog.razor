@@ -1,0 +1,36 @@
+@using WebApp.Components.CustomComponents
+<MudDialog>
+    <TitleContent>
+        Cover Arts for the Cards
+    </TitleContent>
+    <DialogContent>
+        Thanks to SVGBackgrounds.com for providing the cover arts for the cards in this application.
+        The following arts are used:
+        <MudList T="string">
+            @foreach (var coverArt in DebitCard.CoverArtOptions)
+            {
+                <MudListItem>
+                    <AvatarContent>
+                        <div class="@coverArt.Key" style="aspect-ratio: 16 / 9; width: 75px; border-radius: 10px; margin-right: 5px"></div>
+                    </AvatarContent>
+                    <ChildContent>
+                        @coverArt.Value
+                    </ChildContent>
+                </MudListItem>
+            }
+        </MudList>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private MudDialogInstance? MudDialog { get; set; }
+
+    private void Submit() => MudDialog?.Close(DialogResult.Ok(true));
+
+    private void Cancel() => MudDialog?.Cancel();
+}

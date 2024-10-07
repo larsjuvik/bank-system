@@ -58,6 +58,9 @@ else
         <CardHeaderContent>
             <MudText Typo="Typo.h6">Cards</MudText>
         </CardHeaderContent>
+        <CardHeaderActions>
+            <MudIconButton OnClick="ShowCreditsDialogForCardCoverArt" Icon="@Icons.Material.Filled.QuestionMark" Color="Color.Primary" />
+        </CardHeaderActions>
     </MudCardHeader>
     <MudCardContent>
         @if (_userBankAccounts?.Where(b => b.HasDebitCard).Count() is 0)
@@ -143,5 +146,13 @@ else
             // Refresh data
             await GetData();
         }
+    }
+
+    private async Task ShowCreditsDialogForCardCoverArt(MouseEventArgs arg)
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+        var parameters = new DialogParameters<CoverArtCreditsDialog>();
+        
+        await DialogService.ShowAsync<CoverArtCreditsDialog>("Connect Credit Card", parameters, options);
     }
 }
