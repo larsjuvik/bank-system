@@ -1,7 +1,7 @@
 @using System.Globalization
 @namespace WebApp.Components.CustomComponents
 
-<div class="wrapper @_coverArt">
+<div class="wrapper @CoverArt">
     <div class="card-body">
         <h5 class="card-title">@Title</h5>
 
@@ -35,12 +35,9 @@
     [Parameter]
     public string? Id { get; set; }
 
-    private string? _coverArt = string.Empty;
-
     protected override Task OnInitializedAsync()
     {
-        _coverArt = CoverArt;
-        if (string.IsNullOrEmpty(_coverArt))
+        if (string.IsNullOrEmpty(CoverArt))
         {
             GetRandomCoverArt();
         }
@@ -60,7 +57,7 @@
         // Convert id to int to be used as seed - not using the actual string number, can be letters there
         var random = new Random(id.GetHashCode());
 
-        _coverArt = CoverArtOptions.Keys.ToList()[random.Next(CoverArtOptions.Count)];
+        CoverArt = CoverArtOptions.Keys.ToList()[random.Next(CoverArtOptions.Count)];
     }
 
 }
