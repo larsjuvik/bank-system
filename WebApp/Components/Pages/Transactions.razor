@@ -9,10 +9,10 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @attribute [Authorize]
 @attribute [StreamRendering]
-<PageTitle>Users</PageTitle>
+<PageTitle>Transactions</PageTitle>
 
-<MudDataGrid T="TransactionDto" RowStyleFunc="@RowStyle" Items="@_transactions" SortMode="SortMode.Multiple" Filterable="true" QuickFilter="@SearchFilter"
-             Hideable="true" RowClick="@RowClicked" SelectedItemsChanged="@SelectedItemsChanged" Virtualize>
+<MudDataGrid T="TransactionDto" RowStyleFunc="@RowStyle" Items="@_transactions" SortMode="SortMode.Single" Filterable="true" QuickFilter="@SearchFilter"
+             Hideable="true" RowClick="@RowClicked" Virtualize>
     <ToolBarContent>
         <MudText Typo="Typo.h6">Transactions</MudText>
         <MudSpacer />
@@ -76,11 +76,6 @@
 
         return false;
     };
-
-    private void SelectedItemsChanged(HashSet<TransactionDto> obj)
-    {
-        // TODO
-    }
 
     private void RowClicked(DataGridRowClickEventArgs<TransactionDto> obj)
     {

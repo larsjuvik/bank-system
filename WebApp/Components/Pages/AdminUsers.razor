@@ -7,8 +7,8 @@
 @attribute [StreamRendering]
 <PageTitle>Users</PageTitle>
 
-<MudDataGrid T="UserDto" MultiSelection="true" Items="@_users" SortMode="SortMode.Multiple" Filterable="true" QuickFilter="@SearchFilter"
-             Hideable="true" RowClick="@RowClicked" SelectedItemsChanged="@SelectedItemsChanged" Virtualize>
+<MudDataGrid T="UserDto" MultiSelection="true" Items="@_users" SortMode="SortMode.Single" Filterable="true" QuickFilter="@SearchFilter"
+             Hideable="true" RowClick="@RowClicked" Virtualize>
     <ToolBarContent>
         <MudText Typo="Typo.h6">Users</MudText>
         <MudSpacer />
@@ -16,7 +16,6 @@
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <Columns>
-        <SelectColumn T="UserDto" />
         <PropertyColumn Property="u => u.Name" />
         <PropertyColumn Property="u => u.Username" />
         <PropertyColumn Property="u => u.BirthDate" />
@@ -46,12 +45,7 @@
 
         return false;
     };
-
-    private void SelectedItemsChanged(HashSet<UserDto> obj)
-    {
-        // TODO
-    }
-
+    
     private void RowClicked(DataGridRowClickEventArgs<UserDto> obj)
     {
         // TODO
