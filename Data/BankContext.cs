@@ -210,7 +210,7 @@ public class BankContext(DbContextOptions<BankContext> options) : DbContext(opti
                 {
                     Id = userLoginIndex,
                     UserId = user.Id,
-                    LoginDateTime = GetRandomDateTime()
+                    LoginDateTime = GetRandomLoginTime()
                 });
                 userLoginIndex++;
             }
@@ -269,6 +269,7 @@ public class BankContext(DbContextOptions<BankContext> options) : DbContext(opti
     /// </summary>
     /// <param name="modelBuilder">The modelbuilder to add data to</param>
     /// <param name="accountsPool">The pool of users to send transactions between</param>
+    /// <param name="startIndex">The start index for first transaction entity</param>
     /// <returns>The max id used in creating transaction ids</returns>
     private static int AddRandomTransactions(ModelBuilder modelBuilder, List<BankAccount> accountsPool, int startIndex = 1)
     {
@@ -277,9 +278,13 @@ public class BankContext(DbContextOptions<BankContext> options) : DbContext(opti
         var index = startIndex-1;
         foreach (var bankAccount in accountsPool)
         {
-            index++;
-            var otherBankAccount = accountsPool[random.Next(0, accountsPool.Count)];
-            transactions.Add(GetRandomTransaction(index, bankAccount.Id, otherBankAccount.Id));
+            const int transactionsPerBankAccount = 10;
+            for (int i = 0; i < transactionsPerBankAccount; i++)
+            {
+                index++;
+                var otherBankAccount = accountsPool[random.Next(0, accountsPool.Count)];
+                transactions.Add(GetRandomTransaction(index, bankAccount.Id, otherBankAccount.Id));
+            }
         }
         
         modelBuilder.Entity<Transaction>().HasData(transactions);
@@ -335,6 +340,15 @@ public class BankContext(DbContextOptions<BankContext> options) : DbContext(opti
             .AddDays(random.Next(0, 31))
             .AddMonths(random.Next(0, 12))
             .AddYears(random.Next(-40, -5));
+    }
+    
+    private static DateTime GetRandomLoginTime()
+    {
+        var random = new Random();
+        return DateTime.Now
+            .AddDays(random.Next(-31, 0))
+            .AddMonths(random.Next(-12, 0))
+            .AddYears(random.Next(-3, 0));
     }
 
     private static decimal GetRandomTransactionAmount()
