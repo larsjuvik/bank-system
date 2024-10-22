@@ -261,7 +261,7 @@ public class BankContext(DbContextOptions<BankContext> options) : DbContext(opti
         // Creating transactions
         var maxTransactionIndexUsed = AddRandomTransactions(modelBuilder, bankAccounts);
 
-        return (2, 5, maxTransactionIndexUsed);
+        return (users.Max(u=>u.Id), bankAccounts.Max(b=>b.Id), maxTransactionIndexUsed);
     }
 
     /// <summary>
