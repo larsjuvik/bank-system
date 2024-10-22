@@ -20,7 +20,7 @@
         <PropertyColumn Property="u => u.Name" />
         <PropertyColumn Property="u => u.Username" />
         <PropertyColumn Property="u => u.BirthDate" />
-        <PropertyColumn Property="u => u.BankAccounts.Count" Title="Accounts" />
+        <PropertyColumn Property="u => u.BankAccounts == null ? 0 : u.BankAccounts.Count" Title="Accounts" />
     </Columns>
     <PagerContent>
         <MudDataGridPager T="UserDto" />
