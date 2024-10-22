@@ -21,8 +21,8 @@
     </ToolBarContent>
     <Columns>
         <PropertyColumn Title="Amount" Property="t => t.Amount" />
-        <PropertyColumn Title="Sender" Property="t => t.From.AccountNumber" />
-        <PropertyColumn Title="Receiver" Property="t => t.To.AccountNumber" />
+        <PropertyColumn Title="Sender" CellStyleFunc="SendingFundsCellStyle" Property="t => t.From.AccountNumber" />
+        <PropertyColumn Title="Receiver" CellStyleFunc="ReceivingFundsCellStyle" Property="t => t.To.AccountNumber" />
         <PropertyColumn Title="Date" Property="t => t.TransactionDate" />
     </Columns>
     <PagerContent>
@@ -64,6 +64,24 @@
         var userIsReceivingFunds = _bankAccounts.Any(bankAccount => bankAccount.AccountNumber == receivingAccountNumber);
         
         return userIsReceivingFunds ? "background-color: rgba(0, 255, 0, 0.15);" : "background-color: rgba(255, 0, 0, 0.15);";
+    };
+    
+    private Func<TransactionDto, string> ReceivingFundsCellStyle => x =>
+    {
+        if (_bankAccounts == null) return string.Empty;
+        
+        bool isCurrentUsersAccount = _bankAccounts.Any(bankAccount => bankAccount.AccountNumber == x.To.AccountNumber);
+        
+        return isCurrentUsersAccount ? "font-weight: bold;" : string.Empty;
+    };
+    
+    private Func<TransactionDto, string> SendingFundsCellStyle => x =>
+    {
+        if (_bankAccounts == null) return string.Empty;
+        
+        bool isCurrentUsersAccount = _bankAccounts.Any(bankAccount => bankAccount.AccountNumber == x.From.AccountNumber);
+        
+        return isCurrentUsersAccount ? "font-weight: bold;" : string.Empty;
     };
 
     private Func<TransactionDto, bool> SearchFilter => t =>
