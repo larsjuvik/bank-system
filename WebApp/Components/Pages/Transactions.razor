@@ -3,6 +3,7 @@
 @using WebApp.Services
 @inject TransactionService TransactionService
 @inject UserService UserService
+@inject BankAccountService BankAccountService
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
@@ -10,7 +11,7 @@
 @attribute [StreamRendering]
 <PageTitle>Users</PageTitle>
 
-<MudDataGrid T="TransactionDto" MultiSelection="false" Items="@_transactions" SortMode="SortMode.Multiple" Filterable="true" QuickFilter="@SearchFilter"
+<MudDataGrid T="TransactionDto" RowStyleFunc="@RowStyle" Items="@_transactions" SortMode="SortMode.Multiple" Filterable="true" QuickFilter="@SearchFilter"
              Hideable="true" RowClick="@RowClicked" SelectedItemsChanged="@SelectedItemsChanged" Virtualize>
     <ToolBarContent>
         <MudText Typo="Typo.h6">Transactions</MudText>
@@ -19,7 +20,6 @@
                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
     </ToolBarContent>
     <Columns>
-        <SelectColumn T="TransactionDto" />
         <PropertyColumn Title="Amount" Property="t => t.Amount" />
         <PropertyColumn Title="Sender" Property="t => t.From.AccountNumber" />
         <PropertyColumn Title="Receiver" Property="t => t.To.AccountNumber" />
@@ -31,6 +31,7 @@
 </MudDataGrid>
 
 @code {
+    private List<BankAccountDto>? _bankAccounts;
     private IQueryable<TransactionDto>? _transactions;
     private string _searchString = string.Empty;
 
@@ -50,8 +51,20 @@
         }
 
         var userId = await UserService.GetIdByUsernameAsync(username);
+        
         _transactions = TransactionService.GetAllTransactionsByUserIdAsync(userId);
+        _bankAccounts = await BankAccountService.GetAllBankAccountsByUserIdAsync(userId);
     }
+    
+    private Func<TransactionDto, int, string> RowStyle => (x, _) =>
+    {
+        if (_bankAccounts == null) return string.Empty;
+        
+        var receivingAccountNumber = x.To.AccountNumber;
+        var userIsReceivingFunds = _bankAccounts.Any(bankAccount => bankAccount.AccountNumber == receivingAccountNumber);
+        
+        return userIsReceivingFunds ? "background-color: rgba(0, 255, 0, 0.15);" : "background-color: rgba(255, 0, 0, 0.15);";
+    };
 
     private Func<TransactionDto, bool> SearchFilter => t =>
     {

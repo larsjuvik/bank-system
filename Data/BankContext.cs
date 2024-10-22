@@ -278,7 +278,7 @@ public class BankContext(DbContextOptions<BankContext> options) : DbContext(opti
         var index = startIndex-1;
         foreach (var bankAccount in accountsPool)
         {
-            const int transactionsPerBankAccount = 10;
+            const int transactionsPerBankAccount = 100;
             for (var i = 0; i < transactionsPerBankAccount; i++)
             {
                 var otherBankAccount = accountsPool[random.Next(0, accountsPool.Count)];
