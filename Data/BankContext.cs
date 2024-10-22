@@ -279,10 +279,12 @@ public class BankContext(DbContextOptions<BankContext> options) : DbContext(opti
         foreach (var bankAccount in accountsPool)
         {
             const int transactionsPerBankAccount = 10;
-            for (int i = 0; i < transactionsPerBankAccount; i++)
+            for (var i = 0; i < transactionsPerBankAccount; i++)
             {
-                index++;
                 var otherBankAccount = accountsPool[random.Next(0, accountsPool.Count)];
+                if (bankAccount.Id == otherBankAccount.Id) continue;
+                
+                index++;
                 transactions.Add(GetRandomTransaction(index, bankAccount.Id, otherBankAccount.Id));
             }
         }
