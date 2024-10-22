@@ -1,99 +1,47 @@
-﻿@page "/transactions/{accountId?}"
-@using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Components.Authorization
+﻿@page "/transactions"
 @using WebApp.DTOs
 @using WebApp.Services
-@attribute [StreamRendering]
-@attribute [Authorize]
-@inject AuthenticationStateProvider AuthenticationStateProvider
-@inject UserService UserService
-@inject BankAccountService BankAccountService
 @inject TransactionService TransactionService
-@inject NavigationManager NavigationManager
+@inject UserService UserService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@attribute [Authorize]
+@attribute [StreamRendering]
+<PageTitle>Users</PageTitle>
 
-<PageTitle>Transactions</PageTitle>
-
-<div>
-    <h1>Transactions</h1>
-    
-    <p>Select an account to see your transactions.</p>
-    <select class="form-select" aria-label="Select a bank account" @onchange="BankAccountSelectChanged">
-        @if (_bankAccounts == null)
-        {
-            <option selected>Loading...</option>
-        }
-        else
-        {
-            @if (AccountId == null)
-            {
-                <option value="" selected>Select a bank account</option>
-            }
-            @foreach (var bankAccount in _bankAccounts.OrderByDescending(b => b.AccountNumber))
-            { 
-                @if (bankAccount.AccountNumber == AccountId)
-                {
-                    <option value="@bankAccount.AccountNumber" selected>@bankAccount.AccountNumber</option>
-                }
-                else
-                {
-        <option value="@bankAccount.AccountNumber">@bankAccount.AccountNumber</option>
-                }
-            }
-        }
-    </select>
-</div>
-
-
-@if (AccountId != null && _transactions == null)
-{
-    <p><em>Loading...</em></p>
-}
-else if (AccountId != null && _transactions != null)
-{
-<div>
-    @if (!string.IsNullOrEmpty(AccountId))
-    {
-    <p>Here you can see your financial transactions for <b>@AccountId</b>:</p>
-    }
-    <RoundedTable>
-        <TableHead>
-            <thead>
-                <tr>
-            <th>Date</th>
-            <th>From</th>
-            <th>To</th>
-            <th>Amount (USD)</th>
-        </tr>
-            </thead>
-        </TableHead>
-        <TableBody>
-            <tbody>
-            @foreach (var transaction in _transactions)
-            {
-                <tr>
-                    <td>@transaction.TransactionDate.ToShortDateString()</td>
-                    <td>@transaction.From?.AccountNumber</td>
-                    <td>@transaction.To?.AccountNumber</td>
-                    <td class=" @(transaction.Amount < 0 ? "table-danger" : "table-success")">@transaction.Amount
-                    </td>
-                </tr>
-            }
-            </tbody>
-        </TableBody>
-    </RoundedTable>
-</div>
-}
+<MudDataGrid T="TransactionDto" MultiSelection="false" Items="@_transactions" SortMode="SortMode.Multiple" Filterable="true" QuickFilter="@SearchFilter"
+             Hideable="true" RowClick="@RowClicked" SelectedItemsChanged="@SelectedItemsChanged" Virtualize>
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Transactions</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <Columns>
+        <SelectColumn T="TransactionDto" />
+        <PropertyColumn Title="Amount" Property="t => t.Amount" />
+        <PropertyColumn Title="Sender" Property="t => t.From.AccountNumber" />
+        <PropertyColumn Title="Receiver" Property="t => t.To.AccountNumber" />
+        <PropertyColumn Title="Date" Property="t => t.TransactionDate" />
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager T="UserDto" />
+    </PagerContent>
+</MudDataGrid>
 
 @code {
-    private List<BankAccountDto>? _bankAccounts;
-    private List<TransactionDto>? _transactions;
-    
-    [Parameter]
-    public string? AccountId { get; set; }
+    private IQueryable<TransactionDto>? _transactions;
+    private string _searchString = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        // Get id from current user
+        await GetData();
+    }
+
+    private async Task GetData()
+    {
+        // Get username from authentication state
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var username = authState.User.Identity?.Name;
         if (username == null)
@@ -102,39 +50,27 @@ else if (AccountId != null && _transactions != null)
         }
 
         var userId = await UserService.GetIdByUsernameAsync(username);
-        _bankAccounts = await BankAccountService.GetAllBankAccountsByUserIdAsync(userId);
+        _transactions = TransactionService.GetAllTransactionsByUserIdAsync(userId);
+    }
+
+    private Func<TransactionDto, bool> SearchFilter => t =>
+    {
+        if (t.From.AccountNumber.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
         
-        // If account id is already provided, fetch transactions too
-        if (!string.IsNullOrEmpty(AccountId))
-        {
-            // Test that the requested account id belongs to this user
-            var anyBankAccountsByUserHasAccountId = _bankAccounts.Any(b => b.AccountNumber == AccountId);
-            if (anyBankAccountsByUserHasAccountId)
-            {
-                await FetchTransactions(userId, AccountId);
-            }
-            else
-            {
-                NavigationManager.NavigateTo("/access-denied");
-            }
-        }
+        if (t.To.AccountNumber.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    };
+
+    private void SelectedItemsChanged(HashSet<TransactionDto> obj)
+    {
+        // TODO
     }
 
-    private async Task FetchTransactions(int userId, string accountNumber)
+    private void RowClicked(DataGridRowClickEventArgs<TransactionDto> obj)
     {
-        _transactions = (await TransactionService.GetAllTransactionsByUserIdAsync(userId))
-            .Where(t => t.From.AccountNumber == accountNumber || t.To.AccountNumber == accountNumber)
-            .ToList();
-    }
-
-    private void BankAccountSelectChanged(ChangeEventArgs arg)
-    {
-        var accountNumber = (string?) arg.Value;
-        if (string.IsNullOrEmpty(accountNumber))
-        {
-            return;
-        }
-
-        NavigationManager.NavigateTo($"/transactions/{accountNumber}");
+        // TODO
     }
 }
