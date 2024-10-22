@@ -354,7 +354,7 @@ public class BankContext(DbContextOptions<BankContext> options) : DbContext(opti
     private static decimal GetRandomTransactionAmount()
     {
         var random = new Random();
-        return random.Next(-8000, 8000);
+        return random.Next(1, 20000);
     }
     
     private static decimal GetRandomBalanceAmount()
